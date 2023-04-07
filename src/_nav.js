@@ -45,8 +45,8 @@ const _nav = [
     items: [
       {
         component: CNavItem,
-        name: "Online Check In",
-        to: "/check-in/online-check-in",
+        name: "Online Booking",
+        to: "/check-in/online-booking",
       },
       {
         component: CNavItem,

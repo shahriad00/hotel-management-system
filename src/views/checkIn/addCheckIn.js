@@ -11,6 +11,7 @@ import {
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import { AiOutlinePlus } from "react-icons/ai";
+import Select from "react-select";
 import { BiTrash } from "react-icons/bi";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -20,6 +21,7 @@ function AddCheckIn() {
   const [nid, setNid] = useState();
   const [checkInDate, setCheckInDate] = useState(new Date());
   const [checkOutDate, setCheckOutDate] = useState(checkInDate);
+  const [room, setRoom] = useState([]);
   const [bookedBy, setBookedBy] = useState();
   const [companyName, setCompanyName] = useState();
   const [address, setAddress] = useState();
@@ -53,6 +55,7 @@ function AddCheckIn() {
       checkInDate,
       checkOutDate,
       pickup,
+      room
     });
     // add code here to submit the form data to a server or update the state of a parent component
   };
@@ -67,10 +70,7 @@ function AddCheckIn() {
 
   const renderFields = () => {
     return fields.map((field, index) => (
-      <div
-        className="d-flex my-2 gap-3 align-items-baseline w-75"
-        key={field.id}
-      >
+      <div className="d-flex my-2 gap-3 align-items-baseline" key={field.id}>
         <CFormLabel htmlFor="name">Name:</CFormLabel>
         <input
           id="name"
@@ -99,33 +99,57 @@ function AddCheckIn() {
     ));
   };
 
+  const colourOptions = [
+    { value: "ocean", label: "Ocean", color: "#00B8D9", isFixed: true },
+    { value: "blue", label: "Blue", color: "#0052CC", isDisabled: true },
+    { value: "purple", label: "Purple", color: "#5243AA" },
+    { value: "red", label: "Red", color: "#FF5630", isFixed: true },
+    { value: "orange", label: "Orange", color: "#FF8B00" },
+    { value: "yellow", label: "Yellow", color: "#FFC400" },
+    { value: "green", label: "Green", color: "#36B37E" },
+    { value: "forest", label: "Forest", color: "#00875A" },
+    { value: "slate", label: "Slate", color: "#253858" },
+    { value: "silver", label: "Silver", color: "#666666" },
+  ];
+
   return (
     <div>
-      <div>
-        <h5 className="font-weight-bold">Add Check In</h5>
+      <div className="border-top border-end border-start rounded-top my-Header">
+        Add Check In
       </div>
-      <hr />
-      <CForm onSubmit={handleSubmit}>
+      <CForm
+        onSubmit={handleSubmit}
+        className="bg-white rounded-bottom p-4 border"
+      >
+        <div className="d-flex gap-5 align-items-baseline">
+          <CFormLabel className="w-50">Check In:</CFormLabel>
+          <DatePicker
+            selected={checkInDate}
+            minDate={new Date()}
+            onChange={(date) => setCheckInDate(date)}
+            className="form-control mb-3 form-control"
+          />
 
-          <div className="d-flex gap-5 w-75 align-items-baseline">
-            <CFormLabel className="w-50">Check In:</CFormLabel>
-            <DatePicker
-              selected={checkInDate}
-              minDate={new Date()}
-              onChange={(date) => setCheckInDate(date)}
-              className="form-control mb-3 form-control"
-            />
-          
-            <CFormLabel className="w-50">Check Out:</CFormLabel>
-            <DatePicker
-              selected={checkOutDate}
-              minDate={checkInDate}
-              onChange={(date) => setCheckOutDate(date)}
-              className="form-control mb-3 form-control"
-            />
-
+          <CFormLabel className="w-50">Check Out:</CFormLabel>
+          <DatePicker
+            selected={checkOutDate}
+            minDate={checkInDate}
+            onChange={(date) => setCheckOutDate(date)}
+            className="form-control mb-3 form-control"
+          />
         </div>
-        <div className="d-flex gap-3 align-items-baseline w-75">
+        <div className="d-flex gap-3 mb-3 align-items-baseline">
+          <CFormLabel htmlFor="name">Select Room:</CFormLabel>
+          <Select
+            isMulti
+            name="colors"
+            options={colourOptions}
+            className="basic-multi-select w-25"
+            classNamePrefix="select"
+            onChange={(choice) => setRoom(choice)}
+          />
+        </div>
+        <div className="d-flex gap-3 align-items-baseline">
           <CFormLabel htmlFor="name">Name:</CFormLabel>
           <input
             id="name"
@@ -154,7 +178,7 @@ function AddCheckIn() {
           </div>
         </div>
         {renderFields()}
-        <div className="w-75">
+        <div>
           <CFormLabel htmlFor="booked-by">Booked By:</CFormLabel>
           <input
             id="booked-by"
