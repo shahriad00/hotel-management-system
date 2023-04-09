@@ -92,7 +92,9 @@ const OnlineBooking = () => {
     return fields.map((field, index) => (
       <div key={field.id} className="mt-3 d-flex gap-4 align-items-center">
         <div className="w-100">
-          <CFormLabel className="semi-bold" htmlFor="name">Name {index + 2}:</CFormLabel>
+          <CFormLabel className="semi-bold" htmlFor="name">
+            Name {index + 2}:
+          </CFormLabel>
           <input
             id="name"
             type="text"
@@ -103,7 +105,9 @@ const OnlineBooking = () => {
           />
         </div>
         <div className="w-100">
-          <CFormLabel className="semi-bold" htmlFor="id-type">ID type:</CFormLabel>
+          <CFormLabel className="semi-bold" htmlFor="id-type">
+            ID type:
+          </CFormLabel>
           <Select
             id="id-type"
             name="id-type"
@@ -114,7 +118,9 @@ const OnlineBooking = () => {
           />
         </div>
         <div className="w-100">
-          <CFormLabel className="semi-bold" htmlFor="id-no">ID No:</CFormLabel>
+          <CFormLabel className="semi-bold" htmlFor="id-no">
+            ID No:
+          </CFormLabel>
           <input
             id="id-no"
             type="text"
@@ -177,7 +183,9 @@ const OnlineBooking = () => {
               />
             </div>
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="rooms">Select Room:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="rooms">
+                Select Room:
+              </CFormLabel>
               <Select
                 isMulti
                 name="rooms"
@@ -197,7 +205,9 @@ const OnlineBooking = () => {
         <div className="bg-white rounded-bottom p-4 border">
           <div className="d-flex gap-3 align-items-center">
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="name">Name:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="name">
+                Name:
+              </CFormLabel>
               <input
                 id="name"
                 type="text"
@@ -208,7 +218,9 @@ const OnlineBooking = () => {
               />
             </div>
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="email">Email:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="email">
+                Email:
+              </CFormLabel>
               <input
                 id="email"
                 type="text"
@@ -219,7 +231,9 @@ const OnlineBooking = () => {
               />
             </div>
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="mobile">Mobile:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="mobile">
+                Mobile:
+              </CFormLabel>
               <input
                 id="mobile"
                 type="text"
@@ -232,7 +246,9 @@ const OnlineBooking = () => {
           </div>
           <div className="d-flex mt-2 gap-4 align-items-center mt-3">
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="address">Address:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="address">
+                Address:
+              </CFormLabel>
               <input
                 id="address"
                 type="text"
@@ -243,7 +259,9 @@ const OnlineBooking = () => {
               />
             </div>
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="country">Country:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="country">
+                Country:
+              </CFormLabel>
               <Select
                 id="country"
                 name="country"
@@ -261,7 +279,9 @@ const OnlineBooking = () => {
         <div className="bg-white rounded p-4 border mt-2">
           <div className="d-flex gap-4 align-items-center">
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="company">Company Name:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="company">
+                Company Name:
+              </CFormLabel>
               <input
                 id="company"
                 type="text"
@@ -272,7 +292,9 @@ const OnlineBooking = () => {
               />
             </div>
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="booked-by">Booked By:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="booked-by">
+                Booked By:
+              </CFormLabel>
               <input
                 id="booked-by"
                 type="text"
@@ -285,7 +307,9 @@ const OnlineBooking = () => {
           </div>
           <div className="d-flex gap-4 align-items-center  mt-3">
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="reference">Referenced By:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="reference">
+                Referenced By:
+              </CFormLabel>
               <Select
                 id="reference"
                 name="reference"
@@ -296,7 +320,9 @@ const OnlineBooking = () => {
               />
             </div>
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="reason-of-stay">Reason of Stay:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="reason-of-stay">
+                Reason of Stay:
+              </CFormLabel>
               <input
                 id="reason-of-stay"
                 type="text"
@@ -317,7 +343,9 @@ const OnlineBooking = () => {
         <div className="bg-white rounded-bottom p-4 border">
           <div className="d-flex gap-4 align-items-center">
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="id-type">ID type:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="id-type">
+                ID type:
+              </CFormLabel>
               <Select
                 id="id-type"
                 name="id-type"
@@ -328,7 +356,9 @@ const OnlineBooking = () => {
               />
             </div>
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="id-no">ID No:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="id-no">
+                ID No:
+              </CFormLabel>
               <input
                 id="id-no"
                 type="text"
@@ -339,7 +369,9 @@ const OnlineBooking = () => {
               />
             </div>
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="id-img">Upload image:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="id-img">
+                Upload image:
+              </CFormLabel>
               <CFormInput type="file" id="id-img" multiple />
             </div>
           </div>
@@ -353,7 +385,9 @@ const OnlineBooking = () => {
         <div className="bg-white rounded-bottom p-4 border">
           <div className="d-flex gap-4 align-items-center">
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="name">Name:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="name">
+                Name:
+              </CFormLabel>
               <input
                 id="name"
                 type="text"
@@ -364,7 +398,9 @@ const OnlineBooking = () => {
               />
             </div>
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="id-type">ID type:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="id-type">
+                ID type:
+              </CFormLabel>
               <Select
                 id="id-type"
                 name="id-type"
@@ -375,7 +411,9 @@ const OnlineBooking = () => {
               />
             </div>
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="id-no">ID No:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="id-no">
+                ID No:
+              </CFormLabel>
               <input
                 id="id-no"
                 type="text"
@@ -406,7 +444,9 @@ const OnlineBooking = () => {
         <div className="bg-white rounded-bottom p-4 border">
           <div className="d-flex gap-3 align-items-center">
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="payment-type">Payment Type:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="payment-type">
+                Payment Type:
+              </CFormLabel>
               <Select
                 id="payment-type"
                 name="payment-type"
@@ -417,7 +457,9 @@ const OnlineBooking = () => {
               />
             </div>
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="advance">Advance</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="advance">
+                Advance
+              </CFormLabel>
               <CInputGroup className="">
                 <CInputGroupText>৳</CInputGroupText>
                 <CFormInput
@@ -433,133 +475,91 @@ const OnlineBooking = () => {
             </div>
           </div>
         </div>
-        <div>
-          <CFormLabel className="semi-bold" htmlFor="tel">Tel: off/Home</CFormLabel>
-          <input
-            id="tel"
-            type="text"
-            className="form-control"
-            placeholder="Enter Home / office telephone"
-            value={telephone}
-            onChange={(event) => setTelephone(event.target.value)}
-          />
-          <CFormLabel className="semi-bold" htmlFor="eta">ETD</CFormLabel>
-          <input
-            id="etd"
-            type="text"
-            className="form-control"
-            placeholder="Enter ETD"
-            value={ETD}
-            onChange={(event) => setETD(event.target.value)}
-          />
-          <CFormLabel className="semi-bold" htmlFor="due">Due</CFormLabel>
-          <CInputGroup className="">
-            <CInputGroupText>৳</CInputGroupText>
-            <CFormInput
-              id="due"
-              type="number"
-              placeholder="Enter Due amount"
-              value={due}
-              onChange={(event) => setDue(event.target.value)}
-              aria-label="Amount (to the nearest dollar)"
-            />
-          </CInputGroup>
-          <div className="">
-            <CFormLabel className="semi-bold" htmlFor="amenities">
-              Pickup
-            </CFormLabel>
 
-            <CFormCheck
-              className="pb-1 pr-3"
-              type="radio"
-              inline
-              id="yes"
-              name="pickup"
-              value="yes"
-              label="Yes"
-              checked={pickup === "yes"}
-              onChange={(e) => setPickup(e.target.value)}
-            />
-            <CFormCheck
-              className="pb-1 pr-3"
-              type="radio"
-              name="pickup"
-              inline
-              id="no"
-              value="no"
-              label="No"
-              checked={pickup === "no"}
-              onChange={(e) => setPickup(e.target.value)}
-            />
+        {/*------------- Additional Information header ----------------*/}
+        <div className="mt-3 border-top border-end border-start rounded-top my-Header">
+          Additional information
+        </div>
+        {/*--------- Additional Information section (pickup, special instruction) -----------*/}
+        <div className="bg-white rounded-bottom p-4 border">
+          <div className="d-flex gap-3 align-items-baseline">
+            <div className="d-flex gap-3 align-items-center">
+              <CFormLabel className="semi-bold ml-3" htmlFor="pickup">
+                Pickup :
+              </CFormLabel>
+              <CFormCheck
+                className="pb-1 pr-3"
+                type="radio"
+                id="yes"
+                inline
+                name="pickup"
+                value="yes"
+                label="Yes"
+                checked={pickup === "yes"}
+                onChange={(e) => setPickup(e.target.value)}
+              />
+              <CFormCheck
+                className="pb-1 pr-3"
+                type="radio"
+                name="pickup"
+                id="no"
+                inline
+                value="no"
+                label="No"
+                checked={pickup === "no"}
+                onChange={(e) => setPickup(e.target.value)}
+              />
+            </div>
             {pickup === "yes" && (
-              <div className="d-flex gap-3 align-items-center">
-                <CInputGroup className="w-50">
-                  <CInputGroupText>৳</CInputGroupText>
-                  <CFormInput
-                    disabled={chargedByCompany}
-                    id="charge"
-                    type="number"
-                    placeholder="Enter charge amount"
-                    value={charge}
-                    onChange={(event) => setCharge(event.target.value)}
-                    aria-label="Amount (to the nearest dollar)"
-                  />
-                </CInputGroup>
-                <CFormCheck
-                  className="pb-1 pr-3"
-                  inline
-                  id="setChargedByCompany"
-                  name="setChargedByCompany"
-                  value={chargedByCompany}
-                  label="Company"
-                  checked={chargedByCompany}
-                  onChange={(e) => setChargedByCompany(!chargedByCompany)}
+              <CInputGroup className="w-25">
+                <CInputGroupText>৳</CInputGroupText>
+                <CFormInput
+                  disabled={chargedByCompany}
+                  id="charge"
+                  type="number"
+                  placeholder="Enter charge amount"
+                  value={charge}
+                  onChange={(event) => setCharge(event.target.value)}
+                  aria-label="Amount (to the nearest dollar)"
                 />
-              </div>
+              </CInputGroup>
             )}
           </div>
-
-          <CFormLabel className="semi-bold" htmlFor="instruction">
-            Special Instruction (if any)
-          </CFormLabel>
-          <input
-            id="instruction"
-            type="text"
-            className="form-control"
-            placeholder="Enter Special Instruction"
-            value={instruction}
-            onChange={(event) => setInstruction(event.target.value)}
-          />
-          <CFormLabel className="semi-bold" htmlFor="amenities">
-            Send Confirmation ?
-          </CFormLabel>
-          <CFormCheck
-            className="pb-1 pr-3"
-            type="radio"
-            inline
-            id="confirmation-yes"
-            name="confirmation"
-            value="yes"
-            label="Yes"
-            checked={confirmation === "yes"}
-            onChange={(e) => setConfirmation(e.target.value)}
-          />
-          <CFormCheck
-            className="pb-1 pr-3"
-            type="radio"
-            name="confirmation"
-            inline
-            id="confirmation-no"
-            value="no"
-            label="No"
-            checked={confirmation === "no"}
-            onChange={(e) => setConfirmation(e.target.value)}
-          />
-          <div>
-            <CButton type="submit" color="primary">
-              Submit
-            </CButton>
+          <div className="d-flex gap-3 align-items-center mt-3">
+            <div className="w-100">
+              <CFormLabel className="semi-bold" htmlFor="instruction">
+                Special Instruction (if any)
+              </CFormLabel>
+              <input
+                id="instruction"
+                type="text"
+                className="form-control"
+                placeholder="Enter Special Instruction"
+                value={instruction}
+                onChange={(event) => setInstruction(event.target.value)}
+              />
+            </div>
+            <div className="w-100">
+              <CFormLabel className="semi-bold" htmlFor="confirmation">
+                Send Confirmation ?
+              </CFormLabel>
+              <Select
+                id="confirmation"
+                className="basic-multi-select w-100"
+                classNamePrefix="select"
+                options={[
+                  { value: "yes", label: "yes" },
+                  { value: "no", label: "no" },
+                ]}
+                onChange={(change) => setConfirmation(change)}
+              />
+            </div>
           </div>
+        </div>
+        <div>
+          <CButton className="mt-3 px-5" type="submit" color="primary">
+            Submit
+          </CButton>
         </div>
       </CForm>
     </div>
