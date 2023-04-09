@@ -34,7 +34,7 @@ const idTypeOptions = [
 
 const defaultCountry = { value: "Bangladesh", label: "Bangladesh" };
 
-const AddCheckIn = () => {
+const OnlineBooking = () => {
   const [fields, setFields] = useState([]);
   const [name, setName] = useState();
   const [nid, setNid] = useState();
@@ -152,7 +152,7 @@ const AddCheckIn = () => {
   return (
     <div>
       <div className="border-top border-end border-start rounded-top my-Header">
-        Add Check In
+        Add Booking
       </div>
       <CForm onSubmit={handleSubmit}>
         {/*---------- select check in date ----------------*/}
@@ -434,13 +434,136 @@ const AddCheckIn = () => {
           </div>
         </div>
         <div>
-        <CButton className="mt-3 px-5" type="submit" color="primary">
-          Submit
-        </CButton>
+          <CFormLabel className="semi-bold" htmlFor="tel">Tel: off/Home</CFormLabel>
+          <input
+            id="tel"
+            type="text"
+            className="form-control"
+            placeholder="Enter Home / office telephone"
+            value={telephone}
+            onChange={(event) => setTelephone(event.target.value)}
+          />
+          <CFormLabel className="semi-bold" htmlFor="eta">ETD</CFormLabel>
+          <input
+            id="etd"
+            type="text"
+            className="form-control"
+            placeholder="Enter ETD"
+            value={ETD}
+            onChange={(event) => setETD(event.target.value)}
+          />
+          <CFormLabel className="semi-bold" htmlFor="due">Due</CFormLabel>
+          <CInputGroup className="">
+            <CInputGroupText>৳</CInputGroupText>
+            <CFormInput
+              id="due"
+              type="number"
+              placeholder="Enter Due amount"
+              value={due}
+              onChange={(event) => setDue(event.target.value)}
+              aria-label="Amount (to the nearest dollar)"
+            />
+          </CInputGroup>
+          <div className="">
+            <CFormLabel className="semi-bold" htmlFor="amenities">
+              Pickup
+            </CFormLabel>
+
+            <CFormCheck
+              className="pb-1 pr-3"
+              type="radio"
+              inline
+              id="yes"
+              name="pickup"
+              value="yes"
+              label="Yes"
+              checked={pickup === "yes"}
+              onChange={(e) => setPickup(e.target.value)}
+            />
+            <CFormCheck
+              className="pb-1 pr-3"
+              type="radio"
+              name="pickup"
+              inline
+              id="no"
+              value="no"
+              label="No"
+              checked={pickup === "no"}
+              onChange={(e) => setPickup(e.target.value)}
+            />
+            {pickup === "yes" && (
+              <div className="d-flex gap-3 align-items-center">
+                <CInputGroup className="w-50">
+                  <CInputGroupText>৳</CInputGroupText>
+                  <CFormInput
+                    disabled={chargedByCompany}
+                    id="charge"
+                    type="number"
+                    placeholder="Enter charge amount"
+                    value={charge}
+                    onChange={(event) => setCharge(event.target.value)}
+                    aria-label="Amount (to the nearest dollar)"
+                  />
+                </CInputGroup>
+                <CFormCheck
+                  className="pb-1 pr-3"
+                  inline
+                  id="setChargedByCompany"
+                  name="setChargedByCompany"
+                  value={chargedByCompany}
+                  label="Company"
+                  checked={chargedByCompany}
+                  onChange={(e) => setChargedByCompany(!chargedByCompany)}
+                />
+              </div>
+            )}
+          </div>
+
+          <CFormLabel className="semi-bold" htmlFor="instruction">
+            Special Instruction (if any)
+          </CFormLabel>
+          <input
+            id="instruction"
+            type="text"
+            className="form-control"
+            placeholder="Enter Special Instruction"
+            value={instruction}
+            onChange={(event) => setInstruction(event.target.value)}
+          />
+          <CFormLabel className="semi-bold" htmlFor="amenities">
+            Send Confirmation ?
+          </CFormLabel>
+          <CFormCheck
+            className="pb-1 pr-3"
+            type="radio"
+            inline
+            id="confirmation-yes"
+            name="confirmation"
+            value="yes"
+            label="Yes"
+            checked={confirmation === "yes"}
+            onChange={(e) => setConfirmation(e.target.value)}
+          />
+          <CFormCheck
+            className="pb-1 pr-3"
+            type="radio"
+            name="confirmation"
+            inline
+            id="confirmation-no"
+            value="no"
+            label="No"
+            checked={confirmation === "no"}
+            onChange={(e) => setConfirmation(e.target.value)}
+          />
+          <div>
+            <CButton type="submit" color="primary">
+              Submit
+            </CButton>
+          </div>
         </div>
       </CForm>
     </div>
   );
 };
 
-export default AddCheckIn;
+export default OnlineBooking;
