@@ -14,11 +14,32 @@ import { AiOutlinePlus } from "react-icons/ai";
 import Select from "react-select";
 import { BiTrash } from "react-icons/bi";
 import "react-datepicker/dist/react-datepicker.css";
+import COUNTRY from "src/assets/data/Country";
 
-function AddCheckIn() {
+const countryOptions = COUNTRY.map(({ name }) => {
+  return { value: name, label: name };
+});
+
+const paymentOptions = [
+  { value: "bkash", label: "bkash" },
+  { value: "cash", label: "cash" },
+  { value: "debit card", label: "debit card" },
+];
+
+const idTypeOptions = [
+  { value: "nid", label: "nid" },
+  { value: "passport", label: "passport" },
+  { value: "driving license", label: "driving license" },
+];
+
+const defaultCountry = { value: "Bangladesh", label: "Bangladesh" };
+
+const AddCheckIn = () => {
   const [fields, setFields] = useState([]);
   const [name, setName] = useState();
   const [nid, setNid] = useState();
+  const [idType, setIdType] = useState();
+  const [idNumber, setIdNumber] = useState();
   const [checkInDate, setCheckInDate] = useState(new Date());
   const [checkOutDate, setCheckOutDate] = useState(checkInDate);
   const [room, setRoom] = useState([]);
@@ -27,17 +48,11 @@ function AddCheckIn() {
   const [address, setAddress] = useState();
   const [telephone, setTelephone] = useState();
   const [mobile, setMobile] = useState();
-  const [fax, setFax] = useState();
+  const [reasonOfStay, setReasonOfStay] = useState();
   const [email, setEmail] = useState();
-  const [paymentMethod, setPaymentMethod] = useState();
-  const [cardNumber, setCardNumber] = useState();
-  //arrival flight No.
-  const [arrFltNo, setArrFltNo] = useState();
-  //Estimated Time Arrival.
-  const [ETA, setETA] = useState();
-  //departure flight No.
-  const [depFltNo, setDepFltNo] = useState();
-  //Estimated Time Departure.
+  const [paymentType, setPaymentType] = useState();
+  const [country, setCountry] = useState();
+  const [referencedBy, setReferencedBy] = useState();
   const [ETD, setETD] = useState();
   const [pickup, setPickup] = useState();
   const [advance, setAdvance] = useState();
@@ -55,7 +70,12 @@ function AddCheckIn() {
       checkInDate,
       checkOutDate,
       pickup,
-      room
+      room,
+      paymentType,
+      country,
+      referencedBy,
+      idType,
+      idNumber,
     });
     // add code here to submit the form data to a server or update the state of a parent component
   };
@@ -99,9 +119,9 @@ function AddCheckIn() {
     ));
   };
 
-  const colourOptions = [
+  const roomOptions = [
     { value: "ocean", label: "Ocean", color: "#00B8D9", isFixed: true },
-    { value: "blue", label: "Blue", color: "#0052CC", isDisabled: true },
+    { value: "blue", label: "Blue", color: "#0052CC" },
     { value: "purple", label: "Purple", color: "#5243AA" },
     { value: "red", label: "Red", color: "#FF5630", isFixed: true },
     { value: "orange", label: "Orange", color: "#FF8B00" },
@@ -117,95 +137,246 @@ function AddCheckIn() {
       <div className="border-top border-end border-start rounded-top my-Header">
         Add Check In
       </div>
-      <CForm
-        onSubmit={handleSubmit}
-        className="bg-white rounded-bottom p-4 border"
-      >
-        <div className="d-flex gap-5 align-items-baseline">
-          <CFormLabel className="w-50">Check In:</CFormLabel>
-          <DatePicker
-            selected={checkInDate}
-            minDate={new Date()}
-            onChange={(date) => setCheckInDate(date)}
-            className="form-control mb-3 form-control"
-          />
-
-          <CFormLabel className="w-50">Check Out:</CFormLabel>
-          <DatePicker
-            selected={checkOutDate}
-            minDate={checkInDate}
-            onChange={(date) => setCheckOutDate(date)}
-            className="form-control mb-3 form-control"
-          />
-        </div>
-        <div className="d-flex gap-3 mb-3 align-items-baseline">
-          <CFormLabel htmlFor="name">Select Room:</CFormLabel>
-          <Select
-            isMulti
-            name="colors"
-            options={colourOptions}
-            className="basic-multi-select w-25"
-            classNamePrefix="select"
-            onChange={(choice) => setRoom(choice)}
-          />
-        </div>
-        <div className="d-flex gap-3 align-items-baseline">
-          <CFormLabel htmlFor="name">Name:</CFormLabel>
-          <input
-            id="name"
-            type="text"
-            className="mb-3 form-control"
-            placeholder="Enter guest name"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-          />
-          <CFormLabel htmlFor="nid">NID:</CFormLabel>
-          <input
-            id="nid"
-            type="text"
-            className="mb-3 form-control"
-            placeholder="Enter nid number"
-            value={name}
-            onChange={(event) => setNid(event.target.value)}
-          />
-          <div>
-            <button
-              className="d-flex justify-content-center align-items-center btn btn-success"
-              onClick={addField}
-            >
-              <AiOutlinePlus color="white" fontSize={18} />
-            </button>
+      <CForm onSubmit={handleSubmit}>
+        {/*---------- select check in date ----------------*/}
+        <div className="bg-white rounded-bottom p-4 border">
+          <div className="d-flex gap-5 justify-content-between align-items-baseline w-100">
+            <div className="w-100">
+              <CFormLabel className="">Check In:</CFormLabel>
+              <DatePicker
+                selected={checkInDate}
+                minDate={new Date()}
+                onChange={(date) => setCheckInDate(date)}
+                className="form-control mb-3 form-control w-100"
+              />
+            </div>
+            <div className="w-100">
+              <CFormLabel className="">Check Out:</CFormLabel>
+              <DatePicker
+                selected={checkOutDate}
+                minDate={checkInDate}
+                onChange={(date) => setCheckOutDate(date)}
+                className="form-control mb-3 form-control w-100"
+              />
+            </div>
+            <div className="w-100">
+              <CFormLabel htmlFor="rooms">Select Room:</CFormLabel>
+              <Select
+                isMulti
+                name="rooms"
+                options={roomOptions}
+                className="basic-multi-select w-100"
+                classNamePrefix="select"
+                onChange={(choice) => setRoom(choice)}
+              />
+            </div>
           </div>
         </div>
+        {/*------------- Guest Information header ----------------*/}
+        <div className="mt-3 border-top border-end border-start rounded-top my-Header">
+          Guest information
+        </div>
+        {/*--------- Guest Information section (name, email, mobile, address, country) -----------*/}
+        <div className="bg-white rounded-bottom p-4 border">
+          <div className="d-flex gap-3 align-items-baseline">
+            <div className="w-100">
+              <CFormLabel htmlFor="name">Name:</CFormLabel>
+              <input
+                id="name"
+                type="text"
+                className="mb-3 form-control"
+                placeholder="Enter guest name"
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+              />
+            </div>
+            <div className="w-100">
+              <CFormLabel htmlFor="email">Email:</CFormLabel>
+              <input
+                id="email"
+                type="text"
+                className="mb-3 form-control"
+                placeholder="example@email.com"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+              />
+            </div>
+            <div className="w-100">
+              <CFormLabel htmlFor="mobile">Mobile:</CFormLabel>
+              <input
+                id="mobile"
+                type="text"
+                className="mb-3 form-control"
+                placeholder="Enter Mobile Number"
+                value={mobile}
+                onChange={(event) => setMobile(event.target.value)}
+              />
+            </div>
+          </div>
+          <div className="d-flex mt-2 gap-5 align-items-baseline">
+            <div className="w-100">
+              <CFormLabel htmlFor="address">Address:</CFormLabel>
+              <input
+                id="address"
+                type="text"
+                className="mb-3 form-control"
+                placeholder="Enter Home / Company Address"
+                value={address}
+                onChange={(event) => setAddress(event.target.value)}
+              />
+            </div>
+            <div className="w-100">
+              <CFormLabel htmlFor="country">Country:</CFormLabel>
+              <Select
+                id="country"
+                name="country"
+                defaultValue={defaultCountry}
+                options={countryOptions}
+                className="basic-multi-select w-100"
+                classNamePrefix="select"
+                onChange={(choice) => setCountry(choice)}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/*--------- Company, reference, reason to stay, advance-payment, section -----------*/}
+        <div className="bg-white rounded p-4 border mt-2">
+          <div className="d-flex gap-5 align-items-baseline">
+            <div className="w-100">
+              <CFormLabel htmlFor="company">Company Name:</CFormLabel>
+              <input
+                id="company"
+                type="text"
+                className="mb-3 form-control"
+                placeholder="Enter Company name"
+                value={companyName}
+                onChange={(event) => setCompanyName(event.target.value)}
+              />
+            </div>
+            <div className="w-100">
+              <CFormLabel htmlFor="booked-by">Booked By:</CFormLabel>
+              <input
+                id="booked-by"
+                type="text"
+                className="mb-3 form-control"
+                placeholder="Enter name"
+                value={bookedBy}
+                onChange={(event) => setBookedBy(event.target.value)}
+              />
+            </div>
+            <div className="w-100">
+              <CFormLabel htmlFor="reference">Referenced By:</CFormLabel>
+              <Select
+                id="reference"
+                name="reference"
+                options={countryOptions}
+                className="basic-multi-select w-100"
+                classNamePrefix="select"
+                onChange={(choice) => setReferencedBy(choice)}
+              />
+            </div>
+          </div>
+          <div className="d-flex gap-5 align-items-baseline">
+            <div className="w-100">
+              <CFormLabel htmlFor="reason-of-stay">Reason of Stay:</CFormLabel>
+              <input
+                id="reason-of-stay"
+                type="text"
+                className="mb-3 form-control"
+                placeholder="Enter reason of stay"
+                value={reasonOfStay}
+                onChange={(event) => setReasonOfStay(event.target.value)}
+              />
+            </div>
+            <div className="w-100">
+              <CFormLabel htmlFor="payment-type">Payment Type:</CFormLabel>
+              <Select
+                id="payment-type"
+                name="payment-type"
+                options={paymentOptions}
+                className="basic-multi-select w-100"
+                classNamePrefix="select"
+                onChange={(choice) => setPaymentType(choice)}
+              />
+            </div>
+            <div className="w-100">
+              <CFormLabel htmlFor="advance">Advance</CFormLabel>
+              <CInputGroup className="mb-3">
+                <CInputGroupText>৳</CInputGroupText>
+                <CFormInput
+                  id="advance"
+                  type="number"
+                  min={0}
+                  placeholder="Enter Advance amount"
+                  value={advance}
+                  onChange={(event) => setAdvance(event.target.value)}
+                  aria-label="Amount (to the nearest dollar)"
+                />
+              </CInputGroup>
+            </div>
+          </div>
+        </div>
+
+        {/*--------- id card Information section header -----------*/}
+        <div className="mt-3 border-top border-end border-start rounded-top my-Header">
+          ID Card information
+        </div>
+        {/*--------- id card Information section (type, id no, image) -----------*/}
+        <div className="bg-white rounded-bottom p-4 border">
+          <div className="d-flex gap-5 align-items-baseline">
+            <div className="w-100">
+              <CFormLabel htmlFor="id-type">ID type:</CFormLabel>
+              <Select
+                id="id-type"
+                name="id-type"
+                options={idTypeOptions}
+                className="basic-multi-select w-100"
+                classNamePrefix="select"
+                onChange={(choice) => setIdType(choice)}
+              />
+            </div>
+            <div className="w-100">
+              <CFormLabel htmlFor="id-no">Id No:</CFormLabel>
+              <input
+                id="id-no"
+                type="text"
+                className="mb-3 form-control"
+                placeholder="Enter ID No"
+                value={idNumber}
+                onChange={(event) => setIdNumber(event.target.value)}
+              />
+            </div>
+            <div className="w-100">
+              <CFormLabel htmlFor="id-img">Upload image:</CFormLabel>
+              <CFormInput type="file" id="id-img" multiple />
+            </div>
+          </div>
+        </div>
+
+        {/*------------- Guest Information header ----------------*/}
+        <div className="mt-3 border-top border-end border-start rounded-top my-Header">
+          Other Guest information
+        </div>
+        {/*--------- Guest Information section (name, email, mobile, address, country) -----------*/}
+        <div className="bg-white rounded-bottom p-4 border">
+          <div className="d-flex gap-3 align-items-baseline">
+            <div className="w-100">
+              <CFormLabel htmlFor="name">Name:</CFormLabel>
+              <input
+                id="name"
+                type="text"
+                className="mb-3 form-control"
+                placeholder="Enter guest name"
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+              />
+            </div>
+          </div>
+        </div>
+
         {renderFields()}
         <div>
-          <CFormLabel htmlFor="booked-by">Booked By:</CFormLabel>
-          <input
-            id="booked-by"
-            type="text"
-            className="mb-3 form-control"
-            placeholder="Enter name"
-            value={bookedBy}
-            onChange={(event) => setBookedBy(event.target.value)}
-          />
-          <CFormLabel htmlFor="company">Company Name:</CFormLabel>
-          <input
-            id="company"
-            type="text"
-            className="mb-3 form-control"
-            placeholder="Enter Company name"
-            value={companyName}
-            onChange={(event) => setCompanyName(event.target.value)}
-          />
-          <CFormLabel htmlFor="address">Address:</CFormLabel>
-          <input
-            id="address"
-            type="text"
-            className="mb-3 form-control"
-            placeholder="Enter Home / Company Address"
-            value={address}
-            onChange={(event) => setAddress(event.target.value)}
-          />
           <CFormLabel htmlFor="tel">Tel: off/Home</CFormLabel>
           <input
             id="tel"
@@ -214,61 +385,6 @@ function AddCheckIn() {
             placeholder="Enter Home / office telephone"
             value={telephone}
             onChange={(event) => setTelephone(event.target.value)}
-          />
-          <CFormLabel htmlFor="mobile">Mobile</CFormLabel>
-          <input
-            id="mobile"
-            type="text"
-            className="mb-3 form-control"
-            placeholder="Enter Mobile Number"
-            value={mobile}
-            onChange={(event) => setMobile(event.target.value)}
-          />
-          <CFormLabel htmlFor="fax">Fax</CFormLabel>
-          <input
-            id="fax"
-            type="text"
-            className="mb-3 form-control"
-            placeholder="Enter Fax "
-            value={fax}
-            onChange={(event) => setFax(event.target.value)}
-          />
-          <CFormLabel htmlFor="email">Email</CFormLabel>
-          <input
-            id="email"
-            type="text"
-            className="mb-3 form-control"
-            placeholder="Enter Email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-          />
-          <CFormLabel htmlFor="arr-flight-no">Arr Flight No.</CFormLabel>
-          <input
-            id="arr-flight-no"
-            type="text"
-            className="mb-3 form-control"
-            placeholder="Enter Arr Flight No"
-            value={arrFltNo}
-            onChange={(event) => setArrFltNo(event.target.value)}
-          />
-          <CFormLabel htmlFor="eta">ETA</CFormLabel>
-
-          <input
-            id="eta"
-            type="text"
-            className="mb-3 form-control"
-            placeholder="Enter ETA"
-            value={ETA}
-            onChange={(event) => setETA(event.target.value)}
-          />
-          <CFormLabel htmlFor="arr-flight-no">Dep Flight No.</CFormLabel>
-          <input
-            id="dep-flight-no"
-            type="text"
-            className="mb-3 form-control"
-            placeholder="Enter Dep Flight No"
-            value={depFltNo}
-            onChange={(event) => setDepFltNo(event.target.value)}
           />
           <CFormLabel htmlFor="eta">ETD</CFormLabel>
           <input
@@ -279,33 +395,6 @@ function AddCheckIn() {
             value={ETD}
             onChange={(event) => setETD(event.target.value)}
           />
-          <CFormLabel htmlFor="payment-method">Payment Method</CFormLabel>
-          <CFormSelect
-            id="payment-method"
-            value={paymentMethod}
-            className="mb-3"
-            onChange={(event) => setPaymentMethod(event.target.value)}
-          >
-            <option style={{ display: "none" }} defaultValue>
-              {" "}
-              --Select Payment Method--
-            </option>
-            <option value="cash">Cash</option>
-            <option value="bkash">Bkash</option>
-            <option value="Debit Card">Debit Card</option>
-          </CFormSelect>
-          <CFormLabel htmlFor="advance">Advance</CFormLabel>
-          <CInputGroup className="mb-3">
-            <CInputGroupText>৳</CInputGroupText>
-            <CFormInput
-              id="advance"
-              type="number"
-              placeholder="Enter Advance amount"
-              value={advance}
-              onChange={(event) => setAdvance(event.target.value)}
-              aria-label="Amount (to the nearest dollar)"
-            />
-          </CInputGroup>
           <CFormLabel htmlFor="due">Due</CFormLabel>
           <CInputGroup className="mb-3">
             <CInputGroupText>৳</CInputGroupText>
@@ -415,9 +504,26 @@ function AddCheckIn() {
             </CButton>
           </div>
         </div>
+        <CFormLabel htmlFor="nid">NID:</CFormLabel>
+        <input
+          id="nid"
+          type="text"
+          className="mb-3 form-control"
+          placeholder="Enter nid number"
+          value={name}
+          onChange={(event) => setNid(event.target.value)}
+        />
+        <div>
+          <button
+            className="d-flex justify-content-center align-items-center btn btn-success"
+            onClick={addField}
+          >
+            <AiOutlinePlus color="white" fontSize={18} />
+          </button>
+        </div>
       </CForm>
     </div>
   );
-}
+};
 
 export default AddCheckIn;
