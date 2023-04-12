@@ -22,7 +22,7 @@ const AddRoom = () => {
   const [images, setImages] = useState([]);
   const maxNumber = 4;
 
-  const onChange = (imageList, addUpdateIndex) => {
+  const handleImages = (imageList, addUpdateIndex) => {
     // data for submit
     // console.log(imageList, addUpdateIndex);
     setImages(imageList);
@@ -138,7 +138,7 @@ const AddRoom = () => {
               <ImageUploading
                 multiple
                 value={images}
-                onChange={onChange}
+                onChange={handleImages}
                 maxNumber={maxNumber}
                 dataURLKey="data_url"
               >
@@ -149,7 +149,6 @@ const AddRoom = () => {
                   isDragging,
                   dragProps,
                 }) => (
-                  // write your building UI
                   <div className="upload__image-wrapper">
                     <div>
                       <button

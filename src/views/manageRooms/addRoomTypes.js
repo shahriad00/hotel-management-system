@@ -13,16 +13,16 @@ import {
 } from "@coreui/react";
 
 const AMENITIES = [
-  "24-Hour Guest Reception",
-  "Fancy Bathrobes",
-  "Flexible Checkout",
-  "Free Breakfast",
-  "Free Wifi",
-  "Healthy Breakfast",
-  "Mini-fridge",
-  "Parking",
-  "Premium Bedding",
-  "Room Service",
+  { id: '1', label: '24-Hour Guest Reception' },
+  { id: '2', label: 'Fancy Bathrobes' },
+  { id: '3', label: 'Flexible Checkout' },
+  { id: '4', label: 'Free Breakfast' },
+  { id: '5', label: 'Free Wifi' },
+  { id: '6', label: 'Healthy Breakfast' },
+  { id: '7', label: 'Mini-fridge' },
+  { id: '8', label: 'Parking' },
+  { id: '9', label: 'Premium Bedding' },
+  { id: '10', label: 'Room Service' }
 ];
 
 function AddRoomTypes() {
@@ -31,6 +31,7 @@ function AddRoomTypes() {
   const [discountPrice, setDiscountPrice] = useState();
   const [status, setStatus] = useState();
   const [capacity, setCapacity] = useState();
+  const [amenityList, setAmenityList] = useState([])
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -39,8 +40,17 @@ function AddRoomTypes() {
       basePrice,
       discountPrice,
       status,
+      amenityList
     });
     // add code here to submit the form data to a server or update the state of a parent component
+  };
+
+  const handleCheck = (e, label) => {
+    if (e.target.checked) {
+      setAmenityList([...amenityList, label]);
+    } else {
+      setAmenityList(amenityList.filter(value => value !== label));
+    }
   };
 
   return (
@@ -136,12 +146,14 @@ function AddRoomTypes() {
               </CFormLabel>
               {AMENITIES.map((amenity, i) => (
                 <CFormCheck
-                  key={i}
+                  key={amenity.id}
                   className="pb-1 pr-4"
                   inline
-                  id={amenity}
-                  value={amenity}
-                  label={amenity}
+                  id={amenity.id}
+                  value={amenity.label}
+                  label={amenity.label}
+                  checked={amenityList.includes(amenity.label)}
+                  onChange={(e)=>handleCheck(e, amenity.label)}
                 />
               ))}
             </div>

@@ -2,6 +2,9 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { BiEdit } from "react-icons/bi";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { CFormInput, CInputGroup, CInputGroupText } from "@coreui/react";
+import CIcon from "@coreui/icons-react";
+import { cilMagnifyingGlass } from "@coreui/icons";
 
 
 const Rooms = () => {
@@ -12,12 +15,12 @@ const Rooms = () => {
       <h5 className="font-weight-bold">Room list</h5>
       <hr />
       <div className="py-3 d-flex justify-content-between">
-        <input
-          className="form-control mr-sm-2 w-25"
-          type="search"
-          placeholder="Search"
-          aria-label="Search"
-        />
+        <CInputGroup className="input-prepend w-25">
+              <CInputGroupText>
+                <CIcon icon={cilMagnifyingGlass} />
+              </CInputGroupText>
+              <CFormInput type="text" placeholder="search room" />
+        </CInputGroup>
         <button
           onClick={() => navigate("/manage-rooms/add-room")}
           type="button"

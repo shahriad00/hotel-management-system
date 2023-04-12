@@ -37,7 +37,6 @@ const defaultCountry = { value: "Bangladesh", label: "Bangladesh" };
 const AddCheckIn = () => {
   const [fields, setFields] = useState([]);
   const [name, setName] = useState();
-  const [nid, setNid] = useState();
   const [idType, setIdType] = useState();
   const [idNumber, setIdNumber] = useState();
   const [checkInDate, setCheckInDate] = useState(new Date());
@@ -46,38 +45,40 @@ const AddCheckIn = () => {
   const [bookedBy, setBookedBy] = useState();
   const [companyName, setCompanyName] = useState();
   const [address, setAddress] = useState();
-  const [telephone, setTelephone] = useState();
   const [mobile, setMobile] = useState();
   const [reasonOfStay, setReasonOfStay] = useState();
   const [email, setEmail] = useState();
   const [paymentType, setPaymentType] = useState();
   const [country, setCountry] = useState();
   const [referencedBy, setReferencedBy] = useState();
-  const [ETD, setETD] = useState();
-  const [pickup, setPickup] = useState();
   const [advance, setAdvance] = useState();
-  const [due, setDue] = useState();
-  const [instruction, setInstruction] = useState();
-  const [charge, setCharge] = useState();
-  const [chargedByCompany, setChargedByCompany] = useState(false);
-  const [confirmation, setConfirmation] = useState();
+  const [images, setImages] = useState([]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log("Form submitted: ", {
       name,
-      nid,
       checkInDate,
       checkOutDate,
-      pickup,
       room,
       paymentType,
       country,
       referencedBy,
       idType,
       idNumber,
+      images,
     });
     // add code here to submit the form data to a server or update the state of a parent component
+  };
+
+  const handleImageUpload = (e) => {
+    // const files = event.target.files;
+    // const newImages = [...images];
+    // for (let i = 0; i < files.length; i++) {
+    //   newImages.push(URL.createObjectURL(files[i]));
+    // }
+    // setImages(newImages);
+    setImages(e.target.files);
   };
 
   const addField = () => {
@@ -340,7 +341,7 @@ const AddCheckIn = () => {
             </div>
             <div className="w-100">
               <CFormLabel className="semi-bold" htmlFor="id-img">Upload image:</CFormLabel>
-              <CFormInput type="file" id="id-img" multiple />
+              <CFormInput onChange={(e) => handleImageUpload(e)} accept="image/*" type="file" id="id-img" multiple />
             </div>
           </div>
         </div>
