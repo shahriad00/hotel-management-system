@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  CButton,
   CCol,
   CForm,
   CFormInput,
@@ -11,6 +10,9 @@ import {
   CInputGroupText,
   CFormCheck,
 } from "@coreui/react";
+import { toast } from "react-hot-toast";
+import axiosInstance from "src/services/axiosInstance";
+import { useNavigate } from "react-router-dom";
 
 const AMENITIES = [
   { id: '1', label: '24-Hour Guest Reception' },
@@ -25,7 +27,8 @@ const AMENITIES = [
   { id: '10', label: 'Room Service' }
 ];
 
-function AddRoomTypes() {
+const AddRoomTypes = () => {
+
   const [title, setTitle] = useState();
   const [basePrice, setBasePrice] = useState();
   const [discountPrice, setDiscountPrice] = useState();
@@ -33,17 +36,27 @@ function AddRoomTypes() {
   const [capacity, setCapacity] = useState();
   const [amenityList, setAmenityList] = useState([])
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log("Form submitted: ", {
+  const navigate = useNavigate();
+
+  const handleRoomTypeSubmit = (e) => {
+    e.preventDefault();
+    axiosInstance.post('v1/room-type', {
       title,
       basePrice,
       discountPrice,
       status,
+      capacity,
       amenityList
+    }).then(res => {
+      toast.success(res.data.message);
+      navigate('/manage-rooms/room-types');
+    })
+    .catch((err) => {
+      err?.response?.data?.errors.map((err) => {
+        return toast.error(err.messages[0]);
+      })
     });
-    // add code here to submit the form data to a server or update the state of a parent component
-  };
+  }
 
   const handleCheck = (e, label) => {
     if (e.target.checked) {
@@ -59,7 +72,7 @@ function AddRoomTypes() {
         Add Room Type
       </div>
       <CForm
-        onSubmit={handleSubmit}
+        onSubmit={handleRoomTypeSubmit}
         className="bg-white rounded-bottom p-4 border"
       >
         <CRow>
@@ -82,6 +95,7 @@ function AddRoomTypes() {
               className="mb-3"
               placeholder="Enter capacity"
               value={capacity}
+              onWheel={(e) => e.target.blur()}
               onChange={(event) => setCapacity(event.target.value)}
             />
           </CCol>
@@ -98,6 +112,7 @@ function AddRoomTypes() {
                 placeholder="Enter price"
                 value={basePrice}
                 onChange={(event) => setBasePrice(event.target.value)}
+                onWheel={(e) => e.target.blur()}
                 aria-label="Amount (to the nearest dollar)"
               />
               <CInputGroupText>.00</CInputGroupText>
@@ -114,6 +129,7 @@ function AddRoomTypes() {
                 placeholder="Enter discount price"
                 value={discountPrice}
                 onChange={(event) => setDiscountPrice(event.target.value)}
+                onWheel={(e) => e.target.blur()}
                 aria-label="Amount (to the nearest dollar)"
               />
               <CInputGroupText>.00</CInputGroupText>

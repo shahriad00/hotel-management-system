@@ -1,11 +1,11 @@
 import Axios from "axios";
 
-const token = localStorage.getItem('accessToken') || '';
+const token = JSON.parse(localStorage.getItem('token')) || '';
 
 const axiosInstance = Axios.create({
   baseURL: 'http://localhost:4000/',
   ContentType: "application/json",
-  // headers: {'Authorization': `Bearer ${token}`}
+  headers: token ? {'Authorization': `Bearer ${token}`} : null
 });
 
 export default axiosInstance;
