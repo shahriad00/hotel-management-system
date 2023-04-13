@@ -15,7 +15,7 @@ import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import Select from 'react-select';
 import axiosInstance from 'src/services/axiosInstance';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
 const RoleOptions = [

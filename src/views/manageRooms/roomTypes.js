@@ -36,7 +36,7 @@ const RoomTypes = () => {
           <CInputGroupText>
             <CIcon icon={cilMagnifyingGlass} />
           </CInputGroupText>
-          <CFormInput type="text" placeholder="search room" />
+          <CFormInput type="text" placeholder="search room type" />
         </CInputGroup>
         <button
           onClick={() => navigate("/manage-rooms/add-room-types")}
