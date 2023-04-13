@@ -1,10 +1,8 @@
 import {
   CButton,
   CForm,
-  CFormCheck,
   CFormInput,
   CFormLabel,
-  CFormSelect,
   CInputGroup,
   CInputGroupText,
 } from "@coreui/react";

@@ -17,7 +17,7 @@ const RoomTypes = () => {
     if (isMounted) {
         axiosInstance
             .get(`v1/room-type`)
-            .then((res) => {setRoomTypes(res.data);console.log(res.data)})
+            .then((res) => {setRoomTypes(res.data)})
             .catch((err) => {
                 toast.error(err.message);
             });
@@ -50,35 +50,35 @@ const RoomTypes = () => {
       <table className="table bg-white">
         <thead>
           <tr className="bg-dark text-white">
-            <th scope="col">S.No</th>
-            <th scope="col">Title</th>
-            <th scope="col">Base price</th>
-            <th scope="col">Discount price</th>
-            <th scope="col">capacity</th>
-            <th scope="col">Status</th>
-            <th scope="col">Action</th>
+            <th scope="col" className="text-center">S.No</th>
+            <th scope="col" className="text-center">Title</th>
+            <th scope="col" className="text-center">Base price</th>
+            <th scope="col" className="text-center">Discount price</th>
+            <th scope="col" className="text-center">capacity</th>
+            <th scope="col" className="text-center">Status</th>
+            <th scope="col" className="text-center">Action</th>
           </tr>
         </thead>
         <tbody>
           {roomTypes &&
             roomTypes.length > 0 &&
-            roomTypes.map(({title,basePrice, discountPrice, capacity, status}) => (
+            roomTypes.map(({title,basePrice, discountPrice, capacity, status}, i) => (
               <tr key={title}>
-                <th scope="row" className="align-middle">
-                  1
+                <th scope="row" className="text-center">
+                  {i+1}
                 </th>
-                <td className="align-middle">{title}</td>
-                <td className="align-middle">{basePrice}</td>
-                <td className="align-middle">{discountPrice}</td>
-                <td className="align-middle">{capacity}</td>
-                <td>
-                  <span className={`${status === 'active' ? 'bg-success' : 'bg-danger'} px-2 py-1 text-white rounded align-middle`}>
+                <td className="text-center">{title}</td>
+                <td className="text-center">{basePrice}</td>
+                <td className="text-center">{discountPrice}</td>
+                <td className="text-center">{capacity}</td>
+                <td className="d-flex justify-content-center">
+                  <span className={`${status === 'active' ? 'bg-success' : 'bg-danger'} px-2 py-1 text-white rounded text-center`}>
                     {status}
                   </span>
                 </td>
                 <td>
-                  <div className="d-flex align-items-center gap-3">
-                    <span className="btn btn-primary btn-sm">
+                  <div className="d-flex align-items-center justify-content-center gap-3">
+                    <span className="btn btn-warning btn-sm">
                       <BiEdit fontSize={18} color="white" />
                     </span>
                     <span className="btn btn-danger btn-sm">

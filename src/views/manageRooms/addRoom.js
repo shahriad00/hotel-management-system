@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { GoCloudUpload } from "react-icons/go";
 import ImageUploading from "react-images-uploading";
-import { MdDeleteOutline, MdPadding } from "react-icons/md";
-
+import { MdDeleteOutline } from "react-icons/md";
+import Select from "react-select";
 import {
   CButton,
   CCol,
@@ -12,27 +12,80 @@ import {
   CFormSelect,
   CRow,
 } from "@coreui/react";
+import { useEffect } from "react";
+import axiosInstance from "src/services/axiosInstance";
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const AddRoom = () => {
   const [name, setName] = useState("");
   const [roomType, setRoomType] = useState("");
   const [status, setStatus] = useState("");
   const [roomDetails, setRoomDetails] = useState("");
-  const [floor, setFloor] = useState("");
+  const [floorNo, setFloorNo] = useState("");
   const [images, setImages] = useState([]);
+  const [roomTypesData, setRoomTypesData] = useState();
   const maxNumber = 4;
 
-  const handleImages = (imageList, addUpdateIndex) => {
-    // data for submit
-    // console.log(imageList, addUpdateIndex);
+  const navigate = useNavigate();
+
+  const formData = new FormData();
+  formData.append('name', name);
+  formData.append('roomTypeId', roomType.value);
+  formData.append('roomTypeName', roomType.label);
+  formData.append('status', status);
+  formData.append('roomDetails', roomDetails);
+  formData.append('floorNo', floorNo);
+  images.forEach(image => {
+    formData.append('images', image);
+  });
+
+  const handleImages = (imageList) => {
     setImages(imageList);
   };
 
-  const handleSubmit = (event) => {
+  const handleRoomSubmit = (event) => {
     event.preventDefault();
-    console.log("Form submitted: ", { name, status, roomType, floor, images });
-    // add code here to submit the form data to a server or update the state of a parent component
+    if (name && status && roomType && floorNo && roomDetails) {
+      axiosInstance
+        .post(`v1/room`, formData)
+        .then((res) => {
+          toast.success(res.data.message);
+          navigate("/manage-rooms/rooms");
+        })
+        .catch((err) => {
+          err?.response?.data?.errors.map((err) => {
+            return toast.error(err.messages[0]);
+          });
+        });
+    } else {
+      toast.error("fill up all the fields");
+    }
   };
+
+  useEffect(() => {
+    let isMounted = true;
+    if (isMounted) {
+      axiosInstance
+        .get(`v1/room-type`)
+        .then((res) => {
+          setRoomTypesData(res.data);
+        })
+        .catch((err) => {
+          toast.error(err.message);
+        });
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const roomTypeList =
+    roomTypesData &&
+    roomTypesData.length > 0 &&
+    roomTypesData.map(({ _id, title }) => {
+      return { value: _id, label: title, key: _id };
+    });
 
   const imageWrapperStyle = {
     display: "grid",
@@ -57,25 +110,19 @@ const AddRoom = () => {
         Add Room
       </div>
       <CForm
-        onSubmit={handleSubmit}
+        onSubmit={handleRoomSubmit}
         className="bg-white p-4 rounded-bottom border"
       >
         <CRow>
           <CCol>
             <CFormLabel htmlFor="room-type">Room Type:</CFormLabel>
-            <CFormSelect
+            <Select
               id="room-type"
-              value={status}
+              value={roomType}
+              options={roomTypeList}
               className="mb-3"
-              onChange={(event) => setRoomType(event.target.value)}
-            >
-              <option style={{ display: "none" }} defaultValue>
-                {" "}
-                --Select Room Type--
-              </option>
-              <option value="active">Exclusive</option>
-              <option value="inactive">Standard</option>
-            </CFormSelect>
+              onChange={(event) => setRoomType(event)}
+            />
           </CCol>
           <CCol>
             <CFormLabel htmlFor="name">Name:</CFormLabel>
@@ -95,8 +142,8 @@ const AddRoom = () => {
               type="text"
               className="mb-3"
               placeholder="Enter floor No."
-              value={floor}
-              onChange={(event) => setFloor(event.target.value)}
+              value={floorNo}
+              onChange={(event) => setFloorNo(event.target.value)}
             />
           </CCol>
         </CRow>
@@ -155,6 +202,7 @@ const AddRoom = () => {
                         style={isDragging ? { color: "red" } : null}
                         onClick={onImageUpload}
                         className="form-control py-3 gap-3"
+                        type="button"
                         {...dragProps}
                       >
                         <GoCloudUpload fontSize={22} />

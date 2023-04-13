@@ -5,7 +5,8 @@ const token = JSON.parse(localStorage.getItem('token')) || '';
 const axiosInstance = Axios.create({
   baseURL: 'http://localhost:4000/',
   ContentType: "application/json",
-  headers: token ? {'Authorization': `Bearer ${token}`} : null
+  headers: token ? {'Authorization': `Bearer ${token}`} : null,
+  "Access-Control-Allow-Origin": "*",
 });
 
 export default axiosInstance;

@@ -1,14 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BiEdit } from "react-icons/bi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { CFormInput, CInputGroup, CInputGroupText } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilMagnifyingGlass } from "@coreui/icons";
+import axiosInstance from "src/services/axiosInstance";
+import { toast } from "react-hot-toast";
 
 
 const Rooms = () => {
+  const [room, setRoom] = useState();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    let isMounted = true;
+    if (isMounted) {
+        axiosInstance
+            .get(`v1/rooms`)
+            .then((res) => {setRoom(res.data)})
+            .catch((err) => {
+                toast.error(err.message);
+            });
+    }
+    return () => {
+        isMounted = false;
+    };
+}, []);
 
   return (
     <>
@@ -33,64 +51,42 @@ const Rooms = () => {
       <table className="table bg-white">
         <thead>
           <tr className="bg-dark text-white">
-            <th scope="col">S.No</th>
-            <th scope="col">Room Type</th>
-            <th scope="col">Name</th>
-            <th scope="col">Room No.</th>
-            <th scope="col">Floor</th>
-            <th scope="col">Status</th>
-            <th scope="col">Action</th>
+            <th scope="col" className="text-center">S.No</th>
+            <th scope="col" className="text-center">Room Type</th>
+            <th scope="col" className="text-center">Name</th>
+            <th scope="col" className="text-center">Floor No.</th>
+            <th scope="col" className="text-center">Status</th>
+            <th scope="col" className="text-center">Action</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <th scope="row" className="align-middle">
-              1
-            </th>
-            <td className="align-middle">Mark</td>
-            <td className="align-middle">Otto</td>
-            <td className="align-middle">Mark</td>
-            <td className="align-middle">Otto</td>
-            <td>
-              <span className="bg-success px-2 py-1 text-white rounded align-middle">
-                active
-              </span>
-            </td>
-            <td>
-              <div className="d-flex align-items-center gap-3">
-                <span className="btn btn-primary btn-sm">
-                  <BiEdit fontSize={18} color="white" />
-                </span>
-                <span className="btn btn-danger btn-sm">
-                  <RiDeleteBin6Line fontSize={18} color="white" />
-                </span>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <th scope="row" className="align-middle">
-              2
-            </th>
-            <td className="align-middle">Mark</td>
-            <td className="align-middle">Otto</td>
-            <td className="align-middle">Mark</td>
-            <td className="align-middle">Otto</td>
-            <td>
-              <span className="bg-danger px-2 py-1 text-white rounded">
-                Inactive
-              </span>
-            </td>
-            <td>
-              <div className="d-flex align-items-center gap-3">
-                <span className="btn btn-primary btn-sm">
-                  <BiEdit fontSize={18} color="white" />
-                </span>
-                <span className="btn btn-danger btn-sm">
-                  <RiDeleteBin6Line fontSize={18} color="white" />
-                </span>
-              </div>
-            </td>
-          </tr>
+        {room &&
+            room.length > 0 &&
+            room.map(({roomTypeName, name, floorNo, status}, i) => (
+              <tr key={name + Date.now()}>
+                <th scope="row" className="text-center">
+                  {i+1}
+                </th>
+                <td className="text-center">{roomTypeName}</td>
+                <td className="text-center">{name}</td>
+                <td className="text-center">{floorNo}</td>
+                <td className="d-flex justify-content-center">
+                  <span className= "bg-dark px-2 py-1 text-white rounded text-center">
+                    {status}
+                  </span>
+                </td>
+                <td>
+                  <div className="d-flex align-items-center justify-content-center gap-3">
+                    <span className="btn btn-warning btn-sm">
+                      <BiEdit fontSize={18} color="white" />
+                    </span>
+                    <span className="btn btn-danger btn-sm">
+                      <RiDeleteBin6Line fontSize={18} color="white" />
+                    </span>
+                  </div>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </>
