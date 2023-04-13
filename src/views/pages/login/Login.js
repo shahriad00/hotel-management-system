@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -16,21 +16,42 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import { useState } from 'react'
+import { toast } from 'react-hot-toast'
+import axiosInstance from 'src/services/axiosInstance'
 
 const Login = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const navigate = useNavigate();
+
+  const handleLoginSubmit = (e) => {
+    e.preventDefault()
+    axiosInstance.post('v1/auth/login', {
+      email,
+      password,
+    }).then(res => {
+      toast.success('login successful!');
+      localStorage.setItem('token', JSON.stringify(res.data.token.accessToken));
+      navigate('/dashboard');
+    })
+    .catch((err) => {
+      err?.response?.data?.errors.map((err) => {
+        return toast.error(err.messages[0]);
+      })
+    });
+  }
+
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={8}>
-            <CCardGroup>
-              <CCard className="p-4">
+            <CCardGroup className="w-50 mx-auto">
+              <CCard className="p-5 w-25">
                 <CCardBody>
-                  <CForm>
+                  <CForm onSubmit={handleLoginSubmit}>
                     <h1>Login</h1>
                     <p className="text-medium-emphasis">Sign In to your account</p>
                     <CInputGroup className="mb-3">
@@ -52,7 +73,7 @@ const Login = () => {
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        <CButton color="primary" className="px-4">
+                        <CButton type='submit' color="primary" className="px-4">
                           Login
                         </CButton>
                       </CCol>
@@ -63,21 +84,6 @@ const Login = () => {
                       </CCol>
                     </CRow>
                   </CForm>
-                </CCardBody>
-              </CCard>
-              <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
-                <CCardBody className="text-center">
-                  <div>
-                    <h2>Sign up</h2>
-                    <p>
-                      Sign up to create a new account.
-                    </p>
-                    <Link to="/register">
-                      <CButton color="primary" className="mt-3" active tabIndex={-1}>
-                        Register Now!
-                      </CButton>
-                    </Link>
-                  </div>
                 </CCardBody>
               </CCard>
             </CCardGroup>

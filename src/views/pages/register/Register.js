@@ -14,6 +14,9 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import Select from 'react-select';
+import axiosInstance from 'src/services/axiosInstance';
+import toast, { Toaster } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const RoleOptions = [
   { label: 'Admin', value: 'admin' },
@@ -29,15 +32,29 @@ const Register = () => {
   const [password2, setPassword2] = useState('');
   const [role, setRole] = useState();
 
+  const navigate = useNavigate();
+
   const handleRegisterSubmit = (e) => {
     e.preventDefault();
-    console.log("Form submitted: ", {
-      userName,
-      email,
-      password,
-      password2,
-      role,
-    });
+    if(password === password2){
+        axiosInstance.post('v1/auth/register', {
+        name: userName,
+        email,
+        password,
+        role: role.value
+      }).then(res => {
+        toast.success('registration successful!');
+        localStorage.setItem('token', JSON.stringify(res.data.token.accessToken));
+        navigate('/dashboard')
+      })
+      .catch((err) => {
+        err?.response?.data?.errors.map((err) => {
+          return toast.error(err.messages[0]);
+        })
+      });
+    }else{
+      toast.error('password and confirm password is not matching');
+    }
   }
 
   return (
