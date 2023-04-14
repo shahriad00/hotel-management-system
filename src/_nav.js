@@ -92,6 +92,12 @@ const _nav = [
       },
     ],
   },
+  {
+    component: CNavItem,
+    name: "Reference",
+    to: "/reference",
+    icon: <CIcon icon={cilHome} customClassName="nav-icon" />,
+  },
 ];
 
 export default _nav;

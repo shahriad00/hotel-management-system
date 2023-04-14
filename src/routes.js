@@ -14,6 +14,10 @@ const AddCheckIn = React.lazy(() => import('./views/checkIn/addCheckIn'))
 const AllCheckIns = React.lazy(() => import('./views/checkIn/allCheckIns'))
 const CheckOuts = React.lazy(() => import('./views/checkIn/checkOuts'))
 
+// Reference
+const Reference = React.lazy(() => import('./views/reference/reference'))
+const AddReference = React.lazy(() => import('./views/reference/addReference'))
+
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
@@ -25,6 +29,8 @@ const routes = [
   { path: '/check-in/add-check-in', name: 'Add Check In', element: AddCheckIn },
   { path: '/check-in/all-check-ins', name: 'All Check In', element: AllCheckIns },
   { path: '/check-in/check-outs', name: 'Check Outs', element: CheckOuts },
+  { path: '/reference', name: 'Reference', element: Reference },
+  { path: '/add-reference', name: 'Add Reference', element: AddReference },
 ]
 
 export default routes

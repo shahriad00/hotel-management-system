@@ -6,13 +6,15 @@ import {
   CInputGroup,
   CInputGroupText,
 } from "@coreui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
-import { AiOutlinePlus } from "react-icons/ai";
-import Select from "react-select";
-import { BiTrash } from "react-icons/bi";
 import "react-datepicker/dist/react-datepicker.css";
+import { toast } from "react-hot-toast";
+import { AiOutlinePlus } from "react-icons/ai";
+import { BiTrash } from "react-icons/bi";
+import Select from "react-select";
 import COUNTRY from "src/assets/data/Country";
+import axiosInstance from "src/services/axiosInstance";
 
 const countryOptions = COUNTRY.map(({ name }) => {
   return { value: name, label: name };
@@ -34,49 +36,89 @@ const defaultCountry = { value: "Bangladesh", label: "Bangladesh" };
 
 const AddCheckIn = () => {
   const [fields, setFields] = useState([]);
-  const [name, setName] = useState();
-  const [idType, setIdType] = useState();
-  const [idNumber, setIdNumber] = useState();
+  const [name, setName] = useState("");
+  const [idType, setIdType] = useState("");
+  const [idNumber, setIdNumber] = useState("");
   const [checkInDate, setCheckInDate] = useState(new Date());
   const [checkOutDate, setCheckOutDate] = useState(checkInDate);
-  const [room, setRoom] = useState([]);
-  const [bookedBy, setBookedBy] = useState();
-  const [companyName, setCompanyName] = useState();
-  const [address, setAddress] = useState();
-  const [mobile, setMobile] = useState();
-  const [reasonOfStay, setReasonOfStay] = useState();
-  const [email, setEmail] = useState();
-  const [paymentType, setPaymentType] = useState();
-  const [country, setCountry] = useState();
-  const [referencedBy, setReferencedBy] = useState();
-  const [advance, setAdvance] = useState();
+  const [rooms, setRooms] = useState([]);
+  const [bookedBy, setBookedBy] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [address, setAddress] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [reasonOfStay, setReasonOfStay] = useState("");
+  const [email, setEmail] = useState("");
+  const [paymentType, setPaymentType] = useState("");
+  const [country, setCountry] = useState("");
+  const [referencedBy, setReferencedBy] = useState("");
+  const [advance, setAdvance] = useState("");
   const [images, setImages] = useState([]);
+  const [roomsData, setRoomsData] = useState();
+
+  useEffect(() => {
+    let isMounted = true;
+    if (isMounted) {
+      axiosInstance
+        .get(`v1/rooms`)
+        .then((res) => {
+          setRoomsData(res.data);
+        })
+        .catch((err) => {
+          toast.error(err.message);
+        });
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const roomsOptions =
+    roomsData &&
+    roomsData.length > 0 &&
+    roomsData.map(({ _id, name }) => {
+      return { value: _id, label: name, key: _id + Date.now(), roomPrice: 0 };
+    });
+
+  const updatePrice = (price, index) => {
+    const updatedRooms = rooms.map((room, i) => {
+      if (i === index) {
+        return { ...room, roomPrice: price };
+      }
+      return room;
+    });
+    setRooms(updatedRooms);
+  };
+
+  const formData = new FormData();
+  formData.append("checkIn", checkInDate);
+  formData.append("checkOut", checkOutDate);
+  formData.append("paymentType", paymentType.value);
+  formData.append("country", country);
+  formData.append("idType", idType.value);
+  formData.append("idNumber", idNumber);
+  for (let i = 0; i < rooms.length; i++) {
+    formData.append(
+      "selectRooms[]",
+      JSON.stringify({
+        roomsId: rooms[i].value,
+        roomsName: rooms[i].label,
+        roomPrice: rooms[i].roomPrice,
+      })
+    );
+  }
+  images.forEach((image) => {
+    formData.append("images", image);
+  });
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("Form submitted: ", {
-      name,
-      checkInDate,
-      checkOutDate,
-      room,
-      paymentType,
-      country,
-      referencedBy,
-      idType,
-      idNumber,
-      images,
-    });
-    // add code here to submit the form data to a server or update the state of a parent component
+    for (const entry of formData) {
+      console.log(entry);
+    }
   };
 
   const handleImageUpload = (e) => {
-    // const files = event.target.files;
-    // const newImages = [...images];
-    // for (let i = 0; i < files.length; i++) {
-    //   newImages.push(URL.createObjectURL(files[i]));
-    // }
-    // setImages(newImages);
-    setImages(e.target.files);
+    setImages([...e.target.files]);
   };
 
   const addField = () => {
@@ -91,7 +133,9 @@ const AddCheckIn = () => {
     return fields.map((field, index) => (
       <div key={field.id} className="mt-3 d-flex gap-4 align-items-center">
         <div className="w-100">
-          <CFormLabel className="semi-bold" htmlFor="name">Name {index + 2}:</CFormLabel>
+          <CFormLabel className="semi-bold" htmlFor="name">
+            Name {index + 2}:
+          </CFormLabel>
           <input
             id="name"
             type="text"
@@ -102,7 +146,9 @@ const AddCheckIn = () => {
           />
         </div>
         <div className="w-100">
-          <CFormLabel className="semi-bold" htmlFor="id-type">ID type:</CFormLabel>
+          <CFormLabel className="semi-bold" htmlFor="id-type">
+            ID type:
+          </CFormLabel>
           <Select
             id="id-type"
             name="id-type"
@@ -113,7 +159,9 @@ const AddCheckIn = () => {
           />
         </div>
         <div className="w-100">
-          <CFormLabel className="semi-bold" htmlFor="id-no">ID No:</CFormLabel>
+          <CFormLabel className="semi-bold" htmlFor="id-no">
+            ID No:
+          </CFormLabel>
           <input
             id="id-no"
             type="text"
@@ -134,19 +182,6 @@ const AddCheckIn = () => {
       </div>
     ));
   };
-
-  const roomOptions = [
-    { value: "ocean", label: "Ocean", color: "#00B8D9", isFixed: true },
-    { value: "blue", label: "Blue", color: "#0052CC" },
-    { value: "purple", label: "Purple", color: "#5243AA" },
-    { value: "red", label: "Red", color: "#FF5630", isFixed: true },
-    { value: "orange", label: "Orange", color: "#FF8B00" },
-    { value: "yellow", label: "Yellow", color: "#FFC400" },
-    { value: "green", label: "Green", color: "#36B37E" },
-    { value: "forest", label: "Forest", color: "#00875A" },
-    { value: "slate", label: "Slate", color: "#253858" },
-    { value: "silver", label: "Silver", color: "#666666" },
-  ];
 
   return (
     <div>
@@ -176,18 +211,55 @@ const AddCheckIn = () => {
               />
             </div>
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="rooms">Select Room:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="rooms">
+                Select rooms:
+              </CFormLabel>
               <Select
                 isMulti
                 name="rooms"
-                options={roomOptions}
+                options={roomsOptions}
                 className="basic-multi-select w-100"
                 classNamePrefix="select"
-                onChange={(choice) => setRoom(choice)}
+                onChange={(choice) => setRooms(choice)}
               />
             </div>
           </div>
         </div>
+        {/*--------- room price Information section header -----------*/}
+        {rooms && rooms.length > 0 && (
+          <>
+            <div className="mt-3 border-top border-end border-start rounded-top my-Header">
+              Add price for rooms
+            </div>
+            {/*--------- room price Information section (room price) -----------*/}
+            <div className="bg-white rounded-bottom p-4 border">
+              <div className="d-flex gap-3 align-items-center">
+                {rooms &&
+                  rooms.length > 0 &&
+                  rooms.map((room, i) => (
+                    <div key={room.key} className="w-100">
+                      <CFormLabel className="semi-bold" htmlFor={room.key}>
+                        Room name: ({room.label})
+                      </CFormLabel>
+                      <CInputGroup className="">
+                        <CInputGroupText>৳</CInputGroupText>
+                        <CFormInput
+                          id={room.key}
+                          type="number"
+                          min={0}
+                          placeholder="Enter room price"
+                          onChange={(e) => updatePrice(e.target.value, i)}
+                          onWheel={(e) => e.target.blur()}
+                          aria-label="Amount (to the nearest dollar)"
+                        />
+                      </CInputGroup>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </>
+        )}
+
         {/*------------- Guest Information header ----------------*/}
         <div className="mt-3 border-top border-end border-start rounded-top my-Header">
           Guest information
@@ -196,7 +268,9 @@ const AddCheckIn = () => {
         <div className="bg-white rounded-bottom p-4 border">
           <div className="d-flex gap-3 align-items-center">
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="name">Name:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="name">
+                Name:
+              </CFormLabel>
               <input
                 id="name"
                 type="text"
@@ -207,7 +281,9 @@ const AddCheckIn = () => {
               />
             </div>
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="email">Email:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="email">
+                Email:
+              </CFormLabel>
               <input
                 id="email"
                 type="text"
@@ -218,7 +294,9 @@ const AddCheckIn = () => {
               />
             </div>
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="mobile">Mobile:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="mobile">
+                Mobile:
+              </CFormLabel>
               <input
                 id="mobile"
                 type="text"
@@ -231,7 +309,9 @@ const AddCheckIn = () => {
           </div>
           <div className="d-flex mt-2 gap-4 align-items-center mt-3">
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="address">Address:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="address">
+                Address:
+              </CFormLabel>
               <input
                 id="address"
                 type="text"
@@ -242,7 +322,9 @@ const AddCheckIn = () => {
               />
             </div>
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="country">Country:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="country">
+                Country:
+              </CFormLabel>
               <Select
                 id="country"
                 name="country"
@@ -260,7 +342,9 @@ const AddCheckIn = () => {
         <div className="bg-white rounded p-4 border mt-2">
           <div className="d-flex gap-4 align-items-center">
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="company">Company Name:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="company">
+                Company Name:
+              </CFormLabel>
               <input
                 id="company"
                 type="text"
@@ -271,7 +355,9 @@ const AddCheckIn = () => {
               />
             </div>
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="booked-by">Booked By:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="booked-by">
+                Booked By:
+              </CFormLabel>
               <input
                 id="booked-by"
                 type="text"
@@ -284,7 +370,9 @@ const AddCheckIn = () => {
           </div>
           <div className="d-flex gap-4 align-items-center  mt-3">
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="reference">Referenced By:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="reference">
+                Referenced By:
+              </CFormLabel>
               <Select
                 id="reference"
                 name="reference"
@@ -295,7 +383,9 @@ const AddCheckIn = () => {
               />
             </div>
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="reason-of-stay">Reason of Stay:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="reason-of-stay">
+                Reason of Stay:
+              </CFormLabel>
               <input
                 id="reason-of-stay"
                 type="text"
@@ -316,7 +406,9 @@ const AddCheckIn = () => {
         <div className="bg-white rounded-bottom p-4 border">
           <div className="d-flex gap-4 align-items-center">
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="id-type">ID type:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="id-type">
+                ID type:
+              </CFormLabel>
               <Select
                 id="id-type"
                 name="id-type"
@@ -327,7 +419,9 @@ const AddCheckIn = () => {
               />
             </div>
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="id-no">ID No:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="id-no">
+                ID No:
+              </CFormLabel>
               <input
                 id="id-no"
                 type="text"
@@ -338,8 +432,16 @@ const AddCheckIn = () => {
               />
             </div>
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="id-img">Upload image:</CFormLabel>
-              <CFormInput onChange={(e) => handleImageUpload(e)} accept="image/*" type="file" id="id-img" multiple />
+              <CFormLabel className="semi-bold" htmlFor="id-img">
+                Upload image:
+              </CFormLabel>
+              <CFormInput
+                onChange={(e) => handleImageUpload(e)}
+                accept="image/*"
+                type="file"
+                id="id-img"
+                multiple
+              />
             </div>
           </div>
         </div>
@@ -352,7 +454,9 @@ const AddCheckIn = () => {
         <div className="bg-white rounded-bottom p-4 border">
           <div className="d-flex gap-4 align-items-center">
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="name">Name:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="name">
+                Name:
+              </CFormLabel>
               <input
                 id="name"
                 type="text"
@@ -363,7 +467,9 @@ const AddCheckIn = () => {
               />
             </div>
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="id-type">ID type:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="id-type">
+                ID type:
+              </CFormLabel>
               <Select
                 id="id-type"
                 name="id-type"
@@ -374,7 +480,9 @@ const AddCheckIn = () => {
               />
             </div>
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="id-no">ID No:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="id-no">
+                ID No:
+              </CFormLabel>
               <input
                 id="id-no"
                 type="text"
@@ -405,7 +513,9 @@ const AddCheckIn = () => {
         <div className="bg-white rounded-bottom p-4 border">
           <div className="d-flex gap-3 align-items-center">
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="payment-type">Payment Type:</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="payment-type">
+                Payment Type:
+              </CFormLabel>
               <Select
                 id="payment-type"
                 name="payment-type"
@@ -416,7 +526,9 @@ const AddCheckIn = () => {
               />
             </div>
             <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="advance">Advance</CFormLabel>
+              <CFormLabel className="semi-bold" htmlFor="advance">
+                Advance
+              </CFormLabel>
               <CInputGroup className="">
                 <CInputGroupText>৳</CInputGroupText>
                 <CFormInput
@@ -431,11 +543,34 @@ const AddCheckIn = () => {
               </CInputGroup>
             </div>
           </div>
+          <div className="d-flex mt-3 gap-3 align-items-center">
+            {rooms &&
+              rooms.length > 0 &&
+              rooms.map((room, i) => (
+                <div key={room.key} className="w-100">
+                  <CFormLabel className="semi-bold" htmlFor={room.key}>
+                    Room name: ({room.label})
+                  </CFormLabel>
+                  <CInputGroup className="">
+                    <CInputGroupText>৳</CInputGroupText>
+                    <CFormInput
+                      id={room.key}
+                      type="number"
+                      min={0}
+                      placeholder="Enter room price"
+                      onChange={(e) => updatePrice(e.target.value, i)}
+                      onWheel={(e) => e.target.blur()}
+                      aria-label="Amount (to the nearest dollar)"
+                    />
+                  </CInputGroup>
+                </div>
+              ))}
+          </div>
         </div>
         <div>
-        <CButton className="mt-3 px-5" type="submit" color="primary">
-          Submit
-        </CButton>
+          <CButton className="mt-3 px-5" type="submit" color="primary">
+            Submit
+          </CButton>
         </div>
       </CForm>
     </div>
