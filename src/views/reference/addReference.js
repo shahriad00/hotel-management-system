@@ -30,7 +30,7 @@ const AddReference = () => {
       })
       .then((res) => {
         toast.success(res.data.message);
-        navigate("/manage-reference/reference");
+        navigate("/reference");
       })
       .catch((err) => {
         err?.response?.data?.errors.map((err) => {

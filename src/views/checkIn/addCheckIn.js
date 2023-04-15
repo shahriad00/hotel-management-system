@@ -21,15 +21,15 @@ const countryOptions = COUNTRY.map(({ name }) => {
 });
 
 const paymentOptions = [
-  { value: "bkash", label: "bkash" },
-  { value: "cash", label: "cash" },
-  { value: "debit card", label: "debit card" },
+  { value: "Bkash", label: "Bkash" },
+  { value: "Cash", label: "Cash" },
+  { value: "Debit card", label: "Debit card" },
 ];
 
 const idTypeOptions = [
-  { value: "nid", label: "nid" },
-  { value: "passport", label: "passport" },
-  { value: "driving license", label: "driving license" },
+  { value: "Nid", label: "Nid" },
+  { value: "Passport", label: "Passport" },
+  { value: "Driving license", label: "Driving license" },
 ];
 
 const defaultCountry = { value: "Bangladesh", label: "Bangladesh" };
@@ -54,6 +54,7 @@ const AddCheckIn = () => {
   const [advance, setAdvance] = useState("");
   const [images, setImages] = useState([]);
   const [roomsData, setRoomsData] = useState();
+  const [referenceData, setReferencedData] = useState();
 
   useEffect(() => {
     let isMounted = true;
@@ -62,6 +63,14 @@ const AddCheckIn = () => {
         .get(`v1/rooms`)
         .then((res) => {
           setRoomsData(res.data);
+        })
+        .catch((err) => {
+          toast.error(err.message);
+        });
+      axiosInstance
+        .get(`v1/reference`)
+        .then((res) => {
+          setReferencedData(res.data);
         })
         .catch((err) => {
           toast.error(err.message);
@@ -79,6 +88,13 @@ const AddCheckIn = () => {
       return { value: _id, label: name, key: _id + Date.now(), roomPrice: 0 };
     });
 
+  const referenceOptions =
+    referenceData &&
+    referenceData.length > 0 &&
+    referenceData.map(({ _id, name }) => {
+      return { value: _id, label: name, key: _id + Date.now() };
+    });
+
   const updatePrice = (price, index) => {
     const updatedRooms = rooms.map((room, i) => {
       if (i === index) {
@@ -88,27 +104,40 @@ const AddCheckIn = () => {
     });
     setRooms(updatedRooms);
   };
+  const selectedRooms = rooms.map((room) => {
+    return {
+      roomsId: room.value,
+      roomsName: room.label,
+      roomPrice: room.roomPrice,
+    };
+  });
 
   const formData = new FormData();
   formData.append("checkIn", checkInDate);
   formData.append("checkOut", checkOutDate);
-  formData.append("paymentType", paymentType.value);
-  formData.append("country", country);
-  formData.append("idType", idType.value);
-  formData.append("idNumber", idNumber);
-  for (let i = 0; i < rooms.length; i++) {
-    formData.append(
-      "selectRooms[]",
-      JSON.stringify({
-        roomsId: rooms[i].value,
-        roomsName: rooms[i].label,
-        roomPrice: rooms[i].roomPrice,
-      })
-    );
+  // select rooms
+  formData.append("selectRooms", JSON.stringify(selectedRooms));
+  // guest information
+  formData.append("name", name);
+  formData.append("email", email);
+  formData.append("mobile", mobile);
+  formData.append("address", address);
+  formData.append("country", country.value || defaultCountry.value);
+
+  formData.append("companyName", companyName);
+  formData.append("bookedBy", bookedBy);
+  formData.append("referencedById", referencedBy.value);
+  formData.append("referencedByName", referencedBy.label);
+  formData.append("reasonOfStay", reasonOfStay);
+
+  formData.append("guestIdNo", idNumber);
+  formData.append("guestIdType", idType.value);
+  for (let i = 0; i < images.length; i++) {
+    formData.append("images", images[i]);
   }
-  images.forEach((image) => {
-    formData.append("images", image);
-  });
+  formData.append("paymentType", paymentType.value);
+
+  formData.append("otherPerson", JSON.stringify(fields));
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -122,40 +151,57 @@ const AddCheckIn = () => {
   };
 
   const addField = () => {
-    setFields([...fields, { id: fields.length }]);
+    const values =[...fields]
+    values.push({ name: "", idType: "", idNumber: "" });
+    console.log(values);
+    setFields(values);
   };
 
-  const removeField = (id) => {
-    setFields(fields.filter((field) => field.id !== id));
+  const removeField = (index) => {
+    const values = [...fields];
+    values.splice(index, 1);
+    setFields(values);
   };
 
   const renderFields = () => {
     return fields.map((field, index) => (
-      <div key={field.id} className="mt-3 d-flex gap-4 align-items-center">
+      <div
+        key={index}
+        className="mb-3 d-flex gap-4 align-items-center"
+      >
         <div className="w-100">
-          <CFormLabel className="semi-bold" htmlFor="name">
-            Name {index + 2}:
+          <CFormLabel className="semi-bold" htmlFor="otherName">
+            Name {index + 1}:
           </CFormLabel>
           <input
-            id="name"
+            id="otherName"
             type="text"
             className="form-control"
             placeholder="Enter guest name"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
+            value={field.name}
+            onChange={(e) => {
+              const values = [...fields];
+              values[index].name = e.target.value;
+              setFields(values);
+            }}
           />
         </div>
         <div className="w-100">
-          <CFormLabel className="semi-bold" htmlFor="id-type">
+          <CFormLabel className="semi-bold" htmlFor="other-id-type">
             ID type:
           </CFormLabel>
           <Select
-            id="id-type"
+            id="other-id-type"
             name="id-type"
             options={idTypeOptions}
-            className="basic-multi-select w-100"
+            className="w-100"
             classNamePrefix="select"
-            onChange={(choice) => setIdType(choice)}
+            value={field.idType}
+            onChange={(e) => {
+              const values = [...fields];
+              values[index].idType = e;
+              setFields(values);
+            }}
           />
         </div>
         <div className="w-100">
@@ -167,14 +213,19 @@ const AddCheckIn = () => {
             type="text"
             className="form-control"
             placeholder="Enter ID No"
-            value={idNumber}
-            onChange={(event) => setIdNumber(event.target.value)}
+            value={field.idNumber}
+            onChange={(e) => {
+              const values = [...fields];
+              values[index].idNumber = e.target.value;
+              setFields(values);
+            }}
           />
         </div>
         <div className="d-flex align-items-center">
           <button
             className="mt-4 d-flex justify-content-center align-items-center btn btn-danger"
-            onClick={() => removeField(field.id)}
+            type="button"
+            onClick={() => removeField(index)}
           >
             <BiTrash color="white" fontSize={18} />
           </button>
@@ -376,7 +427,7 @@ const AddCheckIn = () => {
               <Select
                 id="reference"
                 name="reference"
-                options={countryOptions}
+                options={referenceOptions}
                 className="basic-multi-select w-100"
                 classNamePrefix="select"
                 onChange={(choice) => setReferencedBy(choice)}
@@ -447,63 +498,25 @@ const AddCheckIn = () => {
         </div>
 
         {/*-------------Information of Other Person header ----------------*/}
-        <div className="mt-3 border-top border-end border-start rounded-top my-Header">
-          Information of Other Person
+        <div className="d-flex justify-content-between mt-3 border rounded-top my-Header">
+          <span> Add Information of Other Person</span>
+          <div className="d-flex align-items-center">
+            <button
+              className="d-flex justify-content-center align-items-center btn btn-success"
+              type="button"
+              onClick={addField}
+            >
+              <AiOutlinePlus color="white" fontSize={18} />
+            </button>
+          </div>
         </div>
         {/*---------Information of Other Person section (name, id type, id number) -----------*/}
-        <div className="bg-white rounded-bottom p-4 border">
-          <div className="d-flex gap-4 align-items-center">
-            <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="name">
-                Name:
-              </CFormLabel>
-              <input
-                id="name"
-                type="text"
-                className="form-control"
-                placeholder="Enter guest name"
-                value={name}
-                onChange={(event) => setName(event.target.value)}
-              />
-            </div>
-            <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="id-type">
-                ID type:
-              </CFormLabel>
-              <Select
-                id="id-type"
-                name="id-type"
-                options={idTypeOptions}
-                className="basic-multi-select w-100"
-                classNamePrefix="select"
-                onChange={(choice) => setIdType(choice)}
-              />
-            </div>
-            <div className="w-100">
-              <CFormLabel className="semi-bold" htmlFor="id-no">
-                ID No:
-              </CFormLabel>
-              <input
-                id="id-no"
-                type="text"
-                className="form-control"
-                placeholder="Enter ID No"
-                value={idNumber}
-                onChange={(event) => setIdNumber(event.target.value)}
-              />
-            </div>
-            <div className="d-flex align-items-center">
-              <button
-                className="mt-4 d-flex justify-content-center align-items-center btn btn-success"
-                onClick={addField}
-              >
-                <AiOutlinePlus color="white" fontSize={18} />
-              </button>
-            </div>
+        {fields && fields.length > 0 && (
+          <div className="bg-white rounded-bottom p-4 border">
+            {/*------- adding other guest fields ---------*/}
+            {renderFields()}
           </div>
-          {/*------- adding other guest fields ---------*/}
-          {renderFields()}
-        </div>
+        )}
 
         {/*------------- Payment Information header ----------------*/}
         <div className="mt-3 border-top border-end border-start rounded-top my-Header">
@@ -542,29 +555,6 @@ const AddCheckIn = () => {
                 />
               </CInputGroup>
             </div>
-          </div>
-          <div className="d-flex mt-3 gap-3 align-items-center">
-            {rooms &&
-              rooms.length > 0 &&
-              rooms.map((room, i) => (
-                <div key={room.key} className="w-100">
-                  <CFormLabel className="semi-bold" htmlFor={room.key}>
-                    Room name: ({room.label})
-                  </CFormLabel>
-                  <CInputGroup className="">
-                    <CInputGroupText>৳</CInputGroupText>
-                    <CFormInput
-                      id={room.key}
-                      type="number"
-                      min={0}
-                      placeholder="Enter room price"
-                      onChange={(e) => updatePrice(e.target.value, i)}
-                      onWheel={(e) => e.target.blur()}
-                      aria-label="Amount (to the nearest dollar)"
-                    />
-                  </CInputGroup>
-                </div>
-              ))}
           </div>
         </div>
         <div>
