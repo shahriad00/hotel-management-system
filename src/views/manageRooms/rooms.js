@@ -71,7 +71,7 @@ const Rooms = () => {
                 <td className="text-center">{name}</td>
                 <td className="text-center">{floorNo}</td>
                 <td className="d-flex justify-content-center">
-                  <span className= "bg-dark px-2 py-1 text-white rounded text-center">
+                  <span className= {`${status === 'booked' && 'bg-warning' || status === 'available' && 'bg-success' || status === 'inactive' && 'bg-danger' || status === 'maintenance' && 'bg-danger' } px-2 py-1 text-white rounded text-center`}>
                     {status}
                   </span>
                 </td>

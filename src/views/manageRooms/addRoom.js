@@ -163,7 +163,7 @@ const AddRoom = () => {
               <option value="available">Available</option>
               <option value="inactive">Inactive</option>
               <option value="booked">Booked</option>
-              <option value="inactive">Maintenance</option>
+              <option value="maintenance">Maintenance</option>
             </CFormSelect>
           </CCol>
           <CCol>

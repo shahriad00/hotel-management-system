@@ -56,10 +56,10 @@ const AllCheckIn = () => {
             <th scope="col" className="text-center">
               S.No
             </th>
-            <th scope="col" className="text-center">
+            <th scope="col" className="">
               Guest Name
             </th>
-            <th scope="col" className="text-center">
+            <th scope="col" className="">
               Mobile
             </th>
             <th scope="col" className="text-center">
