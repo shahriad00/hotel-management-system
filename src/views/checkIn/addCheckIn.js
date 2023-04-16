@@ -12,6 +12,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-hot-toast";
 import { AiOutlinePlus } from "react-icons/ai";
 import { BiTrash } from "react-icons/bi";
+import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import COUNTRY from "src/assets/data/Country";
 import axiosInstance from "src/services/axiosInstance";
@@ -51,10 +52,12 @@ const AddCheckIn = () => {
   const [paymentType, setPaymentType] = useState("");
   const [country, setCountry] = useState("");
   const [referencedBy, setReferencedBy] = useState("");
-  const [advance, setAdvance] = useState("");
+  const [advance, setAdvance] = useState(0);
   const [images, setImages] = useState([]);
   const [roomsData, setRoomsData] = useState();
   const [referenceData, setReferencedData] = useState();
+  
+  const navigate = useNavigate();
 
   useEffect(() => {
     let isMounted = true;
@@ -106,9 +109,9 @@ const AddCheckIn = () => {
   };
   const selectedRooms = rooms.map((room) => {
     return {
-      roomsId: room.value,
-      roomsName: room.label,
+      roomId: room.value,
       roomPrice: room.roomPrice,
+      roomName: room.label,
     };
   });
 
@@ -126,17 +129,17 @@ const AddCheckIn = () => {
 
   formData.append("companyName", companyName);
   formData.append("bookedBy", bookedBy);
-  formData.append("referencedById", referencedBy.value);
-  formData.append("referencedByName", referencedBy.label);
+  formData.append("referencedById", referencedBy.value || '');
+  formData.append("referencedByName", referencedBy.label || '');
   formData.append("reasonOfStay", reasonOfStay);
 
   formData.append("guestIdNo", idNumber);
-  formData.append("guestIdType", idType.value);
+  formData.append("guestIdType", idType.value || '');
   for (let i = 0; i < images.length; i++) {
     formData.append("images", images[i]);
   }
-  formData.append("paymentType", paymentType.value);
-
+  formData.append("paymentType", paymentType.value || '');
+  formData.append("advancePayment", advance);
   formData.append("otherPerson", JSON.stringify(fields));
 
   const handleSubmit = (event) => {
@@ -144,22 +147,34 @@ const AddCheckIn = () => {
     for (const entry of formData) {
       console.log(entry);
     }
+    axiosInstance
+        .post(`v1/check-in`, formData)
+        .then((res) => {
+          toast.success(res.data.message);
+          navigate("/check-in/all-check-ins");
+        })
+        .catch((err) => {
+          toast.error(err?.response?.data?.message);
+        });
   };
 
-  const handleImageUpload = (e) => {
-    setImages([...e.target.files]);
-  };
+  const handleImageUpload = (e) => setImages([...e.target.files]);
 
   const addField = () => {
     const values =[...fields]
     values.push({ name: "", idType: "", idNumber: "" });
-    console.log(values);
     setFields(values);
   };
 
   const removeField = (index) => {
     const values = [...fields];
     values.splice(index, 1);
+    setFields(values);
+  };
+
+  const handleSelect = (e,i)=>{
+    const values = [...fields]
+    values[i].idType = e.value;
     setFields(values);
   };
 
@@ -196,12 +211,9 @@ const AddCheckIn = () => {
             options={idTypeOptions}
             className="w-100"
             classNamePrefix="select"
-            value={field.idType}
-            onChange={(e) => {
-              const values = [...fields];
-              values[index].idType = e;
-              setFields(values);
-            }}
+            value={field.idType.value}
+            onChange={(e)=>handleSelect(e,index)}
+            
           />
         </div>
         <div className="w-100">
@@ -337,7 +349,7 @@ const AddCheckIn = () => {
               </CFormLabel>
               <input
                 id="email"
-                type="text"
+                type="email"
                 className="form-control"
                 placeholder="example@email.com"
                 value={email}
@@ -551,6 +563,7 @@ const AddCheckIn = () => {
                   placeholder="Enter Advance amount"
                   value={advance}
                   onChange={(event) => setAdvance(event.target.value)}
+                  onWheel={(e) => e.target.blur()}
                   aria-label="Amount (to the nearest dollar)"
                 />
               </CInputGroup>
