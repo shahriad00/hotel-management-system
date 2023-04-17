@@ -512,13 +512,12 @@ const AddCheckIn = () => {
         </div>
 
         {/*-------------Information of Other Person header ----------------*/}
-        <div className="d-flex justify-content-between mt-3 border rounded-top my-Header">
+        <div onClick={addField} className="d-flex justify-content-between mt-3 border rounded-top my-Header">
           <span> Add Information of Other Person</span>
           <div className="d-flex align-items-center">
             <button
               className="d-flex justify-content-center align-items-center btn btn-success"
               type="button"
-              onClick={addField}
             >
               <AiOutlinePlus color="white" fontSize={18} />
             </button>

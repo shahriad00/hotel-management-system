@@ -1,8 +1,69 @@
-import React from "react";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
+import { useParams } from "react-router-dom";
+import axiosInstance from "src/services/axiosInstance";
+import { MdDownload } from 'react-icons/md';
+import { IoEye } from "react-icons/io5";
+import ImageModal from "src/components/Modal/imageModal";
 
 const ViewCheckIn = () => {
+  const [viewImage, setViewImage] = useState();
+  const [checkIn, setCheckIn] = useState();
+  const [visible, setVisible] = useState(false);
+
+  const { id } = useParams();
+  const host = 'http://localhost:4000';
+
+  useEffect(() => {
+    let isMounted = true;
+    if (isMounted) {
+      axiosInstance
+        .get(`v1/check-in/${id}`)
+        .then((res) => {
+          setCheckIn(res?.data);
+          console.log(res?.data);
+        })
+        .catch((err) => {
+          toast.error(err.message);
+        });
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const handleImageView = (image) => {
+    setViewImage(host+image);
+    setVisible(!visible);
+  }
+
+  const handleDownload = (imageUrl) => {
+    const URL = host + imageUrl;
+    fetch(
+        URL,
+        {
+          method: "GET",
+          headers: {}
+        }
+      )
+        .then((response) => {
+          response.arrayBuffer().then(function (buffer) {
+            const url = window.URL.createObjectURL(new Blob([buffer]));
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "id-card.png";
+            link.click();
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+  };
+
   return (
     <>
+    <ImageModal imgUrl={viewImage} visible={visible} setVisible={setVisible}/>
       {/*---------- guest information header ----------------*/}
       <div className="border-top border-end border-start rounded-top my-Header">
         Guest Information
@@ -14,21 +75,21 @@ const ViewCheckIn = () => {
             <tbody>
               <tr>
                 <th>Full name</th>
-                <td>2</td>
-                <th>Address</th>
-                <td></td>
-              </tr>
-              <tr>
+                <td>{checkIn?.name}</td>
                 <th>E-mail</th>
-                <td>32323@qq.com</td>
-                <th>Mobile No.</th>
-                <td>132222211</td>
+                <td>{checkIn?.email}</td>
               </tr>
               <tr>
+                <th>Address</th>
+                <td>{checkIn?.address}</td>
                 <th>Country</th>
-                <td>Bangladesh</td>
+                <td>{checkIn?.country}</td>
+              </tr>
+              <tr>
+                <th>Mobile No.</th>
+                <td>{checkIn?.mobile}</td>
                 <th>Company</th>
-                <td>SDL</td>
+                <td>{checkIn?.companyName}</td>
               </tr>
             </tbody>
           </table>
@@ -45,33 +106,38 @@ const ViewCheckIn = () => {
             <tbody>
               <tr>
                 <th>Check In</th>
-                <td>3-2-2024</td>
+                <td>{moment(checkIn?.checkIn).format("DD-MM-YYYY hh:mm a")}</td>
                 <th>Check Out</th>
-                <td>3-2-2024</td>
+                <td>
+                  {moment(checkIn?.checkOut).format("DD-MM-YYYY hh:mm a")}
+                </td>
               </tr>
               <tr>
                 <th>Check In form date</th>
-                <td>132222211</td>
+                <td>{moment(checkIn?.date).format("DD-MM-YYYY hh:mm a")}</td>
                 <th>Duration of Stay</th>
-                <td>2</td>
+                <td>
+                  {checkIn?.durationOfStay}{" "}
+                  {checkIn?.durationOfStay > 1 ? "days" : "day"}
+                </td>
               </tr>
               <tr>
                 <th>ID Card Type</th>
-                <td>Passport</td>
+                <td>{checkIn?.guestIdType}</td>
                 <th>Booked By</th>
-                <td></td>
+                <td>{checkIn?.bookedBy}</td>
               </tr>
               <tr>
                 <th>ID Card Number</th>
-                <td>fsdf</td>
+                <td>{checkIn?.guestIdNo}</td>
                 <th>Referenced By</th>
-                <td></td>
+                <td>{checkIn?.referencedByName}</td>
               </tr>
               <tr>
                 <th>Payment Mode</th>
-                <td></td>
+                <td>{checkIn?.paymentType}</td>
                 <th>Reason of visit/stay</th>
-                <td>AP</td>
+                <td>{checkIn?.reasonOfStay}</td>
               </tr>
             </tbody>
           </table>
@@ -94,12 +160,15 @@ const ViewCheckIn = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>hello</td>
-                <td>kdsf</td>
-                <td>asldf</td>
-                <td>kdjjek;</td>
-              </tr>
+              {
+                checkIn?.otherPerson?.map((person, i) => (
+                  <tr key={person._id}>
+                    <td>{i+1}</td>
+                    <td>{person?.name}</td>
+                    <td>{person?.idType}</td>
+                    <td>{person?.idNumber}</td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
@@ -121,10 +190,20 @@ const ViewCheckIn = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>hello</td>
-                <td>kdsf</td>
-              </tr>
+                {
+                checkIn?.images?.map((image, i) => (
+                  <tr key={i}>
+                    <td>{i+1}</td>
+                    <td className="d-flex justify-content-center gap-3"> 
+                    <button onClick={() => handleImageView(image)} title="view" type="button" className="btn btn-sm px-2 bg-blue">
+                        <IoEye color="white" fontSize={20}/>
+                    </button>
+                    <button onClick={() => handleDownload(image)} title="download" type="button" className="btn btn-sm px-2 bg-teal">
+                        <MdDownload color="white" fontSize={20}/>
+                    </button>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>

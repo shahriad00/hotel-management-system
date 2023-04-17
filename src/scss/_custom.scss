@@ -14,3 +14,15 @@
 .semi-bold{
   font-weight: 600;
 }
+.bg-teal{
+  background-color: #009999;
+  &:hover{
+    background-color: #008e8e!important;
+  }
+}
+.bg-blue{
+  background-color: #0091ff;
+  &:hover{
+    background-color: #007fe0!important;
+  }
+}

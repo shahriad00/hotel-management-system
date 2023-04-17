@@ -77,8 +77,8 @@ const AllCheckIn = () => {
           {checkIn &&
             checkIn.length > 0 &&
             checkIn.map(
-              ({ name, mobile, checkIn, selectRooms }, i) => (
-                <tr key={name + Date.now()}>
+              ({ _id, name, mobile, checkIn, selectRooms }, i) => (
+                <tr key={_id}>
                   <th scope="row" className="text-center">
                     {i + 1}
                   </th>
@@ -96,13 +96,13 @@ const AllCheckIn = () => {
                   </td>
                   <td>
                     <div className="d-flex align-items-center justify-content-center gap-3">
-                      <span className="btn btn-success btn-sm text-white">
+                      <span onClick={() => navigate(`/check-in/view-check-in/${_id}`)} className="btn btn-success btn-sm text-white">
                         view
                       </span>
                       <span className="btn btn-warning btn-sm text-white">
                         advance pay
                       </span>
-                      <span className="btn btn-primary btn-sm text-white">
+                      <span className="btn bg-teal btn-sm text-white">
                         room service
                       </span>
                       <span className="btn btn-danger btn-sm text-white">
