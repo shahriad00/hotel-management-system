@@ -87,7 +87,9 @@ const AddCheckIn = () => {
   const roomsOptions =
     roomsData &&
     roomsData.length > 0 &&
-    roomsData.map(({ _id, name }) => {
+    roomsData.filter((room) => {
+      return (room.status === 'available') 
+    }).map(({ _id, name }) => {
       return { value: _id, label: name, key: _id + Date.now(), roomPrice: 0 };
     });
 

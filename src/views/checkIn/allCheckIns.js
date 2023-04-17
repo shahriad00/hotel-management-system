@@ -50,7 +50,7 @@ const AllCheckIn = () => {
         </button>
       </div>
 
-      <table className="table bg-white">
+      <table className="table table-bordered bg-white">
         <thead>
           <tr className="bg-dark text-white">
             <th scope="col" className="text-center">
@@ -96,11 +96,17 @@ const AllCheckIn = () => {
                   </td>
                   <td>
                     <div className="d-flex align-items-center justify-content-center gap-3">
-                      <span className="btn btn-warning btn-sm">
-                        <BiEdit fontSize={18} color="white" />
+                      <span className="btn btn-success btn-sm text-white">
+                        view
                       </span>
-                      <span className="btn btn-danger btn-sm">
-                        <RiDeleteBin6Line fontSize={18} color="white" />
+                      <span className="btn btn-warning btn-sm text-white">
+                        advance pay
+                      </span>
+                      <span className="btn btn-primary btn-sm text-white">
+                        room service
+                      </span>
+                      <span className="btn btn-danger btn-sm text-white">
+                        check out
                       </span>
                     </div>
                   </td>
