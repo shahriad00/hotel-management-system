@@ -139,6 +139,12 @@ const ViewCheckIn = () => {
                 <th>Reason of visit/stay</th>
                 <td>{checkIn?.reasonOfStay}</td>
               </tr>
+              <tr>
+                <th>Total Advance</th>
+                <td>{checkIn?.totalAdvance}/-</td>
+                <th></th>
+                <td></td>
+              </tr>
             </tbody>
           </table>
         </div>

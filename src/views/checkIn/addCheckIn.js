@@ -56,7 +56,7 @@ const AddCheckIn = () => {
   const [images, setImages] = useState([]);
   const [roomsData, setRoomsData] = useState();
   const [referenceData, setReferencedData] = useState();
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -87,11 +87,13 @@ const AddCheckIn = () => {
   const roomsOptions =
     roomsData &&
     roomsData.length > 0 &&
-    roomsData.filter((room) => {
-      return (room.status === 'available') 
-    }).map(({ _id, name }) => {
-      return { value: _id, label: name, key: _id + Date.now(), roomPrice: 0 };
-    });
+    roomsData
+      .filter((room) => {
+        return room.status === "available";
+      })
+      .map(({ _id, name }) => {
+        return { value: _id, label: name, key: _id + Date.now(), roomPrice: 0 };
+      });
 
   const referenceOptions =
     referenceData &&
@@ -117,6 +119,10 @@ const AddCheckIn = () => {
     };
   });
 
+  const advancePayment = {
+      paymentType: paymentType.value || "Cash",
+      amount: advance,
+    }
   const formData = new FormData();
   formData.append("checkIn", checkInDate);
   formData.append("checkOut", checkOutDate);
@@ -131,18 +137,18 @@ const AddCheckIn = () => {
 
   formData.append("companyName", companyName);
   formData.append("bookedBy", bookedBy);
-  formData.append("referencedById", referencedBy.value || '');
-  formData.append("referencedByName", referencedBy.label || '');
+  formData.append("referencedById", referencedBy.value || "");
+  formData.append("referencedByName", referencedBy.label || "");
   formData.append("reasonOfStay", reasonOfStay);
 
   formData.append("guestIdNo", idNumber);
-  formData.append("guestIdType", idType.value || '');
+  formData.append("guestIdType", idType.value || "");
   for (let i = 0; i < images.length; i++) {
     formData.append("images", images[i]);
   }
-  formData.append("paymentType", paymentType.value || '');
-  formData.append("advancePayment", advance);
+  formData.append("paymentType", paymentType.value || "");
   formData.append("otherPerson", JSON.stringify(fields));
+  formData.append("advancePayment", JSON.stringify(advancePayment));
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -150,20 +156,20 @@ const AddCheckIn = () => {
       console.log(entry);
     }
     axiosInstance
-        .post(`v1/check-in`, formData)
-        .then((res) => {
-          toast.success(res.data.message);
-          navigate("/check-in/all-check-ins");
-        })
-        .catch((err) => {
-          toast.error(err?.response?.data?.message);
-        });
+      .post(`v1/check-in`, formData)
+      .then((res) => {
+        toast.success(res.data.message);
+        navigate("/check-in/all-check-ins");
+      })
+      .catch((err) => {
+        toast.error(err?.response?.data?.message);
+      });
   };
 
   const handleImageUpload = (e) => setImages([...e.target.files]);
 
   const addField = () => {
-    const values =[...fields]
+    const values = [...fields];
     values.push({ name: "", idType: "", idNumber: "" });
     setFields(values);
   };
@@ -174,18 +180,15 @@ const AddCheckIn = () => {
     setFields(values);
   };
 
-  const handleSelect = (e,i)=>{
-    const values = [...fields]
+  const handleSelect = (e, i) => {
+    const values = [...fields];
     values[i].idType = e.value;
     setFields(values);
   };
 
   const renderFields = () => {
     return fields.map((field, index) => (
-      <div
-        key={index}
-        className="mb-3 d-flex gap-4 align-items-center"
-      >
+      <div key={index} className="mb-3 d-flex gap-4 align-items-center">
         <div className="w-100">
           <CFormLabel className="semi-bold" htmlFor="otherName">
             Name {index + 1}:
@@ -214,8 +217,7 @@ const AddCheckIn = () => {
             className="w-100"
             classNamePrefix="select"
             value={field.idType.value}
-            onChange={(e)=>handleSelect(e,index)}
-            
+            onChange={(e) => handleSelect(e, index)}
           />
         </div>
         <div className="w-100">
@@ -512,7 +514,10 @@ const AddCheckIn = () => {
         </div>
 
         {/*-------------Information of Other Person header ----------------*/}
-        <div onClick={addField} className="d-flex justify-content-between mt-3 border rounded-top my-Header">
+        <div
+          onClick={addField}
+          className="d-flex justify-content-between mt-3 border rounded-top my-Header"
+        >
           <span> Add Information of Other Person</span>
           <div className="d-flex align-items-center">
             <button

@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { BiEdit } from "react-icons/bi";
-import { RiDeleteBin6Line } from "react-icons/ri";
 import { CFormInput, CInputGroup, CInputGroupText } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilMagnifyingGlass } from "@coreui/icons";
 import axiosInstance from "src/services/axiosInstance";
 import { toast } from "react-hot-toast";
 import moment from "moment/moment";
+import AdvanceModal from "src/components/Modal/advanceModal";
 
 const AllCheckIn = () => {
-  const [checkIn, setCheckIn] = useState();
+  const [checkIn, setCheckIn] = useState([]);
+  const [visible, setVisible] = useState(false);
+  const [advanceAmount, setAdvanceAmount] = useState(0);
+  const [paymentType, setPaymentType] = useState("");
+  const [advanceHistory, setAdvanceHistory] = useState(0);
+  const [checkInId, setCheckInId] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,6 +33,36 @@ const AllCheckIn = () => {
       isMounted = false;
     };
   }, []);
+
+  // update advance amount in modal
+
+  const getAdvanceAmount = (id) => {
+    axiosInstance
+        .get(`v1/advance-payment/${id}`)
+        .then((res) => {
+          setAdvanceHistory(res.data.totalAmount);
+        })
+        .catch((err) => {
+          toast.error(err.message);
+        }); 
+      setCheckInId(id);
+      setVisible(!visible);
+  }
+
+  const addAdvanceAmount = (id) => {
+    axiosInstance
+      .post(`v1/advance-payment`, {
+        checkInID: id,
+        paymentType: paymentType.value || "Cash",
+        amount: advanceAmount,
+      })
+      .then((res) => {
+        setAdvanceHistory(res.data.totalAmount);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <>
@@ -76,45 +110,64 @@ const AllCheckIn = () => {
         <tbody>
           {checkIn &&
             checkIn.length > 0 &&
-            checkIn.map(
-              ({ _id, name, mobile, checkIn, selectRooms }, i) => (
-                <tr key={_id}>
-                  <th scope="row" className="text-center">
-                    {i + 1}
-                  </th>
-                  <td className="">{name}</td>
-                  <td className="">{mobile}</td>
-                  <td className="text-center">
-                    {selectRooms.map((room,i) => (
-                      <span key={room._id}>
-                        {room.roomName}{selectRooms.length > 1 && selectRooms.length - 1 !== i && " , "}
-                      </span>
-                    ))}
-                  </td>
-                  <td className="text-center">
-                    {moment(checkIn).format("DD-MM-YYYY h:mm a")}
-                  </td>
-                  <td>
-                    <div className="d-flex align-items-center justify-content-center gap-3">
-                      <span onClick={() => navigate(`/check-in/view-check-in/${_id}`)} className="btn btn-success btn-sm text-white">
-                        view
-                      </span>
-                      <span className="btn btn-warning btn-sm text-white">
-                        advance pay
-                      </span>
-                      <span className="btn bg-teal btn-sm text-white">
-                        room service
-                      </span>
-                      <span className="btn btn-danger btn-sm text-white">
-                        check out
-                      </span>
-                    </div>
-                  </td>
-                </tr>
-              )
-            )}
+            checkIn.map(({ _id, name, mobile, checkIn, selectRooms }, i) => (
+              <tr key={_id}>
+                <th scope="row" className="text-center">
+                  {i + 1}
+                </th>
+                <td className="">{name}</td>
+                <td className="">{mobile}</td>
+                <td className="text-center">
+                  {selectRooms.map((room, i) => (
+                    <span key={room._id}>
+                      {room.roomName}
+                      {selectRooms.length > 1 &&
+                        selectRooms.length - 1 !== i &&
+                        " , "}
+                    </span>
+                  ))}
+                </td>
+                <td className="text-center">
+                  {moment(checkIn).format("DD-MM-YYYY h:mm a")}
+                </td>
+                <td>
+                  <div className="d-flex align-items-center justify-content-center gap-3">
+                    <span
+                      onClick={() => navigate(`/check-in/view-check-in/${_id}`)}
+                      className="btn btn-info btn-sm text-white"
+                    >
+                      view
+                    </span>
+                    <span
+                      onClick={() => {
+                        getAdvanceAmount(_id);
+                      }}
+                      className="btn btn-warning btn-sm text-white"
+                    >
+                      advance pay
+                    </span>
+                    <span className="btn bg-teal btn-sm text-white">
+                      room service
+                    </span>
+                    <span className="btn btn-danger btn-sm text-white">
+                      check out
+                    </span>
+                  </div>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
+      <AdvanceModal
+        visible={visible}
+        setVisible={setVisible}
+        advanceAmount={advanceAmount}
+        setAdvanceAmount={setAdvanceAmount}
+        advanceHistory={advanceHistory}
+        setPaymentType={setPaymentType}
+        checkInId={checkInId}
+        addAdvanceAmount={addAdvanceAmount}
+      />
     </>
   );
 };
