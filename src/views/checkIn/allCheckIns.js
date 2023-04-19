@@ -7,13 +7,18 @@ import axiosInstance from "src/services/axiosInstance";
 import { toast } from "react-hot-toast";
 import moment from "moment/moment";
 import AdvanceModal from "src/components/Modal/advanceModal";
+import RoomServiceModal from "src/components/Modal/roomServiceModal";
 
 const AllCheckIn = () => {
   const [checkIn, setCheckIn] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [block, setBlock] = useState(false);
   const [advanceAmount, setAdvanceAmount] = useState(0);
   const [paymentType, setPaymentType] = useState("");
   const [advanceHistory, setAdvanceHistory] = useState(0);
+  const [itemName, setItemName] = useState("");
+  const [roomName, setRoomName] = useState("");
+  const [itemPrice, setItemPrice] = useState(0);
   const [checkInId, setCheckInId] = useState("");
   const navigate = useNavigate();
 
@@ -34,7 +39,7 @@ const AllCheckIn = () => {
     };
   }, []);
 
-  // update advance amount in modal
+  // --------- get advance amount in modal -----------
 
   const getAdvanceAmount = (id) => {
     axiosInstance
@@ -49,20 +54,57 @@ const AllCheckIn = () => {
       setVisible(!visible);
   }
 
+  // -------- add advance amount in modal ----------
+
   const addAdvanceAmount = (id) => {
-    axiosInstance
+    if ( advanceAmount !== 0 && paymentType !== '' ){
+      axiosInstance
       .post(`v1/advance-payment`, {
         checkInID: id,
-        paymentType: paymentType.value || "Cash",
+        paymentType: paymentType,
         amount: advanceAmount,
       })
       .then((res) => {
         setAdvanceHistory(res.data.totalAmount);
+        setAdvanceAmount(0);
+        toast.success('Advance added successfully')
       })
       .catch((err) => {
         console.log(err);
       });
+    } else{
+      toast.error('fill the information properly!')
+    }
   };
+
+  // --------------- add room service item ----------------------
+
+  const addRoomService = (id) => {
+    if ( itemPrice !== 0 && itemName !== '' && roomName !== ''){
+      axiosInstance
+      .post(`v1/room-service`, {
+        checkInID: id,
+        roomName,
+        itemName,
+        itemPrice,
+      })
+      .then((res) => {
+        setItemName('');
+        setRoomName('');
+        setItemPrice(0);
+        toast.success('Room service added successfully');
+        setBlock(false);
+
+      })
+      .catch((err) => {
+        toast.error(err?.response?.data?.message);
+        console.log(err);
+      });
+    } else{
+      toast.error('fill the information properly!')
+    }
+  };
+
 
   return (
     <>
@@ -146,7 +188,7 @@ const AllCheckIn = () => {
                     >
                       advance pay
                     </span>
-                    <span className="btn bg-teal btn-sm text-white">
+                    <span onClick={()=> {setCheckInId(_id);setBlock(!block)}} className="btn bg-teal btn-sm text-white">
                       room service
                     </span>
                     <span className="btn btn-danger btn-sm text-white">
@@ -167,6 +209,18 @@ const AllCheckIn = () => {
         setPaymentType={setPaymentType}
         checkInId={checkInId}
         addAdvanceAmount={addAdvanceAmount}
+      />
+      <RoomServiceModal
+        block={block}
+        setBlock={setBlock}
+        checkInId={checkInId}
+        itemName={itemName}
+        setItemName={setItemName}
+        roomName={roomName}
+        setRoomName={setRoomName}
+        itemPrice={itemPrice}
+        setItemPrice={setItemPrice}
+        addRoomService={addRoomService}
       />
     </>
   );

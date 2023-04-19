@@ -11,6 +11,7 @@ const ViewCheckIn = () => {
   const [viewImage, setViewImage] = useState();
   const [checkIn, setCheckIn] = useState();
   const [visible, setVisible] = useState(false);
+  const [totalPayed, setTotalPayed] = useState("");
 
   const { id } = useParams();
   const host = 'http://localhost:4000';
@@ -22,7 +23,14 @@ const ViewCheckIn = () => {
         .get(`v1/check-in/${id}`)
         .then((res) => {
           setCheckIn(res?.data);
-          console.log(res?.data);
+        })
+        .catch((err) => {
+          toast.error(err.message);
+        });
+      axiosInstance
+        .get(`v1/advance-payment/${id}`)
+        .then((res) => {
+          setTotalPayed(res.data.totalAmount);
         })
         .catch((err) => {
           toast.error(err.message);
@@ -140,8 +148,8 @@ const ViewCheckIn = () => {
                 <td>{checkIn?.reasonOfStay}</td>
               </tr>
               <tr>
-                <th>Total Advance</th>
-                <td>{checkIn?.totalAdvance}/-</td>
+                <th>Total Payed</th>
+                <td>{totalPayed}/-</td>
                 <th></th>
                 <td></td>
               </tr>
