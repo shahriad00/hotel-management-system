@@ -33,6 +33,7 @@ const Login = () => {
       password,
     }).then(res => {
       toast.success('login successful!');
+      localStorage.removeItem('token');
       localStorage.setItem('token', JSON.stringify(res.data.token.accessToken));
       navigate('/dashboard');
     })
