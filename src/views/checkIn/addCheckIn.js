@@ -116,6 +116,8 @@ const AddCheckIn = () => {
       roomId: room.value,
       roomPrice: room.roomPrice,
       roomName: room.label,
+      checkIn: checkInDate,
+      checkOut: checkOutDate,
     };
   });
 
