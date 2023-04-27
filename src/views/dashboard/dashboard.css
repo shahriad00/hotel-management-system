@@ -1,0 +1,9 @@
+.fc-daygrid-day-number{
+    font-weight: 600;
+    color: #000970;
+    text-decoration: none;
+    margin-right: 10px;
+}
+.fc-col-header-cell-cushion{
+    text-decoration: none;
+}

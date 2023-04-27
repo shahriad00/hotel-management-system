@@ -50,6 +50,11 @@ const _nav = [
       },
       {
         component: CNavItem,
+        name: "All Online Booking",
+        to: "/check-in/all-online-booking",
+      },
+      {
+        component: CNavItem,
         name: "Add Check In",
         to: "/check-in/add-check-in",
       },

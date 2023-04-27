@@ -11,11 +11,13 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-hot-toast";
 import { AiOutlinePlus } from "react-icons/ai";
+import { BiSearch } from "react-icons/bi";
 import { BiTrash } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import COUNTRY from "src/assets/data/Country";
 import axiosInstance from "src/services/axiosInstance";
+import moment from "moment/moment";
 
 const countryOptions = COUNTRY.map(({ name }) => {
   return { value: name, label: name };
@@ -63,14 +65,6 @@ const AddCheckIn = () => {
     let isMounted = true;
     if (isMounted) {
       axiosInstance
-        .get(`v1/rooms`)
-        .then((res) => {
-          setRoomsData(res.data);
-        })
-        .catch((err) => {
-          toast.error(err.message);
-        });
-      axiosInstance
         .get(`v1/reference`)
         .then((res) => {
           setReferencedData(res.data);
@@ -87,13 +81,9 @@ const AddCheckIn = () => {
   const roomsOptions =
     roomsData &&
     roomsData.length > 0 &&
-    roomsData
-      .filter((room) => {
-        return room.status === "available";
-      })
-      .map(({ _id, name }) => {
-        return { value: _id, label: name, key: _id + Date.now(), roomPrice: 0 };
-      });
+    roomsData.map(({ _id, name }) => {
+      return { value: _id, label: name, key: _id + Date.now(), roomPrice: 0 };
+    });
 
   const referenceOptions =
     referenceData &&
@@ -122,9 +112,9 @@ const AddCheckIn = () => {
   });
 
   const advancePayment = {
-      paymentType: paymentType.value || "Cash",
-      amount: advance,
-    }
+    paymentType: paymentType.value || "Cash",
+    amount: advance,
+  };
   const formData = new FormData();
   formData.append("checkIn", checkInDate);
   formData.append("checkOut", checkOutDate);
@@ -168,6 +158,27 @@ const AddCheckIn = () => {
       });
   };
 
+  const filterRooms = (allRooms1, selectedRooms1) => {
+    console.log(allRooms1.length);
+    console.log(selectedRooms1.length);
+    const availableRooms = allRooms1.filter(
+      (obj1) => !selectedRooms1.some((obj2) => obj1._id === obj2.roomId)
+    );
+    setRoomsData(availableRooms);
+  };
+
+  const checkAvailableRooms = () => {
+    axiosInstance
+      .get(`v1/search?from=${moment(checkInDate).format('MM-DD-YYYY')}&to=${moment(checkOutDate).format('MM-DD-YYYY')}`)
+      .then((res) => {
+        filterRooms(res?.data?.allRooms, res?.data?.selectedRooms);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
+  };
+
   const handleImageUpload = (e) => setImages([...e.target.files]);
 
   const addField = () => {
@@ -188,6 +199,7 @@ const AddCheckIn = () => {
     setFields(values);
   };
 
+  //----- other person field ---- will add a new field onClick
   const renderFields = () => {
     return fields.map((field, index) => (
       <div key={index} className="mb-3 d-flex gap-4 align-items-center">
@@ -260,7 +272,7 @@ const AddCheckIn = () => {
       <CForm onSubmit={handleSubmit}>
         {/*---------- select check in date ----------------*/}
         <div className="bg-white rounded-bottom p-4 border">
-          <div className="d-flex gap-4 justify-content-between align-items-center w-100">
+          <div className="d-flex gap-4 justify-content-between align-items-end w-100">
             <div className="w-100">
               <CFormLabel className="semi-bold">Check In:</CFormLabel>
               <DatePicker
@@ -278,6 +290,16 @@ const AddCheckIn = () => {
                 onChange={(date) => setCheckOutDate(date)}
                 className="form-control form-control w-100"
               />
+            </div>
+            <div className="w-50">
+              <button
+                type="button"
+                onClick={checkAvailableRooms}
+                className="btn btn-primary d-flex align-items-center gap-1"
+              >
+                <span>check room</span>
+                <BiSearch />
+              </button>
             </div>
             <div className="w-100">
               <CFormLabel className="semi-bold" htmlFor="rooms">

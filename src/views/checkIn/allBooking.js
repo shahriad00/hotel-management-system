@@ -9,7 +9,7 @@ import moment from "moment/moment";
 import AdvanceModal from "src/components/Modal/advanceModal";
 import RoomServiceModal from "src/components/Modal/roomServiceModal";
 
-const AllCheckIn = () => {
+const AllBooking = () => {
   const [checkIn, setCheckIn] = useState([]);
   const [visible, setVisible] = useState(false);
   const [block, setBlock] = useState(false);
@@ -108,7 +108,7 @@ const AllCheckIn = () => {
 
   return (
     <>
-      <h5 className="font-weight-bold">Check In list</h5>
+      <h5 className="font-weight-bold">All Online Booking list</h5>
       <hr />
       <div className="py-3 d-flex justify-content-between">
         <CInputGroup className="input-prepend w-25">
@@ -122,7 +122,7 @@ const AllCheckIn = () => {
           type="button"
           className="btn btn-primary"
         >
-          + Add Check In
+          + Add online booking
         </button>
       </div>
 
@@ -152,7 +152,7 @@ const AllCheckIn = () => {
         <tbody>
           {checkIn &&
             checkIn.length > 0 &&
-            checkIn.filter(({ type }) => type === 'check-in').map(({ _id, name, mobile, checkIn, selectRooms }, i) => (
+            checkIn.filter(({ type }) => type === 'booking').map(({ _id, name, mobile, checkIn, selectRooms }, i) => (
               <tr key={_id}>
                 <th scope="row" className="text-center">
                   {i + 1}
@@ -226,4 +226,4 @@ const AllCheckIn = () => {
   );
 };
 
-export default AllCheckIn;
+export default AllBooking;

@@ -4,6 +4,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import axiosInstance from "src/services/axiosInstance";
 import { toast } from "react-hot-toast";
+import './dashboard.css';
 
 const Dashboard = () => {
   const [allRoomStatus, setAllRoomStatus] = useState();
