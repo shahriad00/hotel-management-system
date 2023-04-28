@@ -152,7 +152,9 @@ const AllCheckIn = () => {
         <tbody>
           {checkIn &&
             checkIn.length > 0 &&
-            checkIn.filter(({ type }) => type === 'check-in').map(({ _id, name, mobile, checkIn, selectRooms }, i) => (
+            checkIn
+              .filter(({ type, isCheckedOut }) => type === 'check-in' && isCheckedOut === false)
+              .map(({ _id, name, mobile, checkIn, selectRooms }, i) => (
               <tr key={_id}>
                 <th scope="row" className="text-center">
                   {i + 1}

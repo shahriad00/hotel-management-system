@@ -6,20 +6,10 @@ import { cilMagnifyingGlass } from "@coreui/icons";
 import axiosInstance from "src/services/axiosInstance";
 import { toast } from "react-hot-toast";
 import moment from "moment/moment";
-import AdvanceModal from "src/components/Modal/advanceModal";
-import RoomServiceModal from "src/components/Modal/roomServiceModal";
 
 const AllBooking = () => {
   const [checkIn, setCheckIn] = useState([]);
-  const [visible, setVisible] = useState(false);
-  const [block, setBlock] = useState(false);
-  const [advanceAmount, setAdvanceAmount] = useState(0);
-  const [paymentType, setPaymentType] = useState("");
-  const [advanceHistory, setAdvanceHistory] = useState(0);
-  const [itemName, setItemName] = useState("");
-  const [roomName, setRoomName] = useState("");
-  const [itemPrice, setItemPrice] = useState(0);
-  const [checkInId, setCheckInId] = useState("");
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,72 +29,24 @@ const AllBooking = () => {
     };
   }, []);
 
-  // --------- get advance amount in modal -----------
-
-  const getAdvanceAmount = (id) => {
+  const moveToCheckIn = (id) => {
     axiosInstance
-        .get(`v1/advance-payment/${id}`)
+        .patch(`v1/check-in/move-to-check-in/${id}`)
         .then((res) => {
-          setAdvanceHistory(res.data.totalAmount);
+          toast.success(res.data.message);
+          axiosInstance
+            .get(`v1/check-in`)
+            .then((res) => {
+              setCheckIn(res.data);
+            })
+            .catch((err) => {
+              toast.error(err.message);
+            });
         })
         .catch((err) => {
           toast.error(err.message);
-        }); 
-      setCheckInId(id);
-      setVisible(!visible);
+        });
   }
-
-  // -------- add advance amount in modal ----------
-
-  const addAdvanceAmount = (id) => {
-    if ( advanceAmount !== 0 && paymentType !== '' ){
-      axiosInstance
-      .post(`v1/advance-payment`, {
-        checkInID: id,
-        paymentType: paymentType,
-        amount: advanceAmount,
-      })
-      .then((res) => {
-        setAdvanceHistory(res.data.totalAmount);
-        setAdvanceAmount(0);
-        toast.success('Advance added successfully')
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    } else{
-      toast.error('fill the information properly!')
-    }
-  };
-
-  // --------------- add room service item ----------------------
-
-  const addRoomService = (id) => {
-    if ( itemPrice !== 0 && itemName !== '' && roomName !== ''){
-      axiosInstance
-      .post(`v1/room-service`, {
-        checkInID: id,
-        roomName,
-        itemName,
-        itemPrice,
-      })
-      .then((res) => {
-        setItemName('');
-        setRoomName('');
-        setItemPrice(0);
-        toast.success('Room service added successfully');
-        setBlock(false);
-
-      })
-      .catch((err) => {
-        toast.error(err?.response?.data?.message);
-        console.log(err);
-      });
-    } else{
-      toast.error('fill the information properly!')
-    }
-  };
-
 
   return (
     <>
@@ -175,24 +117,13 @@ const AllBooking = () => {
                 <td>
                   <div className="d-flex align-items-center justify-content-center gap-3">
                     <span
-                      onClick={() => navigate(`/check-in/view-check-in/${_id}`)}
+                      onClick={() => navigate(`/check-in/view-online-booking/${_id}`)}
                       className="btn btn-info btn-sm text-white"
                     >
                       view
                     </span>
-                    <span
-                      onClick={() => {
-                        getAdvanceAmount(_id);
-                      }}
-                      className="btn btn-warning btn-sm text-white"
-                    >
-                      advance pay
-                    </span>
-                    <span onClick={()=> {setCheckInId(_id);setBlock(!block)}} className="btn bg-teal btn-sm text-white">
-                      room service
-                    </span>
-                    <span className="btn btn-danger btn-sm text-white">
-                      check out
+                    <span onClick={() => moveToCheckIn(_id)} className="btn btn-warning btn-sm text-white">
+                      Move to check-in
                     </span>
                   </div>
                 </td>
@@ -200,28 +131,6 @@ const AllBooking = () => {
             ))}
         </tbody>
       </table>
-      <AdvanceModal
-        visible={visible}
-        setVisible={setVisible}
-        advanceAmount={advanceAmount}
-        setAdvanceAmount={setAdvanceAmount}
-        advanceHistory={advanceHistory}
-        setPaymentType={setPaymentType}
-        checkInId={checkInId}
-        addAdvanceAmount={addAdvanceAmount}
-      />
-      <RoomServiceModal
-        block={block}
-        setBlock={setBlock}
-        checkInId={checkInId}
-        itemName={itemName}
-        setItemName={setItemName}
-        roomName={roomName}
-        setRoomName={setRoomName}
-        itemPrice={itemPrice}
-        setItemPrice={setItemPrice}
-        addRoomService={addRoomService}
-      />
     </>
   );
 };
