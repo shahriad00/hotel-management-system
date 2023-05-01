@@ -5,6 +5,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import axiosInstance from "src/services/axiosInstance";
 import { toast } from "react-hot-toast";
 import './dashboard.css';
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const [allRoomStatus, setAllRoomStatus] = useState();
@@ -27,12 +28,20 @@ const Dashboard = () => {
     };
   }, []);
 
+  const navigate = useNavigate();
+
+  const handleEventClick = (info) => {
+    navigate(`/check-in/view-check-in/${info.event._def.extendedProps.checkInId}`);
+  };
+
   const events =
     allRoomStatus &&
-    allRoomStatus.map(({ roomName, from, to }) => ({
-      title: `Room - ${roomName}`,
+    allRoomStatus.map(({ type, checkInId, roomName, from, to }) => ({
+      title: ` Room - ${roomName} (${type})`,
       start: new Date(from),
       end: new Date(to),
+      checkInId: checkInId.toString(),
+      color:`${type === 'booking' ? '#5D9C59' : '#146C94'}`,
     }));
 
   return (
@@ -47,6 +56,7 @@ const Dashboard = () => {
               eventContent={renderEventContent}
               aspectRatio={2}
               displayEventTime={false}
+              eventClick={handleEventClick}
             />
           </>
         </CCardBody>

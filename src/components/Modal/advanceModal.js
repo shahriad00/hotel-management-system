@@ -33,7 +33,7 @@ const AdvanceModal = ({
         <CModalBody>
           <p className="fw-bold">
             Total Payed:
-            <span className="text-primary">{advanceHistory}/-</span>
+            <span className="text-primary">{' '}{advanceHistory}/-</span>
           </p>
           <CFormLabel className="semi-bold" htmlFor="advance">
             Add advance amount:

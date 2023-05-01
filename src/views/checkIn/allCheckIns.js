@@ -193,7 +193,7 @@ const AllCheckIn = () => {
                     <span onClick={()=> {setCheckInId(_id);setBlock(!block)}} className="btn bg-teal btn-sm text-white">
                       room service
                     </span>
-                    <span className="btn btn-danger btn-sm text-white">
+                    <span onClick={() => navigate(`/check-out/${_id}`)} className="btn btn-danger btn-sm text-white">
                       check out
                     </span>
                   </div>

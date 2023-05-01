@@ -7,7 +7,7 @@ import { MdDownload } from 'react-icons/md';
 import { IoEye } from "react-icons/io5";
 import ImageModal from "src/components/Modal/imageModal";
 
-const ViewCheckIn = () => {
+const ViewOnlineBooking = () => {
   const [viewImage, setViewImage] = useState();
   const [checkIn, setCheckIn] = useState();
   const [visible, setVisible] = useState(false);
@@ -226,4 +226,4 @@ const ViewCheckIn = () => {
   );
 };
 
-export default ViewCheckIn;
+export default ViewOnlineBooking;

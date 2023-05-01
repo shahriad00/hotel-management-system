@@ -57,11 +57,11 @@ const OnlineBooking = () => {
   const [referencedBy, setReferencedBy] = useState("");
   const [advance, setAdvance] = useState(0);
   const [images, setImages] = useState([]);
-  const [roomsData, setRoomsData] = useState();
-  const [referenceData, setReferencedData] = useState();
-  const [instruction, setInstruction] = useState();
-  const [pickupCharge, setPickupCharge] = useState();
-  const [pickup, setPickup] = useState();
+  const [roomsData, setRoomsData] = useState([]);
+  const [referenceData, setReferencedData] = useState([]);
+  const [instruction, setInstruction] = useState('');
+  const [pickupCharge, setPickupCharge] = useState(0);
+  const [pickup, setPickup] = useState('');
 
   const navigate = useNavigate();
 

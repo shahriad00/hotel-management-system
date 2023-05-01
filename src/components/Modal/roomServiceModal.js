@@ -45,8 +45,8 @@ import {
                 onWheel={(e) => e.target.blur()}
                 aria-label="Amount (to the nearest dollar)"
               />
-            <CFormLabel className="semi-bold" htmlFor="price">
-              price:
+            <CFormLabel className="semi-bold mt-3" htmlFor="price">
+              Price:
             </CFormLabel>
             <CInputGroup className="mb-3">
               <CInputGroupText>৳</CInputGroupText>

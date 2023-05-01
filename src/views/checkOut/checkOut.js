@@ -1,13 +1,13 @@
 import moment from "moment/moment";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "src/services/axiosInstance";
 import { MdDownload } from 'react-icons/md';
 import { IoEye } from "react-icons/io5";
 import ImageModal from "src/components/Modal/imageModal";
 
-const ViewCheckIn = () => {
+const CheckOut = () => {
   const [viewImage, setViewImage] = useState();
   const [checkIn, setCheckIn] = useState();
   const [visible, setVisible] = useState(false);
@@ -16,6 +16,7 @@ const ViewCheckIn = () => {
   const [roomService, setRoomService] = useState();
 
   const { id } = useParams();
+  const navigate = useNavigate();
   const host = 'http://localhost:4000';
 
   useEffect(() => {
@@ -94,8 +95,9 @@ const ViewCheckIn = () => {
     <>
     <ImageModal imgUrl={viewImage} visible={visible} setVisible={setVisible}/>
       {/*---------- guest information header ----------------*/}
-      <div className="border-top border-end border-start rounded-top my-Header">
+      <div className="d-flex justify-content-between  align-items-center border-top border-end border-start rounded-top my-Header">
         Guest Information
+        <span onClick={() => navigate(`/edit-guest/${checkIn?._id}`)} className="btn btn-success rounded text-white shadow px-3 py-2"> Update Guest Information </span>
       </div>
       {/*---------- guest information table ----------------*/}
       <div className="bg-white rounded-bottom p-4 border">
@@ -427,4 +429,4 @@ const ViewCheckIn = () => {
   );
 };
 
-export default ViewCheckIn;
+export default CheckOut;

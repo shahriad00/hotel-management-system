@@ -160,9 +160,8 @@ const AddRoom = () => {
                 {" "}
                 --Select status--
               </option>
-              <option value="available">Available</option>
+              <option value="available">Active</option>
               <option value="inactive">Inactive</option>
-              <option value="booked">Booked</option>
               <option value="maintenance">Maintenance</option>
             </CFormSelect>
           </CCol>
