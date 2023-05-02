@@ -74,7 +74,7 @@ const _nav = [
       {
         component: CNavItem,
         name: "Check Outs",
-        to: "/check-in/check-outs",
+        to: "/all-check-outs",
         icon: <CIcon icon={cilArrowRight} customClassName="nav-icon" />
       },
     ],

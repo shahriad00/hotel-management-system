@@ -18,7 +18,8 @@ const ViewOnlineBooking = React.lazy(() => import('./views/checkIn/viewOnlineBoo
 
 // Check out
 const CheckOut = React.lazy(() => import('./views/checkOut/checkOut'))
-const updateGuestInfo = React.lazy(() => import('./views/checkOut/updateGuestInfo'))
+const AllCheckOuts = React.lazy(() => import('./views/checkOut/allCheckOuts.js'))
+const UpdateGuestInfo = React.lazy(() => import('./views/checkOut/updateGuestInfo'))
 
 // Reference
 const Reference = React.lazy(() => import('./views/reference/reference'))
@@ -35,10 +36,11 @@ const routes = [
   { path: '/check-in/all-online-booking', name: 'all online booking', element: AllOnlineBooking },
   { path: '/check-in/add-check-in', name: 'Add Check In', element: AddCheckIn },
   { path: '/check-in/all-check-ins', name: 'All Check In', element: AllCheckIns },
-  { path: '/edit-guest/:id', name: 'Edit Guest', element: updateGuestInfo },
+  { path: '/edit-guest/:id', name: 'Edit Guest', element: UpdateGuestInfo },
   { path: '/check-in/view-check-in/:id', name: 'View Check In', element: ViewCheckIn },
   { path: '/check-in/view-online-booking/:id', name: 'View Online Booking', element: ViewOnlineBooking },
   { path: '/check-out/:id', name: 'Check Outs', element: CheckOut },
+  { path: '/all-check-outs', name: 'All Check Outs', element: AllCheckOuts },
   { path: '/reference', name: 'Reference', element: Reference },
   { path: '/add-reference', name: 'Add Reference', element: AddReference },
 ]
