@@ -1,18 +1,18 @@
-import React, { useState } from "react";
 import {
-  CCol,
-  CForm,
-  CFormInput,
-  CFormLabel,
-  CFormSelect,
-  CRow,
-  CInputGroup,
-  CInputGroupText,
-  CFormCheck,
+    CCol,
+    CForm,
+    CFormCheck,
+    CFormInput,
+    CFormLabel,
+    CFormSelect,
+    CInputGroup,
+    CInputGroupText,
+    CRow,
 } from "@coreui/react";
+import { useState } from "react";
 import { toast } from "react-hot-toast";
-import axiosInstance from "src/services/axiosInstance";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "src/services/axiosInstance";
 
 const AMENITIES = [
   { id: '1', label: '24-Hour Guest Reception' },
@@ -176,7 +176,7 @@ const AddRoomTypes = () => {
           </CCol>
         </CRow>
 
-        <button type="submit" className="btn btn-primary mb-3 px-5">
+        <button type="submit" className="btn btn-info text-white mb-3 px-5">
           Submit
         </button>
       </CForm>

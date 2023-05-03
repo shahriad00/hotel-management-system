@@ -42,16 +42,15 @@ const Rooms = () => {
         <button
           onClick={() => navigate("/manage-rooms/add-room")}
           type="button"
-          className="btn btn-primary"
+          className="btn btn-info text-white"
         >
           + Add Room
         </button>
       </div>
 
-      <table className="table bg-white">
+      <table className="table-bordered table rounded-3 overflow-hidden bg-white shadow-sm table-hover">
         <thead>
-          <tr className="bg-dark text-white">
-            <th scope="col" className="text-center">S.No</th>
+          <tr className="">
             <th scope="col" className="text-center">Room Type</th>
             <th scope="col" className="text-center">Name</th>
             <th scope="col" className="text-center">Floor No.</th>
@@ -64,9 +63,6 @@ const Rooms = () => {
             room.length > 0 &&
             room.map(({roomTypeName, name, floorNo, status}, i) => (
               <tr key={name + Date.now()}>
-                <th scope="row" className="text-center">
-                  {i+1}
-                </th>
                 <td className="text-center">{roomTypeName}</td>
                 <td className="text-center">{name}</td>
                 <td className="text-center">{floorNo}</td>

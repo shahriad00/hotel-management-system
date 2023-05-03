@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { cilMagnifyingGlass } from "@coreui/icons";
+import CIcon from "@coreui/icons-react";
+import { CFormInput, CInputGroup, CInputGroupText } from "@coreui/react";
+import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 import { BiEdit } from "react-icons/bi";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { CFormInput, CInputGroup, CInputGroupText } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
-import { cilMagnifyingGlass } from "@coreui/icons";
+import { useNavigate } from "react-router-dom";
 import axiosInstance from "src/services/axiosInstance";
-import { toast } from "react-hot-toast";
 
 const Reference = () => {
   const [reference, setReference] = useState();
@@ -41,7 +41,7 @@ const Reference = () => {
         <button
           onClick={() => navigate("/add-reference")}
           type="button"
-          className="btn btn-primary"
+          className="btn btn-info text-white"
         >
           + Add Reference
         </button>

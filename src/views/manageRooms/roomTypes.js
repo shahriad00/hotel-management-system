@@ -41,15 +41,15 @@ const RoomTypes = () => {
         <button
           onClick={() => navigate("/manage-rooms/add-room-types")}
           type="button"
-          className="btn btn-primary"
+          className="btn btn-info text-white"
         >
           + Add Room Type
         </button>
       </div>
 
-      <table className="table bg-white">
+      <table className="table-bordered table rounded-3 overflow-hidden bg-white shadow-sm">
         <thead>
-          <tr className="bg-dark text-white">
+          <tr className="">
             <th scope="col" className="text-center">S.No</th>
             <th scope="col" className="text-center">Title</th>
             <th scope="col" className="text-center">Base price</th>

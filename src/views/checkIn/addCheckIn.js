@@ -274,7 +274,7 @@ const AddCheckIn = () => {
         <div className="bg-white rounded-bottom p-4 border">
           <div className="d-flex gap-4 justify-content-between align-items-end w-100">
             <div className="w-100">
-              <CFormLabel className="semi-bold">Check In:</CFormLabel>
+              <CFormLabel className="semi-bold">Check In<span className="text-danger">*</span>:</CFormLabel>
               <DatePicker
                 selected={checkInDate}
                 minDate={new Date()}
@@ -283,7 +283,7 @@ const AddCheckIn = () => {
               />
             </div>
             <div className="w-100">
-              <CFormLabel className="semi-bold">Check Out:</CFormLabel>
+              <CFormLabel className="semi-bold">Check Out<span className="text-danger">*</span>:</CFormLabel>
               <DatePicker
                 selected={checkOutDate}
                 minDate={checkInDate}
@@ -295,7 +295,7 @@ const AddCheckIn = () => {
               <button
                 type="button"
                 onClick={checkAvailableRooms}
-                className="btn btn-primary d-flex align-items-center gap-1"
+                className="btn btn-info text-white d-flex align-items-center gap-1"
               >
                 <span>check room</span>
                 <BiSearch />
@@ -303,7 +303,7 @@ const AddCheckIn = () => {
             </div>
             <div className="w-100">
               <CFormLabel className="semi-bold" htmlFor="rooms">
-                Select rooms:
+                Select rooms<span className="text-danger">*</span>:
               </CFormLabel>
               <Select
                 isMulti
@@ -330,7 +330,7 @@ const AddCheckIn = () => {
                   rooms.map((room, i) => (
                     <div key={room.key} className="w-100">
                       <CFormLabel className="semi-bold" htmlFor={room.key}>
-                        Room name: ({room.label})
+                        Room name<span className="text-danger">*</span>: ({room.label})
                       </CFormLabel>
                       <CInputGroup className="">
                         <CInputGroupText>৳</CInputGroupText>
@@ -360,7 +360,7 @@ const AddCheckIn = () => {
           <div className="d-flex gap-3 align-items-center">
             <div className="w-100">
               <CFormLabel className="semi-bold" htmlFor="name">
-                Name:
+                Name<span className="text-danger">*</span>:
               </CFormLabel>
               <input
                 id="name"
@@ -386,7 +386,7 @@ const AddCheckIn = () => {
             </div>
             <div className="w-100">
               <CFormLabel className="semi-bold" htmlFor="mobile">
-                Mobile:
+                Mobile<span className="text-danger">*</span>:
               </CFormLabel>
               <input
                 id="mobile"
@@ -401,7 +401,7 @@ const AddCheckIn = () => {
           <div className="d-flex mt-2 gap-4 align-items-center mt-3">
             <div className="w-100">
               <CFormLabel className="semi-bold" htmlFor="address">
-                Address:
+                Address<span className="text-danger">*</span>:
               </CFormLabel>
               <input
                 id="address"

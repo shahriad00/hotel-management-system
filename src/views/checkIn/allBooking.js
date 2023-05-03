@@ -16,7 +16,7 @@ const AllBooking = () => {
     let isMounted = true;
     if (isMounted) {
       axiosInstance
-        .get(`v1/check-in`)
+        .get(`v1/all-check-in`)
         .then((res) => {
           setCheckIn(res.data);
         })
@@ -62,15 +62,15 @@ const AllBooking = () => {
         <button
           onClick={() => navigate("/check-in/add-check-in")}
           type="button"
-          className="btn btn-primary"
+          className="btn btn-info text-white"
         >
           + Add online booking
         </button>
       </div>
 
-      <table className="table table-bordered bg-white">
+      <table className="table rounded-3 overflow-hidden shadow-sm table-bordered bg-white table-hover">
         <thead>
-          <tr className="bg-dark text-white">
+          <tr className="">
             <th scope="col" className="text-center">
               S.No
             </th>

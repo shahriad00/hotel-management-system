@@ -1,15 +1,15 @@
-import React, { useState } from "react";
 import {
-  CCol,
-  CForm,
-  CFormInput,
-  CFormLabel,
-  CRow,
+    CCol,
+    CForm,
+    CFormInput,
+    CFormLabel,
+    CRow,
 } from "@coreui/react";
+import { useState } from "react";
 import { toast } from "react-hot-toast";
-import axiosInstance from "src/services/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
+import axiosInstance from "src/services/axiosInstance";
 
 const AddReference = () => {
   const [name, setName] = useState();
@@ -100,7 +100,7 @@ const AddReference = () => {
           </CCol>
         </CRow>
 
-        <button type="submit" className="btn btn-primary mb-3 px-5">
+        <button type="submit" className="btn btn-info text-white mb-3 px-5">
           Submit
         </button>
       </CForm>

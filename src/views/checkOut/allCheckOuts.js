@@ -6,27 +6,52 @@ import { cilMagnifyingGlass } from "@coreui/icons";
 import axiosInstance from "src/services/axiosInstance";
 import { toast } from "react-hot-toast";
 import moment from "moment/moment";
+import ReactPaginate from "react-paginate";
 
 const AllCheckOuts = () => {
   const [checkIn, setCheckIn] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [totalPages, setTotalPages] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     let isMounted = true;
     if (isMounted) {
       axiosInstance
-        .get(`v1/check-in`)
+      .get(`v1/check-out?page=${currentPage}&limit=${itemsPerPage}`)
         .then((res) => {
-          setCheckIn(res.data);
+          setCheckIn(res?.data?.allCheckOuts);
+          setTotalPages(res?.data?.totalPages);
         })
         .catch((err) => {
           toast.error(err.message);
+          localStorage.removeItem('token');
+          window.location.replace('#/login');
         });
     }
     return () => {
       isMounted = false;
     };
   }, []);
+
+  // Handle changing the page
+  const handlePageClick = (data) => {
+    setCurrentPage(data.selected + 1);
+
+    setTimeout(() => {
+      axiosInstance
+        .get(`v1/check-out?page=${currentPage}&limit=${itemsPerPage}`)
+        .then((res) => {
+          setCheckIn(res?.data?.allCheckOuts);
+          setTotalPages(res?.data?.totalPages);
+          console.log(res?.data);
+        })
+        .catch((err) => {
+          toast.error(err.message);
+        });
+    }, 100);
+  };
 
 
   return (
@@ -38,16 +63,13 @@ const AllCheckOuts = () => {
           <CInputGroupText>
             <CIcon icon={cilMagnifyingGlass} />
           </CInputGroupText>
-          <CFormInput type="text" placeholder="search check in's" />
+          <CFormInput type="text" placeholder="search check outs's" />
         </CInputGroup>
       </div>
 
-      <table className="table table-bordered bg-white">
+      <table className="table-bordered table rounded-3 overflow-hidden bg-white shadow-sm table-hover">
         <thead>
-          <tr className="bg-dark text-white">
-            <th scope="col" className="text-center">
-              S.No
-            </th>
+          <tr className="">
             <th scope="col" className="">
               Guest Name
             </th>
@@ -69,12 +91,8 @@ const AllCheckOuts = () => {
           {checkIn &&
             checkIn.length > 0 &&
             checkIn
-              .filter(({ type, isCheckedOut }) => type === 'check-out' && isCheckedOut)
               .map(({ _id, name, mobile, checkIn, selectRooms }, i) => (
               <tr key={_id}>
-                <th scope="row" className="text-center">
-                  {i + 1}
-                </th>
                 <td className="">{name}</td>
                 <td className="">{mobile}</td>
                 <td className="text-center">
@@ -107,6 +125,25 @@ const AllCheckOuts = () => {
             ))}
         </tbody>
       </table>
+      <ReactPaginate
+        previousLabel={"previous"}
+        nextLabel={"next"}
+        breakLabel={"..."}
+        pageCount={totalPages}
+        marginPagesDisplayed={2}
+        pageRangeDisplayed={3}
+        onPageChange={handlePageClick}
+        containerClassName={"pagination justify-content-center"}
+        pageClassName={"page-item"}
+        pageLinkClassName={"page-link"}
+        previousClassName={"page-item"}
+        previousLinkClassName={"page-link"}
+        nextClassName={"page-item"}
+        nextLinkClassName={"page-link"}
+        breakClassName={"page-item"}
+        breakLinkClassName={"page-link"}
+        activeClassName={"active"}
+      />
     </>
   );
 };
