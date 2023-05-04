@@ -1,3 +1,5 @@
+/* eslint-disable no-script-url */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import moment from "moment/moment";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
@@ -6,6 +8,7 @@ import axiosInstance from "src/services/axiosInstance";
 import { MdDownload } from "react-icons/md";
 import { IoEye } from "react-icons/io5";
 import ImageModal from "src/components/Modal/imageModal";
+import HOST from "src/assets/data/ImageHosting";
 
 const ViewCheckIn = () => {
   const [viewImage, setViewImage] = useState();
@@ -16,7 +19,6 @@ const ViewCheckIn = () => {
   const [roomService, setRoomService] = useState();
 
   const { id } = useParams();
-  const host = "http://localhost:4000";
 
   useEffect(() => {
     let isMounted = true;
@@ -58,13 +60,13 @@ const ViewCheckIn = () => {
 
   //image modal
   const handleImageView = (image) => {
-    setViewImage(host + image);
+    setViewImage(HOST + image);
     setVisible(!visible);
   };
 
   // download image
   const handleDownload = (imageUrl) => {
-    const URL = host + imageUrl;
+    const URL = HOST + imageUrl;
     fetch(URL, { method: "GET", headers: {} })
       .then((response) => {
         response.arrayBuffer().then(function (buffer) {
@@ -97,8 +99,9 @@ const ViewCheckIn = () => {
         setVisible={setVisible}
       />
       {/*---------- guest information header ----------------*/}
-      <div className="border-top border-end border-start rounded-top my-Header">
-        Guest Information
+      <div className="d-flex justify-content-between align-items-center border-top border-end border-start rounded-top my-Header">
+        <span>Guest Information</span>
+        <span className="fw-400 fs-6">Check-in ID: {checkIn?.bookingId}</span>
       </div>
       {/*---------- guest information table ----------------*/}
       <div className="bg-white rounded-bottom p-4 border">
@@ -432,15 +435,25 @@ const ViewCheckIn = () => {
               <th className="w-100 text-end">Total Payed:</th>
               <td className="text-end w-10">{totalPayed}/- Tk</td>
             </tr>
+            <tr>
+              <th className="w-100 text-end">Discount:</th>
+              <td className="text-end w-10">{checkIn?.discount}/- Tk</td>
+            </tr>
             <tr className="bg-warning-light">
               <th className="w-100 text-end">Grand Total:</th>
               <td className="text-end w-10">
-                {total - percentage(GST, total) - totalPayed}/- Tk
+                {total - percentage(GST, total) - totalPayed - Number(checkIn?.discount)}/- Tk
               </td>
             </tr>
           </tbody>
         </table>
       </div>
+      <a
+        className="btn btn-info text-white px-5 mt-3 d-print-none"
+        href="javascript:window.print()"
+      >
+        Print
+      </a>
     </>
   );
 };

@@ -96,7 +96,7 @@ const CheckOut = () => {
 
   const handleCheckOut = () => {
     axiosInstance
-        .patch(`v1/check-out/${id}`,{type: 'check-out'})
+        .patch(`v1/check-out/${id}`,{type: 'check-out', discount})
         .then((res) => {
           toast.success(res.data.message);
           setVisibleCheckOut(false);

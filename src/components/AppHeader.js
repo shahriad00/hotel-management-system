@@ -17,13 +17,18 @@ import { cilBell, cilEnvelopeOpen, cilList, cilMenu } from '@coreui/icons'
 import { AppBreadcrumb } from './index'
 import { AppHeaderDropdown } from './header/index'
 import { logo } from 'src/assets/brand/logo'
+import COMPANY_NAME from 'src/assets/data/CompanyName'
 
 const AppHeader = () => {
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
 
   return (
-    <CHeader position="sticky" className="mb-4">
+    <>
+      <CHeader className="text-center my-5 d-none d-print-block fw-600 fs-3">
+        {COMPANY_NAME}
+      </CHeader>
+      <CHeader position="sticky" className="mb-4 d-print-none">
       <CContainer fluid>
         <CHeaderToggler
           className="ps-1"
@@ -62,6 +67,7 @@ const AppHeader = () => {
         <AppBreadcrumb />
       </CContainer>
     </CHeader>
+    </>
   )
 }
 

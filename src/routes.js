@@ -37,7 +37,7 @@ const routes = [
   { path: '/check-in/add-check-in', name: 'Add Check In', element: AddCheckIn },
   { path: '/check-in/all-check-ins', name: 'All Check In', element: AllCheckIns },
   { path: '/edit-guest/:id', name: 'Edit Guest', element: UpdateGuestInfo },
-  { path: '/check-in/view-check-in/:id', name: 'View Check In', element: ViewCheckIn },
+  { path: '/view-guest/:id', name: 'View Guest', element: ViewCheckIn },
   { path: '/check-in/view-online-booking/:id', name: 'View Online Booking', element: ViewOnlineBooking },
   { path: '/check-out/:id', name: 'Check Outs', element: CheckOut },
   { path: '/all-check-outs', name: 'All Check Outs', element: AllCheckOuts },

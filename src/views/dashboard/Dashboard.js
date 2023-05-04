@@ -31,7 +31,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   const handleEventClick = (info) => {
-    navigate(`/check-in/view-check-in/${info.event._def.extendedProps.checkInId}`);
+    navigate(`/view-guest/${info.event._def.extendedProps.checkInId}`);
   };
 
   const events =

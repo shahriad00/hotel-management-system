@@ -146,7 +146,7 @@ const OnlineBooking = () => {
   formData.append("paymentType", paymentType.value || "");
   formData.append("otherPerson", JSON.stringify(fields));
   formData.append("advancePayment", JSON.stringify(advancePayment));
-  formData.append("pickup", pickup);
+  formData.append("pickup", pickup || 'no');
   formData.append("pickupCharge", pickupCharge);
   formData.append("type", 'booking');
 

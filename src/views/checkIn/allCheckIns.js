@@ -24,6 +24,7 @@ const AllCheckIn = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [totalPages, setTotalPages] = useState("");
+  const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -125,8 +126,22 @@ const AllCheckIn = () => {
         .catch((err) => {
           toast.error(err.message);
         });
-    }, 100);
+    }, 200);
   };
+
+  //------- handle search ----------
+  const handleSearch = () => {
+    axiosInstance
+    .get(`v1/check-in?page=${currentPage}&limit=${itemsPerPage}&search=${search}`)
+    .then((res) => {
+      setCheckIn(res?.data?.allCheckIns);
+      setTotalPages(res?.data?.totalPages);
+      console.log(res?.data?.allCheckIns);
+    })
+    .catch((err) => {
+      toast.error(err.message);
+    });
+}
 
   return (
     <>
@@ -134,10 +149,9 @@ const AllCheckIn = () => {
       <hr />
       <div className="py-3 d-flex justify-content-between">
         <CInputGroup className="input-prepend w-25">
-          <CInputGroupText>
+          <CFormInput onChange={(e) => setSearch(e.target.value)} type="text" placeholder="search check in's" />          <CInputGroupText onClick={handleSearch}>
             <CIcon icon={cilMagnifyingGlass} />
           </CInputGroupText>
-          <CFormInput type="text" placeholder="search check in's" />
         </CInputGroup>
         <button
           onClick={() => navigate("/check-in/add-check-in")}
@@ -199,7 +213,7 @@ const AllCheckIn = () => {
                     <div className="d-flex align-items-center justify-content-center gap-3">
                       <span
                         onClick={() =>
-                          navigate(`/check-in/view-check-in/${_id}`)
+                          navigate(`/view-guest/${_id}`)
                         }
                         className="btn btn-info btn-sm text-white"
                       >

@@ -6,23 +6,33 @@ import { cilMagnifyingGlass } from "@coreui/icons";
 import axiosInstance from "src/services/axiosInstance";
 import { toast } from "react-hot-toast";
 import moment from "moment/moment";
+import ReactPaginate from "react-paginate";
 
 const AllBooking = () => {
-  const [checkIn, setCheckIn] = useState([]);
+  const [booking, setBooking] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [totalPages, setTotalPages] = useState("");
+  const [search, setSearch] = useState("");
 
   const navigate = useNavigate();
+
+  const fetchData = () => {
+    axiosInstance
+      .get(`v1/booking?page=${currentPage}&&limit=${itemsPerPage}&search=${search}`)
+      .then((res) => {
+        setBooking(res.data?.allBookings);
+        setTotalPages(res?.data?.totalPages);
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
+  };
 
   useEffect(() => {
     let isMounted = true;
     if (isMounted) {
-      axiosInstance
-        .get(`v1/all-check-in`)
-        .then((res) => {
-          setCheckIn(res.data);
-        })
-        .catch((err) => {
-          toast.error(err.message);
-        });
+      fetchData();
     }
     return () => {
       isMounted = false;
@@ -31,36 +41,42 @@ const AllBooking = () => {
 
   const moveToCheckIn = (id) => {
     axiosInstance
-        .patch(`v1/check-in/move-to-check-in/${id}`)
-        .then((res) => {
-          toast.success(res.data.message);
-          axiosInstance
-            .get(`v1/check-in`)
-            .then((res) => {
-              setCheckIn(res.data);
-            })
-            .catch((err) => {
-              toast.error(err.message);
-            });
-        })
-        .catch((err) => {
-          toast.error(err.message);
-        });
-  }
+      .patch(`v1/check-in/move-to-check-in/${id}`)
+      .then((res) => {
+        toast.success(res.data.message);
+        fetchData();
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
+  };
 
+  // Handle changing the page
+  const handlePageClick = (data) => {
+    setCurrentPage(data.selected + 1);
+
+    setTimeout(() => {
+      fetchData();
+    }, 200);
+  };
+
+  //------- handle search ----------
+  const handleSearch = () => {
+   fetchData();
+  }
   return (
     <>
       <h5 className="font-weight-bold">All Online Booking list</h5>
       <hr />
       <div className="py-3 d-flex justify-content-between">
         <CInputGroup className="input-prepend w-25">
-          <CInputGroupText>
+          <CFormInput onChange={(e)=> setSearch(e.target.value)} type="text" placeholder="search check in's" />
+          <CInputGroupText onClick={handleSearch}>
             <CIcon icon={cilMagnifyingGlass} />
           </CInputGroupText>
-          <CFormInput type="text" placeholder="search check in's" />
         </CInputGroup>
         <button
-          onClick={() => navigate("/check-in/add-check-in")}
+          onClick={() => navigate("/check-in/online-booking")}
           type="button"
           className="btn btn-info text-white"
         >
@@ -92,45 +108,71 @@ const AllBooking = () => {
           </tr>
         </thead>
         <tbody>
-          {checkIn &&
-            checkIn.length > 0 &&
-            checkIn.filter(({ type }) => type === 'booking').map(({ _id, name, mobile, checkIn, selectRooms }, i) => (
-              <tr key={_id}>
-                <th scope="row" className="text-center">
-                  {i + 1}
-                </th>
-                <td className="">{name}</td>
-                <td className="">{mobile}</td>
-                <td className="text-center">
-                  {selectRooms.map((room, i) => (
-                    <span key={room._id}>
-                      {room.roomName}
-                      {selectRooms.length > 1 &&
-                        selectRooms.length - 1 !== i &&
-                        " , "}
-                    </span>
-                  ))}
-                </td>
-                <td className="text-center">
-                  {moment(checkIn).format("DD-MM-YYYY")}
-                </td>
-                <td>
-                  <div className="d-flex align-items-center justify-content-center gap-3">
-                    <span
-                      onClick={() => navigate(`/check-in/view-online-booking/${_id}`)}
-                      className="btn btn-info btn-sm text-white"
-                    >
-                      view
-                    </span>
-                    <span onClick={() => moveToCheckIn(_id)} className="btn btn-warning btn-sm text-white">
-                      Move to check-in
-                    </span>
-                  </div>
-                </td>
-              </tr>
-            ))}
+          {booking &&
+            booking.length > 0 &&
+            booking
+              .filter(({ type }) => type === "booking")
+              .map(({ _id, name, mobile, checkIn, selectRooms }, i) => (
+                <tr key={_id}>
+                  <th scope="row" className="text-center">
+                    {i + 1}
+                  </th>
+                  <td className="">{name}</td>
+                  <td className="">{mobile}</td>
+                  <td className="text-center">
+                    {selectRooms.map((room, i) => (
+                      <span key={room._id}>
+                        {room.roomName}
+                        {selectRooms.length > 1 &&
+                          selectRooms.length - 1 !== i &&
+                          " , "}
+                      </span>
+                    ))}
+                  </td>
+                  <td className="text-center">
+                    {moment(checkIn).format("DD-MM-YYYY")}
+                  </td>
+                  <td>
+                    <div className="d-flex align-items-center justify-content-center gap-3">
+                      <span
+                        onClick={() =>
+                          navigate(`/check-in/view-online-booking/${_id}`)
+                        }
+                        className="btn btn-info btn-sm text-white"
+                      >
+                        view
+                      </span>
+                      <span
+                        onClick={() => moveToCheckIn(_id)}
+                        className="btn btn-warning btn-sm text-white"
+                      >
+                        Move to check-in
+                      </span>
+                    </div>
+                  </td>
+                </tr>
+              ))}
         </tbody>
       </table>
+      <ReactPaginate
+        previousLabel={"previous"}
+        nextLabel={"next"}
+        breakLabel={"..."}
+        pageCount={totalPages}
+        marginPagesDisplayed={2}
+        pageRangeDisplayed={3}
+        onPageChange={handlePageClick}
+        containerClassName={"pagination justify-content-center"}
+        pageClassName={"page-item"}
+        pageLinkClassName={"page-link"}
+        previousClassName={"page-item"}
+        previousLinkClassName={"page-link"}
+        nextClassName={"page-item"}
+        nextLinkClassName={"page-link"}
+        breakClassName={"page-item"}
+        breakLinkClassName={"page-link"}
+        activeClassName={"active"}
+      />
     </>
   );
 };
