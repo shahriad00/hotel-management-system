@@ -1,8 +1,20 @@
-import { CModal, CModalBody } from "@coreui/react";
+/* eslint-disable react/prop-types */
+import {
+  CButton,
+  CModal,
+  CModalBody,
+  CModalFooter,
+  CModalHeader,
+  CModalTitle,
+} from "@coreui/react";
 import React from "react";
 
 // eslint-disable-next-line react/prop-types
-const CheckOutModal = ({ visibleCheckOut, setVisibleCheckOut, handleCheckOut }) => {
+const CheckOutModal = ({
+  visibleCheckOut,
+  setVisibleCheckOut,
+  handleCheckOut,
+}) => {
   return (
     <>
       <CModal
@@ -10,18 +22,18 @@ const CheckOutModal = ({ visibleCheckOut, setVisibleCheckOut, handleCheckOut }) 
         visible={visibleCheckOut}
         onClose={() => setVisibleCheckOut(false)}
       >
-        <CModalBody className="p-5">
-          <div className="d-flex justify-content-center fw-bold fs-4 mb-5">Confirm Check-out ?</div>
-          <div className="d-flex justify-content-center gap-5">
-            <button
-              onClick={() => setVisibleCheckOut(false)}
-              className="btn btn-danger text-white"
-            >
-              Cancel
-            </button>
-            <button onClick={handleCheckOut} className="btn btn-success text-white">Confirm</button>
-          </div>
-        </CModalBody>
+        <CModalHeader onClose={() => setVisibleCheckOut(false)}>
+          <CModalTitle>Confirm Check-out?</CModalTitle>
+        </CModalHeader>
+        <CModalBody className="text-center py-4">Are you sure, You want to check out?</CModalBody>
+        <CModalFooter className="d-flex justify-content-center gap-3">
+          <CButton className="text-white" color="danger" onClick={() => setVisibleCheckOut(false)}>
+            Close
+          </CButton>
+          <CButton className="text-white"  onClick={handleCheckOut} color="info">
+            Confirm
+          </CButton>
+        </CModalFooter>
       </CModal>
     </>
   );

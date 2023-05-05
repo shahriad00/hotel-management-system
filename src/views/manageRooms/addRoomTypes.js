@@ -9,9 +9,10 @@ import {
     CInputGroupText,
     CRow,
 } from "@coreui/react";
-import { useState } from "react";
+import React,{ useState } from "react";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import SubmitButton from "src/components/Button/submitButton";
 import axiosInstance from "src/services/axiosInstance";
 
 const AMENITIES = [
@@ -175,10 +176,7 @@ const AddRoomTypes = () => {
             </div>
           </CCol>
         </CRow>
-
-        <button type="submit" className="btn btn-info text-white mb-3 px-5">
-          Submit
-        </button>
+        <SubmitButton/>
       </CForm>
     </>
   );

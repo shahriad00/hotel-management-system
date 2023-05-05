@@ -7,33 +7,57 @@ import CIcon from "@coreui/icons-react";
 import { cilMagnifyingGlass } from "@coreui/icons";
 import axiosInstance from "src/services/axiosInstance";
 import { toast } from "react-hot-toast";
+import DeleteModal from "src/components/Modal/deleteModal";
 
 
 const Rooms = () => {
   const [room, setRoom] = useState();
+  const [visible, setVisible] = useState();
+  const [id, setId] = useState();
   const navigate = useNavigate();
+
+
+  const fetchData = () => {
+    axiosInstance
+      .get(`v1/rooms`)
+      .then((res) => {setRoom(res.data)})
+      .catch((err) => {
+          toast.error(err.message);
+      });
+  }
 
   useEffect(() => {
     let isMounted = true;
     if (isMounted) {
-        axiosInstance
-            .get(`v1/rooms`)
-            .then((res) => {setRoom(res.data)})
-            .catch((err) => {
-                toast.error(err.message);
-            });
+      fetchData();
     }
     return () => {
         isMounted = false;
     };
-}, []);
+  }, []);
+
+  const handleDelete = () => {
+    axiosInstance
+      .patch(`v1/unpublish-room/${id}`,{ isPublished : false })
+      .then((res) => {
+        toast.success(res.data.message);
+        fetchData();
+        setVisible(false);
+        setId('');
+      })
+      .catch((err) => {
+          toast.error(err.message);
+          setVisible(false);
+          setId('');
+      });
+  }
 
   return (
     <>
       <h5 className="font-weight-bold">Room list</h5>
       <hr />
       <div className="py-3 d-flex justify-content-between">
-        <CInputGroup className="input-prepend w-25">
+        <CInputGroup className="input-prepend w-25 shadow-sm">
               <CInputGroupText>
                 <CIcon icon={cilMagnifyingGlass} />
               </CInputGroupText>
@@ -42,15 +66,16 @@ const Rooms = () => {
         <button
           onClick={() => navigate("/manage-rooms/add-room")}
           type="button"
-          className="btn btn-info text-white"
+          className="btn btn-info text-white shadow"
         >
           + Add Room
         </button>
       </div>
 
-      <table className="table-bordered table rounded-3 overflow-hidden bg-white shadow-sm table-hover">
+      <table className="table-bordered table rounded-3 overflow-hidden bg-white shadow table-striped">
         <thead>
           <tr className="">
+            <th scope="col" className="text-center">S.No</th>
             <th scope="col" className="text-center">Room Type</th>
             <th scope="col" className="text-center">Name</th>
             <th scope="col" className="text-center">Floor No.</th>
@@ -61,22 +86,25 @@ const Rooms = () => {
         <tbody>
         {room &&
             room.length > 0 &&
-            room.map(({roomTypeName, name, floorNo, status}, i) => (
-              <tr key={name + Date.now()}>
+            room.map(({_id, roomTypeName, name, floorNo, status}, i) => (
+              <tr key={_id}>
+                <th scope="row" className="text-center">
+                  {i+1}
+                </th>
                 <td className="text-center">{roomTypeName}</td>
                 <td className="text-center">{name}</td>
                 <td className="text-center">{floorNo}</td>
                 <td className="d-flex justify-content-center">
-                  <span className= {`${status === 'booked' && 'bg-warning' || status === 'available' && 'bg-success' || status === 'inactive' && 'bg-danger' || status === 'maintenance' && 'bg-danger' } px-2 py-1 text-white rounded text-center`}>
+                  <span className= {`${status === 'active' && 'bg-success' || status === 'inactive' && 'bg-danger' || status === 'maintenance' && 'bg-warning' } px-2 py-1 text-white rounded text-center`}>
                     {status}
                   </span>
                 </td>
                 <td>
                   <div className="d-flex align-items-center justify-content-center gap-3">
-                    <span className="btn btn-warning btn-sm">
+                    <span title='edit' onClick={()=> navigate(`/manage-rooms/edit-room/${_id}`)} className="btn btn-warning btn-sm">
                       <BiEdit fontSize={18} color="white" />
                     </span>
-                    <span className="btn btn-danger btn-sm">
+                    <span title='delete' onClick={()=>{ setId(_id); setVisible(true) }} className="btn btn-danger btn-sm">
                       <RiDeleteBin6Line fontSize={18} color="white" />
                     </span>
                   </div>
@@ -85,6 +113,7 @@ const Rooms = () => {
             ))}
         </tbody>
       </table>
+      <DeleteModal visible={visible} setVisible={setVisible} handleDelete={handleDelete} />
     </>
   );
 };

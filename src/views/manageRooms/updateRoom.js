@@ -15,8 +15,26 @@ import {
 import { useEffect } from "react";
 import axiosInstance from "src/services/axiosInstance";
 import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import HOST from "src/assets/data/ImageHosting";
 import SubmitButton from "src/components/Button/submitButton";
+
+const imageWrapperStyle = {
+  display: "grid",
+  placeItems: "center",
+  position: "relative",
+  width: "185px",
+  height: "135px",
+  borderRadius: "6px",
+  padding: "5px",
+  border: "1px dashed gray",
+};
+
+const imageStyle = {
+  maxWidth: "175px",
+  maxHeight: "125px",
+  objectFit: "contain",
+};
 
 const AddRoom = () => {
   const [name, setName] = useState("");
@@ -25,40 +43,75 @@ const AddRoom = () => {
   const [roomDetails, setRoomDetails] = useState("");
   const [floorNo, setFloorNo] = useState("");
   const [images, setImages] = useState([]);
+  const [existingImg, setExistingImg] = useState([]);
   const [roomTypesData, setRoomTypesData] = useState();
+  const [removedImages] = useState([]);
   const maxNumber = 4;
 
   const navigate = useNavigate();
 
-  const handleImages = (imageList) => {
-    setImages(imageList);
-  };
+  const { id } = useParams();
+
+  useEffect(() => {
+    let isMounted = true;
+    if (isMounted) {
+      axiosInstance
+        .get(`v1/room/${id}`)
+        .then((res) => {
+          setName(res?.data?.name);
+          setRoomType({
+            label: res?.data?.roomTypeName,
+            value: res?.data?.roomTypeId,
+          });
+          setFloorNo(res?.data?.floorNo);
+          setExistingImg(res?.data?.images);
+          setStatus(res?.data?.status);
+          setRoomDetails(res?.data?.roomDetails);
+          console.log(res);
+        })
+        .catch((err) => {
+          toast.error(err.message);
+        });
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const formData = new FormData();
-  formData.append('name', name);
-  formData.append('roomTypeId', roomType.value);
-  formData.append('roomTypeName', roomType.label);
-  formData.append('status', status);
-  formData.append('roomDetails', roomDetails);
-  formData.append('floorNo', floorNo);
-  images.forEach(image => {
-    formData.append('images', image.file);
+  formData.append("name", name);
+  formData.append("roomTypeId", roomType.value);
+  formData.append("roomTypeName", roomType.label);
+  formData.append("status", status);
+  formData.append("roomDetails", roomDetails);
+  formData.append("floorNo", floorNo);
+  for(let i = 0 ; i < removedImages.length ; i++){
+    formData.append("removedImages[]", removedImages[i]);
+  }
+  for(let i = 0 ; i < existingImg.length ; i++){
+    formData.append("existingImg[]", existingImg[i]);
+  }
+  images.forEach((image) => {
+    formData.append("images", image.file);
   });
 
+  const handleImages = (imageList) => {
+    setImages(imageList);
+    console.log(imageList);
+  };
 
   const handleRoomSubmit = (event) => {
     event.preventDefault();
     if (name && status && roomType && floorNo && roomDetails) {
       axiosInstance
-        .post(`v1/room`, formData)
+        .patch(`v1/room/${id}`, formData)
         .then((res) => {
           toast.success(res.data.message);
           navigate("/manage-rooms/rooms");
         })
         .catch((err) => {
-          err?.response?.data?.errors.map((err) => {
-            return toast.error(err.messages[0]);
-          });
+          console.log(err);
+          toast.error(err?.response?.data?.message);
         });
     } else {
       toast.error("fill up all the fields");
@@ -89,27 +142,16 @@ const AddRoom = () => {
       return { value: _id, label: title, key: _id };
     });
 
-  const imageWrapperStyle = {
-    display: "grid",
-    placeItems: "center",
-    position: "relative",
-    width: "185px",
-    height: "135px",
-    borderRadius: "6px",
-    padding: "5px",
-    border: "1px dashed gray",
-  };
-
-  const imageStyle = {
-    maxWidth: "175px",
-    maxHeight: "125px",
-    objectFit: "contain",
+  const handleRemoveItem = (value) => {
+    removedImages.push(value);
+    setExistingImg(existingImg.filter((item) => item !== value));
+    console.log(existingImg);
   };
 
   return (
     <>
       <div className="border-top border-end border-start rounded-top my-Header">
-        Add Room
+        Edit Room
       </div>
       <CForm
         onSubmit={handleRoomSubmit}
@@ -151,6 +193,17 @@ const AddRoom = () => {
         </CRow>
         <CRow>
           <CCol>
+            <CFormLabel htmlFor="details">Details:</CFormLabel>
+            <textarea
+              id="details"
+              type="text"
+              className="mb-3 form-control"
+              placeholder="Enter Room Details"
+              value={roomDetails}
+              onChange={(event) => setRoomDetails(event.target.value)}
+            />
+          </CCol>
+          <CCol>
             <CFormLabel htmlFor="status">Status:</CFormLabel>
             <CFormSelect
               id="status"
@@ -166,17 +219,6 @@ const AddRoom = () => {
               <option value="inactive">Inactive</option>
               <option value="maintenance">Maintenance</option>
             </CFormSelect>
-          </CCol>
-          <CCol>
-            <CFormLabel htmlFor="details">Details:</CFormLabel>
-            <textarea
-              id="details"
-              type="text"
-              className="mb-3 form-control"
-              placeholder="Enter Room Details"
-              value={roomDetails}
-              onChange={(event) => setRoomDetails(event.target.value)}
-            />
           </CCol>
         </CRow>
         <CRow>
@@ -216,7 +258,7 @@ const AddRoom = () => {
                       {imageList.length > 0 && (
                         <h5 className="pt-3">Preview Image:</h5>
                       )}
-                      {imageList.map((image, index) => (
+                      {imageList?.map((image, index) => (
                         <div
                           key={index}
                           style={imageWrapperStyle}
@@ -229,8 +271,9 @@ const AddRoom = () => {
                             alt=""
                             width="100%"
                           />
-                          <div className="position-absolute top-0 start-100 translate-middle">
+                          <div className="position-absolute top-0 start-100 translate-middle rounded-circle">
                             <button
+                              type="button"
                               className="btn btn-danger d-flex justify-content-center align-items-center"
                               onClick={() => onImageRemove(index)}
                             >
@@ -246,7 +289,40 @@ const AddRoom = () => {
             </div>
           </CCol>
         </CRow>
-        <SubmitButton/>
+
+        {existingImg?.length > 0 && (
+          <h5 className="pt-3 fs-5">Existing Image:</h5>
+        )}
+        <div className="d-flex gap-5 flex-wrap">
+          {existingImg?.map((image, index) => (
+            <div
+              key={index}
+              style={imageWrapperStyle}
+              className="position-relative mt-4"
+            >
+              <img
+                className="img-fluid rounded"
+                style={imageStyle}
+                src={HOST + image}
+                alt=""
+                width="100%"
+              />
+              <div className="position-absolute top-0 start-100 translate-middle rounded-circle">
+                <button
+                  type="button"
+                  className="btn btn-danger d-flex justify-content-center align-items-center"
+                  onClick={() => {
+                    handleRemoveItem(image);
+                  }}
+                >
+                  <MdDeleteOutline color="white" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <SubmitButton />
       </CForm>
     </>
   );

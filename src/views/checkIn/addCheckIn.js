@@ -18,6 +18,7 @@ import Select from "react-select";
 import COUNTRY from "src/assets/data/Country";
 import axiosInstance from "src/services/axiosInstance";
 import moment from "moment/moment";
+import SubmitButton from "src/components/Button/submitButton";
 
 const countryOptions = COUNTRY.map(({ name }) => {
   return { value: name, label: name };
@@ -600,11 +601,7 @@ const AddCheckIn = () => {
             </div>
           </div>
         </div>
-        <div>
-          <CButton className="mt-3 px-5" type="submit" color="primary">
-            Submit
-          </CButton>
-        </div>
+        <SubmitButton/>
       </CForm>
     </div>
   );

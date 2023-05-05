@@ -5,8 +5,10 @@ const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 // Manage Rooms
 const Rooms = React.lazy(() => import('./views/manageRooms/rooms'))
 const AddRoom = React.lazy(() => import('./views/manageRooms/addRoom'))
+const UpdateRoom = React.lazy(() => import('./views/manageRooms/updateRoom'))
 const RoomTypes = React.lazy(() => import('./views/manageRooms/roomTypes'))
 const AddRoomTypes = React.lazy(() => import('./views/manageRooms/addRoomTypes'))
+const UpdateRoomTypes = React.lazy(() => import('./views/manageRooms/updatedRoomType'))
 
 // Check In
 const OnlineBooking = React.lazy(() => import('./views/checkIn/onlineBooking'))
@@ -30,8 +32,10 @@ const routes = [
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/manage-rooms/rooms', name: 'Rooms', element: Rooms },
   { path: '/manage-rooms/add-room', name: 'Add Room', element: AddRoom },
+  { path: '/manage-rooms/edit-room/:id', name: 'Edit Room', element: UpdateRoom },
   { path: '/manage-rooms/room-types', name: 'Room Types', element: RoomTypes },
   { path: '/manage-rooms/add-room-types', name: 'Add Room Types', element: AddRoomTypes },
+  { path: '/manage-rooms/edit-room-types/:id', name: 'Edit Room Types', element: UpdateRoomTypes },
   { path: '/check-in/online-booking', name: 'online booking', element: OnlineBooking },
   { path: '/check-in/all-online-booking', name: 'all online booking', element: AllOnlineBooking },
   { path: '/check-in/add-check-in', name: 'Add Check In', element: AddCheckIn },
