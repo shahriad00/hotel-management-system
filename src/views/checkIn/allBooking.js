@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CFormInput, CInputGroup, CInputGroupText } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
-import { cilMagnifyingGlass } from "@coreui/icons";
 import axiosInstance from "src/services/axiosInstance";
 import { toast } from "react-hot-toast";
 import moment from "moment/moment";
 import ReactPaginate from "react-paginate";
+import SearchBar from "src/components/SearchBar/searchBar";
 
 const AllBooking = () => {
   const [booking, setBooking] = useState([]);
@@ -69,12 +67,7 @@ const AllBooking = () => {
       <h5 className="font-weight-bold">All Online Booking list</h5>
       <hr />
       <div className="py-3 d-flex justify-content-between">
-        <CInputGroup className="input-prepend w-25">
-          <CFormInput onChange={(e)=> setSearch(e.target.value)} type="text" placeholder="search check in's" />
-          <CInputGroupText onClick={handleSearch}>
-            <CIcon icon={cilMagnifyingGlass} />
-          </CInputGroupText>
-        </CInputGroup>
+        <SearchBar placeHolder="Search online bookings" handleSearch={handleSearch} setSearch={setSearch}/>
         <button
           onClick={() => navigate("/check-in/online-booking")}
           type="button"
@@ -87,7 +80,7 @@ const AllBooking = () => {
       <table className="table rounded-3 overflow-hidden shadow-sm table-bordered bg-white table-hover">
         <thead>
           <tr className="">
-            <th scope="col" className="text-center">
+            <th scope="col" className="w-5 text-center">
               S.No
             </th>
             <th scope="col" className="">
@@ -121,12 +114,9 @@ const AllBooking = () => {
                   <td className="">{mobile}</td>
                   <td className="text-center">
                     {selectRooms.map((room, i) => (
-                      <span key={room._id}>
-                        {room.roomName}
-                        {selectRooms.length > 1 &&
-                          selectRooms.length - 1 !== i &&
-                          " , "}
-                      </span>
+                      <span className="badge bg-dark gap-2 mx-1" key={room._id}>
+                      {room.roomName}
+                    </span>
                     ))}
                   </td>
                   <td className="text-center">

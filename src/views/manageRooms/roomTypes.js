@@ -2,16 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BiEdit } from "react-icons/bi";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { CFormInput, CInputGroup, CInputGroupText } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
-import { cilMagnifyingGlass } from "@coreui/icons";
 import axiosInstance from "src/services/axiosInstance";
 import { toast } from "react-hot-toast";
 import DeleteModal from "src/components/Modal/deleteModal";
+import SearchBar from "src/components/SearchBar/searchBar";
 
 const RoomTypes = () => {
   const [roomTypes, setRoomTypes] = useState();
-  const [visible, setVisible] = useState();
+  const [visible, setVisible] = useState(false);
+  const [search, setSearch] = useState('');
   const [id, setId] = useState();
   const navigate = useNavigate();
 
@@ -26,7 +25,8 @@ const RoomTypes = () => {
   useEffect(() => {
     let isMounted = true;
     if (isMounted) {
-      fetchData()
+      fetchData();
+      setSearch('');
     }
     return () => {
         isMounted = false;
@@ -49,17 +49,22 @@ const RoomTypes = () => {
       });
   }
 
+  const handleSearch = () => {
+    let updatedList = [];
+    search === '' ?
+      fetchData()
+    :
+    updatedList = roomTypes.filter((item) => {
+      return item?.title.toLowerCase().indexOf(search.toLowerCase()) !== -1;
+    })
+    setRoomTypes(updatedList);
+  }
+
   return (
     <>
       <h5 className="font-weight-bold bg-white rounded p-3 shadow-sm d-none">Room Type list</h5>
       <div className="py-3 d-flex justify-content-between">
-        <CInputGroup className="input-prepend w-25 shadow-sm">
-          <CFormInput type="text" placeholder="search room type" />
-          <CInputGroupText className="gap-2" role='button'>
-            Search
-            <CIcon icon={cilMagnifyingGlass} />
-          </CInputGroupText>
-        </CInputGroup>
+      <SearchBar placeHolder="Search Room-type title" handleSearch={handleSearch} setSearch={setSearch}/>
         <button
           onClick={() => navigate("/manage-rooms/add-room-types")}
           type="button"
@@ -72,7 +77,7 @@ const RoomTypes = () => {
       <table className="table-bordered table table-striped rounded-3 overflow-hidden bg-white shadow">
         <thead>
           <tr className="">
-            <th scope="col" className="text-center">S.No</th>
+            <th scope="col" className="w-5 text-center">S.No</th>
             <th scope="col" className="text-center">Title</th>
             <th scope="col" className="text-center">Base price</th>
             <th scope="col" className="text-center">Discount price</th>
@@ -93,8 +98,8 @@ const RoomTypes = () => {
                 <td className="text-center">{basePrice}</td>
                 <td className="text-center">{discountPrice}</td>
                 <td className="text-center">{capacity}</td>
-                <td className="d-flex justify-content-center">
-                  <span className={`${status === 'active' ? 'bg-success' : 'bg-danger'} px-2 py-1 text-white rounded text-center`}>
+                <td className="text-center">
+                  <span className={`badge ${status === 'active' ? 'bg-success' : 'bg-danger'}`}>
                     {status}
                   </span>
                 </td>

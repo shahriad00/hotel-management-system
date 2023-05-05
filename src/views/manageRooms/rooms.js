@@ -8,11 +8,13 @@ import { cilMagnifyingGlass } from "@coreui/icons";
 import axiosInstance from "src/services/axiosInstance";
 import { toast } from "react-hot-toast";
 import DeleteModal from "src/components/Modal/deleteModal";
+import SearchBar from "src/components/SearchBar/searchBar";
 
 
 const Rooms = () => {
   const [room, setRoom] = useState();
-  const [visible, setVisible] = useState();
+  const [visible, setVisible] = useState(false);
+  const [search, setSearch] = useState('');
   const [id, setId] = useState();
   const navigate = useNavigate();
 
@@ -30,6 +32,7 @@ const Rooms = () => {
     let isMounted = true;
     if (isMounted) {
       fetchData();
+      setSearch('');
     }
     return () => {
         isMounted = false;
@@ -51,18 +54,23 @@ const Rooms = () => {
           setId('');
       });
   }
+  const handleSearch = () => {
+    let updatedList = [];
+    search === '' ?
+      fetchData()
+    :
+    updatedList = room.filter((item) => {
+      return item?.name.toLowerCase().indexOf(search.toLowerCase()) !== -1
+    })
+    setRoom(updatedList);
+  }
 
   return (
     <>
       <h5 className="font-weight-bold">Room list</h5>
       <hr />
       <div className="py-3 d-flex justify-content-between">
-        <CInputGroup className="input-prepend w-25 shadow-sm">
-              <CInputGroupText>
-                <CIcon icon={cilMagnifyingGlass} />
-              </CInputGroupText>
-              <CFormInput type="text" placeholder="search room" />
-        </CInputGroup>
+      <SearchBar placeHolder="Search Room name" handleSearch={handleSearch} setSearch={setSearch}/>
         <button
           onClick={() => navigate("/manage-rooms/add-room")}
           type="button"
@@ -72,10 +80,10 @@ const Rooms = () => {
         </button>
       </div>
 
-      <table className="table-bordered table rounded-3 overflow-hidden bg-white shadow table-striped">
+      <table className="table-bordered table rounded-3 overflow-hidden bg-white shadow-sm table-striped">
         <thead>
           <tr className="">
-            <th scope="col" className="text-center">S.No</th>
+            <th scope="col" className="w-5 text-center">S.No</th>
             <th scope="col" className="text-center">Room Type</th>
             <th scope="col" className="text-center">Name</th>
             <th scope="col" className="text-center">Floor No.</th>
@@ -94,8 +102,8 @@ const Rooms = () => {
                 <td className="text-center">{roomTypeName}</td>
                 <td className="text-center">{name}</td>
                 <td className="text-center">{floorNo}</td>
-                <td className="d-flex justify-content-center">
-                  <span className= {`${status === 'active' && 'bg-success' || status === 'inactive' && 'bg-danger' || status === 'maintenance' && 'bg-warning' } px-2 py-1 text-white rounded text-center`}>
+                <td className="text-center">
+                  <span className= {`badge ${status === 'active' && 'bg-success' || status === 'inactive' && 'bg-danger' || status === 'maintenance' && 'bg-warning' }`}>
                     {status}
                   </span>
                 </td>

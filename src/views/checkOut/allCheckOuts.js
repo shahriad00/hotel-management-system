@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CFormInput, CInputGroup, CInputGroupText } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
-import { cilMagnifyingGlass } from "@coreui/icons";
 import axiosInstance from "src/services/axiosInstance";
 import { toast } from "react-hot-toast";
 import moment from "moment/moment";
 import ReactPaginate from "react-paginate";
+import SearchBar from "src/components/SearchBar/searchBar";
 
 const AllCheckOuts = () => {
   const [checkIn, setCheckIn] = useState([]);
@@ -73,22 +71,13 @@ const AllCheckOuts = () => {
       <h5 className="font-weight-bold">Check Out list</h5>
       <hr />
       <div className="py-3">
-        <CInputGroup className="input-prepend w-25">
-          <CFormInput
-            onChange={(e) => setSearch(e.target.value)}
-            type="text"
-            placeholder="search check outs's"
-          />
-          <CInputGroupText role="button" onClick={handleSearch}>
-            <CIcon icon={cilMagnifyingGlass} />
-          </CInputGroupText>
-        </CInputGroup>
+        <SearchBar placeHolder="Search Check-outs's" handleSearch={handleSearch} setSearch={setSearch}/>
       </div>
 
-      <table className="table-bordered table rounded-3 overflow-hidden bg-white shadow-sm table-hover">
+      <table className="table-bordered table rounded-3 overflow-hidden bg-white shadow-sm table-striped">
         <thead>
-          <tr className="">
-            <th scope="col" className="text-center">
+          <tr className="py-3">
+            <th scope="col" className="w-5 text-center">
               S No.
             </th>
             <th scope="col" className="">
@@ -123,11 +112,8 @@ const AllCheckOuts = () => {
                 <td className="">{mobile}</td>
                 <td className="text-center">
                   {selectRooms.map((room, i) => (
-                    <span key={room._id}>
+                    <span className="badge bg-dark gap-2 mx-1" key={room._id}>
                       {room.roomName}
-                      {selectRooms.length > 1 &&
-                        selectRooms.length - 1 !== i &&
-                        " , "}
                     </span>
                   ))}
                 </td>

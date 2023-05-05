@@ -5,10 +5,11 @@ import {
     CFormLabel,
     CRow,
 } from "@coreui/react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
+import SubmitButton from "src/components/Button/submitButton";
 import axiosInstance from "src/services/axiosInstance";
 
 const AddReference = () => {
@@ -41,8 +42,8 @@ const AddReference = () => {
 
   return (
     <>
-      <div className="border-top border-end border-start rounded-top my-Header">
-        Add Room Type
+      <div className="border border-bottom-0 rounded-top my-Header">
+        Add Reference
       </div>
       <CForm
         onSubmit={handleReferenceSubmit}
@@ -99,10 +100,7 @@ const AddReference = () => {
             />
           </CCol>
         </CRow>
-
-        <button type="submit" className="btn btn-info text-white mb-3 px-5">
-          Submit
-        </button>
+        <SubmitButton/>
       </CForm>
     </>
   );

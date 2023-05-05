@@ -69,7 +69,7 @@ const AddRoomTypes = () => {
 
   return (
     <>
-      <div className="border-top border-end border-start rounded-top my-Header">
+      <div className="border border-bottom-0 rounded-top my-Header">
         Add Room Type
       </div>
       <CForm

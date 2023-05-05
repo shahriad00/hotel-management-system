@@ -108,7 +108,7 @@ const AddRoom = () => {
 
   return (
     <>
-      <div className="border-top border-end border-start rounded-top my-Header">
+      <div className="border-bottom-0 border rounded-top my-Header">
         Add Room
       </div>
       <CForm
@@ -151,6 +151,17 @@ const AddRoom = () => {
         </CRow>
         <CRow>
           <CCol>
+            <CFormLabel htmlFor="details">Details:</CFormLabel>
+            <textarea
+              id="details"
+              type="text"
+              className="mb-3 form-control"
+              placeholder="Enter Room Details"
+              value={roomDetails}
+              onChange={(event) => setRoomDetails(event.target.value)}
+            />
+          </CCol>
+          <CCol>
             <CFormLabel htmlFor="status">Status:</CFormLabel>
             <CFormSelect
               id="status"
@@ -166,17 +177,6 @@ const AddRoom = () => {
               <option value="inactive">Inactive</option>
               <option value="maintenance">Maintenance</option>
             </CFormSelect>
-          </CCol>
-          <CCol>
-            <CFormLabel htmlFor="details">Details:</CFormLabel>
-            <textarea
-              id="details"
-              type="text"
-              className="mb-3 form-control"
-              placeholder="Enter Room Details"
-              value={roomDetails}
-              onChange={(event) => setRoomDetails(event.target.value)}
-            />
           </CCol>
         </CRow>
         <CRow>
@@ -198,19 +198,17 @@ const AddRoom = () => {
                   dragProps,
                 }) => (
                   <div className="upload__image-wrapper">
-                    <div>
-                      <button
-                        style={isDragging ? { color: "red" } : null}
-                        onClick={onImageUpload}
-                        className="form-control py-3 gap-3"
-                        type="button"
-                        {...dragProps}
-                      >
-                        <GoCloudUpload fontSize={22} />
-                        <span className="ml-3">
-                          Upload an image or drag and drop PNG,JPG
-                        </span>
-                      </button>
+                    <div 
+                      style={isDragging ? { color: "red" } : null}
+                      onClick={onImageUpload}
+                      className="d-flex align-items-center justify-content-center gap-3 form-control py-3 gap-3"
+                      type="button"
+                      {...dragProps}
+                    >
+                      <GoCloudUpload fontSize={22} />
+                      <span className="ml-3">
+                        Upload an image or drag and drop PNG,JPG
+                      </span>
                     </div>
                     <div className="d-flex gap-5">
                       {imageList.length > 0 && (

@@ -273,7 +273,7 @@ const OnlineBooking = () => {
   return (
     <div>
       <div className="border-top border-end border-start rounded-top my-Header">
-        Add Check In
+        Add Online Booking
       </div>
       <CForm onSubmit={handleSubmit}>
         {/*---------- select check in date ----------------*/}
@@ -574,7 +574,7 @@ const OnlineBooking = () => {
           <div className="d-flex gap-3 align-items-baseline">
             <div className="d-flex gap-3 align-items-center">
               <CFormLabel className="semi-bold ml-3" htmlFor="pickup">
-                Pickup<span className="text-danger">*</span> :
+                Pickup:
               </CFormLabel>
               <CFormCheck
                 className="pb-1 pr-3"

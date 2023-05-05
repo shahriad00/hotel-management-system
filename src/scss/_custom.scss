@@ -9,7 +9,6 @@
   background-color: #fcfcfc;
   border: 1px solid #ccc;
   border-radius: 4px;
-  box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
 }
 .semi-bold{
   font-weight: 600;
@@ -28,6 +27,10 @@
 }
 .w-10{
   min-width: 160px;
+}
+
+.w-5{
+  width: 70px
 }
 
 .max-w-25{

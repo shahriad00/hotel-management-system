@@ -26,18 +26,19 @@ const UpdateGuestInfo = React.lazy(() => import('./views/checkOut/updateGuestInf
 // Reference
 const Reference = React.lazy(() => import('./views/reference/reference'))
 const AddReference = React.lazy(() => import('./views/reference/addReference'))
+const UpdateReference = React.lazy(() => import('./views/reference/updateReference'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
-  { path: '/manage-rooms/rooms', name: 'Rooms', element: Rooms },
+  { path: '/manage-rooms/rooms', name: 'Room List', element: Rooms },
   { path: '/manage-rooms/add-room', name: 'Add Room', element: AddRoom },
   { path: '/manage-rooms/edit-room/:id', name: 'Edit Room', element: UpdateRoom },
   { path: '/manage-rooms/room-types', name: 'Room Types', element: RoomTypes },
   { path: '/manage-rooms/add-room-types', name: 'Add Room Types', element: AddRoomTypes },
   { path: '/manage-rooms/edit-room-types/:id', name: 'Edit Room Types', element: UpdateRoomTypes },
-  { path: '/check-in/online-booking', name: 'online booking', element: OnlineBooking },
-  { path: '/check-in/all-online-booking', name: 'all online booking', element: AllOnlineBooking },
+  { path: '/check-in/online-booking', name: 'Online Booking', element: OnlineBooking },
+  { path: '/check-in/all-online-booking', name: 'All online bookings', element: AllOnlineBooking },
   { path: '/check-in/add-check-in', name: 'Add Check In', element: AddCheckIn },
   { path: '/check-in/all-check-ins', name: 'All Check In', element: AllCheckIns },
   { path: '/edit-guest/:id', name: 'Edit Guest', element: UpdateGuestInfo },
@@ -47,6 +48,7 @@ const routes = [
   { path: '/all-check-outs', name: 'All Check Outs', element: AllCheckOuts },
   { path: '/reference', name: 'Reference', element: Reference },
   { path: '/add-reference', name: 'Add Reference', element: AddReference },
+  { path: '/edit-reference/:id', name: 'Edit Reference', element: UpdateReference },
 ]
 
 export default routes
