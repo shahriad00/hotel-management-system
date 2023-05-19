@@ -179,7 +179,7 @@ const ViewCheckIn = () => {
                 <th></th>
                 <td></td>
               </tr>
-              {(checkIn?.pickupCharge > 0 || checkIn?.pickupCharge !== "") && (
+              {(Number(checkIn?.pickupCharge) > 0) && (
                 <tr>
                   <th>Pick-up charge</th>
                   <td>{checkIn?.pickupCharge} Tk</td>
@@ -436,7 +436,7 @@ const ViewCheckIn = () => {
                 {(total = roomTotal + roomServiceTotal)}/- Tk
               </td>
             </tr>
-            {(checkIn?.pickupCharge > 0 || checkIn?.pickupCharge !== "") && (
+            {(Number(checkIn?.pickupCharge) > 0) && (
               <tr>
                 <th className="w-100 text-end">Pick-up charge</th>
                 <td className="text-end w-10">{checkIn?.pickupCharge}/- Tk</td>
@@ -463,7 +463,7 @@ const ViewCheckIn = () => {
                   percentage(GST, total) -
                   totalPayed -
                   checkIn?.discount +
-                  Number(checkIn?.pickupCharge)}
+                  (checkIn?.pickupCharge ? Number(checkIn?.pickupCharge) : 0)}
                 /- Tk
               </td>
             </tr>

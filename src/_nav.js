@@ -5,6 +5,7 @@ import {
   cilHome,
   cilArrowRight,
   cilAddressBook,
+  cilCash,
 } from "@coreui/icons";
 import React from "react";
 import CIcon from "@coreui/icons-react";
@@ -84,6 +85,12 @@ const _nav = [
     name: "Reference",
     to: "/reference",
     icon: <CIcon icon={cilAddressBook} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: "Total Income",
+    to: "/total-income",
+    icon: <CIcon icon={cilCash} customClassName="nav-icon" />,
   },
   {
     component: CNavGroup,

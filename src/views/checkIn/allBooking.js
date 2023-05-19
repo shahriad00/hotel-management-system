@@ -12,7 +12,7 @@ const AllBooking = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(20);
   const [visible, setVisible] = useState(false);
-  const [totalPages, setTotalPages] = useState("");
+  const [totalPages, setTotalPages] = useState();
   const [search, setSearch] = useState("");
   const [id, setId] = useState('');
 
@@ -20,7 +20,7 @@ const AllBooking = () => {
 
   const fetchData = () => {
     axiosInstance
-      .get(`v1/booking?page=${currentPage}&&limit=${itemsPerPage}&search=${search}`)
+      .get(`v1/booking?page=${currentPage}&limit=${itemsPerPage}&search=${search}`)
       .then((res) => {
         setBooking(res.data?.allBookings);
         setTotalPages(res?.data?.totalPages);

@@ -152,7 +152,7 @@ const ViewOnlineBooking = () => {
                 <td>{checkIn?.pickup}</td>
               </tr>
               {
-                (checkIn?.pickupCharge > 0 || checkIn?.pickupCharge !== '') &&
+                (Number(checkIn?.pickupCharge) > 0) &&
                 <tr>
                   <th>Pick-up charge</th>
                   <td>{checkIn?.pickupCharge} Tk</td>
