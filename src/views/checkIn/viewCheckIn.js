@@ -28,6 +28,7 @@ const ViewCheckIn = () => {
         .get(`v1/check-in/${id}`)
         .then((res) => {
           setCheckIn(res?.data);
+          console.log("data -> ", res?.data);
         })
         .catch((err) => {
           toast.error(err.message);
@@ -174,10 +175,18 @@ const ViewCheckIn = () => {
               </tr>
               <tr>
                 <th>Total Payed :</th>
-                <td>{totalPayed}/-</td>
+                <td>{totalPayed ? totalPayed : 0} Tk</td>
                 <th></th>
                 <td></td>
               </tr>
+              {(checkIn?.pickupCharge > 0 || checkIn?.pickupCharge !== "") && (
+                <tr>
+                  <th>Pick-up charge</th>
+                  <td>{checkIn?.pickupCharge} Tk</td>
+                  <th></th>
+                  <td></td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -375,7 +384,7 @@ const ViewCheckIn = () => {
           </div>
         )}
         {/* ----------------- Advance Payment section ---------------------*/}
-        {advancePayment?.length > 0 && (
+        {advancePayment?.length > 0 && totalPayed && (
           <div className="w-100 mb-5">
             <h5>Payed Amount:</h5>
             <table className="table table-bordered">
@@ -427,14 +436,22 @@ const ViewCheckIn = () => {
                 {(total = roomTotal + roomServiceTotal)}/- Tk
               </td>
             </tr>
+            {(checkIn?.pickupCharge > 0 || checkIn?.pickupCharge !== "") && (
+              <tr>
+                <th className="w-100 text-end">Pick-up charge</th>
+                <td className="text-end w-10">{checkIn?.pickupCharge}/- Tk</td>
+              </tr>
+            )}
             <tr>
               <th className="w-100 text-end">GST ({GST}%):</th>
               <td className="text-end w-10">{percentage(GST, total)}/- Tk</td>
             </tr>
-            <tr>
-              <th className="w-100 text-end">Total Payed:</th>
-              <td className="text-end w-10">{totalPayed}/- Tk</td>
-            </tr>
+            {totalPayed && (
+              <tr>
+                <th className="w-100 text-end">Total Payed:</th>
+                <td className="text-end w-10">{totalPayed}/- Tk</td>
+              </tr>
+            )}
             <tr>
               <th className="w-100 text-end">Discount:</th>
               <td className="text-end w-10">{checkIn?.discount}/- Tk</td>
@@ -442,7 +459,12 @@ const ViewCheckIn = () => {
             <tr className="bg-warning-light">
               <th className="w-100 text-end">Grand Total:</th>
               <td className="text-end w-10">
-                {total - percentage(GST, total) - totalPayed - Number(checkIn?.discount)}/- Tk
+                {total -
+                  percentage(GST, total) -
+                  totalPayed -
+                  checkIn?.discount +
+                  Number(checkIn?.pickupCharge)}
+                /- Tk
               </td>
             </tr>
           </tbody>

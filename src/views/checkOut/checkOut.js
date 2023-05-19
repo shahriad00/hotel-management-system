@@ -7,6 +7,7 @@ import { MdDownload } from "react-icons/md";
 import { IoEye } from "react-icons/io5";
 import ImageModal from "src/components/Modal/imageModal";
 import CheckOutModal from "src/components/Modal/checkOutModal";
+import HOST from "src/assets/data/ImageHosting";
 
 const CheckOut = () => {
   const [viewImage, setViewImage] = useState();
@@ -20,7 +21,6 @@ const CheckOut = () => {
 
   const { id } = useParams();
   const navigate = useNavigate();
-  const host = "http://localhost:4000";
 
   useEffect(() => {
     let isMounted = true;
@@ -62,13 +62,13 @@ const CheckOut = () => {
 
   //image modal
   const handleImageView = (image) => {
-    setViewImage(host + image);
+    setViewImage(HOST + image);
     setVisible(!visible);
   };
 
   // download image
   const handleDownload = (imageUrl) => {
-    const URL = host + imageUrl;
+    const URL = HOST + imageUrl;
     fetch(URL, { method: "GET", headers: {} })
       .then((response) => {
         response.arrayBuffer().then(function (buffer) {
@@ -88,6 +88,7 @@ const CheckOut = () => {
   let roomServiceTotal = 0;
   let GST = 0;
   let total = 0;
+  let grandTotal = 0;
 
   // ------- get percentage -----------
   function percentage(percent, total) {
@@ -96,16 +97,16 @@ const CheckOut = () => {
 
   const handleCheckOut = () => {
     axiosInstance
-        .patch(`v1/check-out/${id}`,{type: 'check-out', discount})
-        .then((res) => {
-          toast.success(res.data.message);
-          setVisibleCheckOut(false);
-          navigate('/check-in/all-check-ins');
-        })
-        .catch((err) => {
-          toast.error(err.message);
-        });
-  }
+      .patch(`v1/check-out/${id}`, { type: "check-out", discount, grandTotal })
+      .then((res) => {
+        toast.success(res.data.message);
+        setVisibleCheckOut(false);
+        navigate("/check-in/all-check-ins");
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
+  };
 
   return (
     <>
@@ -196,10 +197,18 @@ const CheckOut = () => {
               </tr>
               <tr>
                 <th>Total Payed :</th>
-                <td>{totalPayed}/-</td>
+                <td>{totalPayed ? totalPayed : 0} Tk</td>
                 <th></th>
                 <td></td>
               </tr>
+              {(checkIn?.pickupCharge > 0 || checkIn?.pickupCharge !== "") && (
+                <tr>
+                  <th>Pick-up charge</th>
+                  <td>{checkIn?.pickupCharge} Tk</td>
+                  <th></th>
+                  <td></td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -327,7 +336,7 @@ const CheckOut = () => {
                   <td className="text-center">{room.roomPrice}/-</td>
                   <td className="text-center">
                     <span className="d-none">
-                      {(roomTotal += room.roomPrice * checkIn?.durationOfStay)}
+                      {(roomTotal += room?.roomPrice * checkIn?.durationOfStay)}
                     </span>
                     {room.roomPrice * checkIn?.durationOfStay} Tk
                   </td>
@@ -400,7 +409,7 @@ const CheckOut = () => {
           </>
         )}
         {/* ----------------- Advance Payment section ---------------------*/}
-        {advancePayment?.length > 0 && (
+        {advancePayment?.length > 0 && totalPayed && (
           <div className="w-100 mb-5">
             <h5>Payed Amount:</h5>
             <table className="table table-bordered">
@@ -453,23 +462,31 @@ const CheckOut = () => {
                 {(total = roomTotal + roomServiceTotal)}/- Tk
               </td>
             </tr>
+            {(checkIn?.pickupCharge > 0 || checkIn?.pickupCharge !== "") && (
+              <tr>
+                <th className="w-100 text-end">Pick-up charge</th>
+                <td className="text-end w-10">{checkIn?.pickupCharge}/- Tk</td>
+              </tr>
+            )}
             <tr>
               <th className="w-100 text-end">GST ({GST}%):</th>
               <td className="text-end w-10">{percentage(GST, total)}/- Tk</td>
             </tr>
-            <tr>
-              <th className="w-100 text-end">Total Payed:</th>
-              <td className="text-end w-10">{totalPayed}/- Tk</td>
-            </tr>
+            {totalPayed && (
+              <tr>
+                <th className="w-100 text-end">Total Payed:</th>
+                <td className="text-end w-10">{totalPayed}/- Tk</td>
+              </tr>
+            )}
             <tr>
               <th className="w-100 text-end">Discount:</th>
               <td className="d-flex align-items-center gap-1 text-end w-10">
                 <input
                   onWheel={(e) => e.target.blur()}
-                  className="form-control"
+                  className="form-control text-end"
                   type="number"
                   value={discount}
-                  onChange={(e)=> setDiscount(e.target.value)}
+                  onChange={(e) => setDiscount(e.target.value)}
                 />
                 Tk
               </td>
@@ -477,17 +494,39 @@ const CheckOut = () => {
             <tr className="bg-warning-light align-middle">
               <th className="w-100 text-end">Grand Total:</th>
               <td className="text-end w-10 fw-bold">
-                {total - percentage(GST, total) - totalPayed - discount}/- Tk
+                {
+                  (grandTotal =
+                    total -
+                    percentage(GST, total) -
+                    totalPayed -
+                    discount +
+                    Number(checkIn?.pickupCharge))
+                }
+                /- Tk
               </td>
             </tr>
           </tbody>
         </table>
         <div className="d-flex gap-3">
-          <button onClick={()=> setVisibleCheckOut(true)} className="btn bg-info text-white rounded">Confirm Check Out</button>
-          <button onClick={()=> navigate('/check-in/all-check-ins')} className="btn text-white bg-warning rounded">Cancel</button>
+          <button
+            onClick={() => setVisibleCheckOut(true)}
+            className="btn bg-info text-white rounded"
+          >
+            Confirm Check Out
+          </button>
+          <button
+            onClick={() => navigate("/check-in/all-check-ins")}
+            className="btn text-white bg-warning rounded"
+          >
+            Cancel
+          </button>
         </div>
       </div>
-      <CheckOutModal visibleCheckOut={visibleCheckOut} setVisibleCheckOut={setVisibleCheckOut} handleCheckOut={handleCheckOut}/>
+      <CheckOutModal
+        visibleCheckOut={visibleCheckOut}
+        setVisibleCheckOut={setVisibleCheckOut}
+        handleCheckOut={handleCheckOut}
+      />
     </>
   );
 };

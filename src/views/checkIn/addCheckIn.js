@@ -55,7 +55,7 @@ const AddCheckIn = () => {
   const [paymentType, setPaymentType] = useState("");
   const [country, setCountry] = useState("");
   const [referencedBy, setReferencedBy] = useState("");
-  const [advance, setAdvance] = useState(0);
+  const [advance, setAdvance] = useState();
   const [images, setImages] = useState([]);
   const [roomsData, setRoomsData] = useState();
   const [referenceData, setReferencedData] = useState();
@@ -113,7 +113,7 @@ const AddCheckIn = () => {
   });
 
   const advancePayment = {
-    paymentType: paymentType.value || "Cash",
+    paymentType: paymentType.value,
     amount: advance,
   };
   const formData = new FormData();
@@ -160,8 +160,6 @@ const AddCheckIn = () => {
   };
 
   const filterRooms = (allRooms1, selectedRooms1) => {
-    console.log(allRooms1.length);
-    console.log(selectedRooms1.length);
     const availableRooms = allRooms1.filter(
       (obj1) => !selectedRooms1.some((obj2) => obj1._id === obj2.roomId)
     );
@@ -173,7 +171,6 @@ const AddCheckIn = () => {
       .get(`v1/search?from=${moment(checkInDate).format('MM-DD-YYYY')}&to=${moment(checkOutDate).format('MM-DD-YYYY')}`)
       .then((res) => {
         filterRooms(res?.data?.allRooms, res?.data?.selectedRooms);
-        console.log(res.data);
       })
       .catch((err) => {
         toast.error(err.message);
@@ -307,6 +304,7 @@ const AddCheckIn = () => {
                 Select rooms<span className="text-danger">*</span>:
               </CFormLabel>
               <Select
+                isDisabled={!roomsOptions}
                 isMulti
                 name="rooms"
                 options={roomsOptions}
@@ -468,6 +466,7 @@ const AddCheckIn = () => {
               <Select
                 id="reference"
                 name="reference"
+                isDisabled={!referenceOptions}
                 options={referenceOptions}
                 className="basic-multi-select w-100"
                 classNamePrefix="select"

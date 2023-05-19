@@ -147,10 +147,20 @@ const ViewOnlineBooking = () => {
               </tr>
               <tr>
                 <th>Total Payed</th>
-                <td>{totalPayed}/-</td>
+                <td>{totalPayed ? totalPayed : 0} Tk</td>
                 <th>Pick up</th>
                 <td>{checkIn?.pickup}</td>
               </tr>
+              {
+                (checkIn?.pickupCharge > 0 || checkIn?.pickupCharge !== '') &&
+                <tr>
+                  <th>Pick-up charge</th>
+                  <td>{checkIn?.pickupCharge} Tk</td>
+                  <th></th>
+                  <td></td>
+                </tr>
+              }
+              
             </tbody>
           </table>
         </div>

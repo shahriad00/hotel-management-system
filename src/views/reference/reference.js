@@ -3,11 +3,14 @@ import { toast } from "react-hot-toast";
 import { BiEdit } from "react-icons/bi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
+import DeleteModal from "src/components/Modal/deleteModal";
 import SearchBar from "src/components/SearchBar/searchBar";
 import axiosInstance from "src/services/axiosInstance";
 
 const Reference = () => {
   const [reference, setReference] = useState([]);
+  const [id, setId] = useState('');
+  const [visible, setVisible] = useState(false);
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
 
@@ -30,6 +33,22 @@ const Reference = () => {
     };
   }, []);
 
+  const handleDelete = () => {
+    axiosInstance
+      .patch(`v1/reference/unpublish-reference/${id}`,{ isPublished : false })
+      .then((res) => {
+        toast.success(res.data.message);
+        fetchData();
+        setVisible(false);
+        setId('');
+      })
+      .catch((err) => {
+          toast.error(err.message);
+          setVisible(false);
+          setId('');
+      });
+  }
+
   const handleSearch = () => {
     let updatedList = [];
     search === '' ?
@@ -50,7 +69,7 @@ const Reference = () => {
         <button
           onClick={() => navigate("/add-reference")}
           type="button"
-          className="btn btn-info text-white"
+          className="btn btn-info text-white shadow"
         >
           + Add Reference
         </button>
@@ -88,7 +107,7 @@ const Reference = () => {
                     <span title="Edit" onClick={()=>navigate(`/edit-reference/${_id}`)} className="btn btn-warning btn-sm">
                       <BiEdit fontSize={18} color="white" />
                     </span>
-                    <span title="Delete" className="btn btn-danger btn-sm">
+                    <span title="Delete" onClick={()=>{setVisible(true);setId(_id)}} className="btn btn-danger btn-sm">
                       <RiDeleteBin6Line fontSize={18} color="white" />
                     </span>
                   </div>
@@ -97,6 +116,7 @@ const Reference = () => {
             ))}
         </tbody>
       </table>
+      <DeleteModal visible={visible} setVisible={setVisible} handleDelete={handleDelete} />
     </>
   );
 };

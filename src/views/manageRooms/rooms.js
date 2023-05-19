@@ -2,9 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BiEdit } from "react-icons/bi";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { CFormInput, CInputGroup, CInputGroupText } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
-import { cilMagnifyingGlass } from "@coreui/icons";
 import axiosInstance from "src/services/axiosInstance";
 import { toast } from "react-hot-toast";
 import DeleteModal from "src/components/Modal/deleteModal";
@@ -15,9 +12,9 @@ const Rooms = () => {
   const [room, setRoom] = useState();
   const [visible, setVisible] = useState(false);
   const [search, setSearch] = useState('');
-  const [id, setId] = useState();
-  const navigate = useNavigate();
+  const [id, setId] = useState('');
 
+  const navigate = useNavigate();
 
   const fetchData = () => {
     axiosInstance

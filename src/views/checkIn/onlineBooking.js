@@ -55,7 +55,7 @@ const OnlineBooking = () => {
   const [paymentType, setPaymentType] = useState("");
   const [country, setCountry] = useState("");
   const [referencedBy, setReferencedBy] = useState("");
-  const [advance, setAdvance] = useState(0);
+  const [advance, setAdvance] = useState();
   const [images, setImages] = useState([]);
   const [roomsData, setRoomsData] = useState([]);
   const [referenceData, setReferencedData] = useState([]);
@@ -116,7 +116,7 @@ const OnlineBooking = () => {
   });
 
   const advancePayment = {
-    paymentType: paymentType.value || "Cash",
+    paymentType: paymentType.value,
     amount: advance,
   };
   const formData = new FormData();
@@ -312,6 +312,7 @@ const OnlineBooking = () => {
                 Select rooms<span className="text-danger">*</span> :
               </CFormLabel>
               <Select
+                isDisabled={!roomsOptions}
                 isMulti
                 name="rooms"
                 options={roomsOptions}
@@ -473,6 +474,7 @@ const OnlineBooking = () => {
               <Select
                 id="reference"
                 name="reference"
+                isDisabled={!referenceOptions}
                 options={referenceOptions}
                 className="basic-multi-select w-100"
                 classNamePrefix="select"

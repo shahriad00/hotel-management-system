@@ -5,13 +5,16 @@ import { toast } from "react-hot-toast";
 import moment from "moment/moment";
 import ReactPaginate from "react-paginate";
 import SearchBar from "src/components/SearchBar/searchBar";
+import DeleteModal from "src/components/Modal/deleteModal";
 
 const AllBooking = () => {
   const [booking, setBooking] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(20);
+  const [visible, setVisible] = useState(false);
   const [totalPages, setTotalPages] = useState("");
   const [search, setSearch] = useState("");
+  const [id, setId] = useState('');
 
   const navigate = useNavigate();
 
@@ -39,15 +42,35 @@ const AllBooking = () => {
 
   const moveToCheckIn = (id) => {
     axiosInstance
-      .patch(`v1/check-in/move-to-check-in/${id}`)
+      .patch(`v1/check-in/move-to-check-in/${id}`, {type : 'check-in'})
       .then((res) => {
         toast.success(res.data.message);
         fetchData();
+        setTimeout(()=> {
+          navigate(`/view-guest/${id}`);
+        },1200)
+        
       })
       .catch((err) => {
         toast.error(err.message);
       });
   };
+
+  const handleDelete = () => {
+    axiosInstance
+      .delete(`v1/delete-booking/${id}`)
+      .then((res) => {
+        toast.success(res.data.message);
+        fetchData();
+        setVisible(false);
+        setId('');
+      })
+      .catch((err) => {
+          toast.error(err.message);
+          setVisible(false);
+          setId('');
+      });
+  }
 
   // Handle changing the page
   const handlePageClick = (data) => {
@@ -138,6 +161,12 @@ const AllBooking = () => {
                       >
                         Move to check-in
                       </span>
+                      <span
+                        onClick={() => {setVisible(true); setId(_id)}}
+                        className="btn btn-danger btn-sm text-white"
+                      >
+                        Delete
+                      </span>
                     </div>
                   </td>
                 </tr>
@@ -148,7 +177,7 @@ const AllBooking = () => {
         previousLabel={"previous"}
         nextLabel={"next"}
         breakLabel={"..."}
-        pageCount={totalPages}
+        pageCount={Number(totalPages)}
         marginPagesDisplayed={2}
         pageRangeDisplayed={3}
         onPageChange={handlePageClick}
@@ -163,6 +192,7 @@ const AllBooking = () => {
         breakLinkClassName={"page-link"}
         activeClassName={"active"}
       />
+      <DeleteModal visible={visible} setVisible={setVisible} handleDelete={handleDelete} />
     </>
   );
 };

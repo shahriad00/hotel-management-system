@@ -45,7 +45,7 @@ const AddReference = () => {
     return () => {
         isMounted = false;
     };
-  }, []);
+  }, [id]);
 
   const handleReferenceSubmit = (e) => {
     e.preventDefault();
