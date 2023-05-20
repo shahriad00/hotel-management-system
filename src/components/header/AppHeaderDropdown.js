@@ -23,15 +23,26 @@ import {
 import CIcon from '@coreui/icons-react'
 
 import avatar7 from './../../assets/images/avatars/2.jpg'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-hot-toast'
 
 const AppHeaderDropdown = () => {
+
+  const navigate = useNavigate();
+
+  const handleLogOut = () => {
+    localStorage.removeItem('token');
+    navigate('/login');
+    toast.success('Successfully Logged out!')
+  }
+
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
         <CAvatar src={avatar7} size="md" />
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
-        <CDropdownHeader className="bg-light fw-semibold py-2">Account</CDropdownHeader>
+        {/* <CDropdownHeader className="bg-light fw-semibold py-2">Account</CDropdownHeader>
         <CDropdownItem href="#">
           <CIcon icon={cilBell} className="me-2" />
           Updates
@@ -82,11 +93,12 @@ const AppHeaderDropdown = () => {
           <CBadge color="primary" className="ms-2">
             42
           </CBadge>
-        </CDropdownItem>
-        <CDropdownDivider />
-        <CDropdownItem href="#">
+        </CDropdownItem>*/}
+        <CDropdownHeader className="bg-light fw-semibold py-2">Settings</CDropdownHeader>
+        <CDropdownDivider /> 
+        <CDropdownItem role='button' onClick={handleLogOut}>
           <CIcon icon={cilLockLocked} className="me-2" />
-          Lock Account
+          Log out
         </CDropdownItem>
       </CDropdownMenu>
     </CDropdown>

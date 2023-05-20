@@ -1,7 +1,6 @@
 import React, { Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { CContainer, CSpinner } from '@coreui/react'
-import { Toaster } from 'react-hot-toast';
 
 // routes config
 import routes from '../routes'
@@ -28,12 +27,17 @@ const AppContent = () => {
                   path={route.path}
                   exact={route.exact}
                   name={route.name}
-                  element={<route.element />}
+                  element={localStorage.getItem("token") !== null ? (
+                    <route.element />
+                  ) : (
+                    <Navigate to="/login" />
+                  )}
                 />
               )
             )
           })}
           <Route path="/" element={<Navigate to="dashboard" replace />} />
+          <Route path="/*" element={<Navigate to="404" replace />} />
         </Routes>
       </Suspense>
     </CContainer>

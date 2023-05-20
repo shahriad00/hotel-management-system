@@ -50,7 +50,6 @@ const TotalExpense = () => {
       })
       .catch((err) => {
         toast.error(err.message);
-        console.log(err);
       });
   };
 
@@ -143,7 +142,7 @@ const TotalExpense = () => {
               </tr>
             ))}
             { allIncome?.length > 0 && 
-              <tr>
+              <tr className="bg-success-light">
                 <td></td>
                 <td></td>
                 <td></td>

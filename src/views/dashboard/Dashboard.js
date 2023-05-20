@@ -3,7 +3,6 @@ import { CCard, CCardBody } from "@coreui/react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import axiosInstance from "src/services/axiosInstance";
-import { toast } from "react-hot-toast";
 import './dashboard.css';
 import { useNavigate } from "react-router-dom";
 
@@ -17,10 +16,9 @@ const Dashboard = () => {
         .get(`v1/all-room-status`)
         .then((res) => {
           setAllRoomStatus(res.data);
-          console.log(res.data);
         })
         .catch((err) => {
-          toast.error(err.message);
+          window.location.reload();
         });
     }
     return () => {

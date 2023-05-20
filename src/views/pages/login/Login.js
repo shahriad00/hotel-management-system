@@ -38,9 +38,7 @@ const Login = () => {
       navigate('/dashboard');
     })
     .catch((err) => {
-      err?.response?.data?.errors.map((err) => {
-        return toast.error(err.messages[0]);
-      })
+      toast.error(err.response.data.message);
     });
   }
 
@@ -73,14 +71,9 @@ const Login = () => {
                       />
                     </CInputGroup>
                     <CRow>
-                      <CCol xs={6}>
-                        <CButton type='submit' color="primary" className="px-4">
+                      <CCol xs={12}>
+                        <CButton type='submit' color="primary" className="px-4  w-100">
                           Login
-                        </CButton>
-                      </CCol>
-                      <CCol xs={6} className="text-right">
-                        <CButton color="link" className="px-0">
-                          Forgot password?
                         </CButton>
                       </CCol>
                     </CRow>
