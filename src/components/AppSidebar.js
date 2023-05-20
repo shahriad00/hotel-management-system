@@ -1,4 +1,5 @@
 import React from 'react'
+import logo from '../../src/assets/images/rutbah-hotel.jpg';
 import { useSelector, useDispatch } from 'react-redux'
 
 import { CSidebar, CSidebarBrand, CSidebarNav, CSidebarToggler } from '@coreui/react'
@@ -31,8 +32,12 @@ const AppSidebar = () => {
       className='d-print-none'
     >
       <CSidebarBrand className="d-none d-md-flex" to="/">
-        <CIcon className="sidebar-brand-full" icon={logoNegative} height={35} />
-        <CIcon className="sidebar-brand-narrow" icon={sygnet} height={35} />
+        <div className="fw-bold sidebar-brand-full">
+          <img src={logo} alt="logo" width={100}/>
+        </div>
+        <div className="sidebar-brand-narrow">
+          <img src={logo} alt="logo" width={60} />
+        </div>
       </CSidebarBrand>
       <CSidebarNav>
         <SimpleBar>
