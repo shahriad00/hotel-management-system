@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import axiosInstance from "src/services/axiosInstance";
 import { MdDownload } from "react-icons/md";
 import { IoEye } from "react-icons/io5";
+import { AiOutlinePrinter } from "react-icons/ai";
 import ImageModal from "src/components/Modal/imageModal";
 import HOST from "src/assets/data/ImageHosting";
 
@@ -474,7 +475,7 @@ const ViewCheckIn = () => {
         className="btn btn-info text-white px-5 mt-3 d-print-none"
         href="javascript:window.print()"
       >
-        Print
+        <AiOutlinePrinter fontSize={22} /> Print
       </a>
     </>
   );

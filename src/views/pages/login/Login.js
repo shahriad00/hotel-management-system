@@ -18,6 +18,8 @@ import { cilLockLocked, cilUser } from '@coreui/icons'
 import { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import axiosInstance from 'src/services/axiosInstance'
+import { SECRET } from 'src/assets/data/Secret'
+import CryptoJS from "crypto-js"
 
 const Login = () => {
 
@@ -26,16 +28,26 @@ const Login = () => {
 
   const navigate = useNavigate();
 
+  const encryptData = (_data) => {
+    const data = CryptoJS.AES.encrypt(
+      JSON.stringify(_data),SECRET
+    ).toString();
+    return data;
+  };
+
   const handleLoginSubmit = (e) => {
     e.preventDefault()
     axiosInstance.post('v1/auth/login', {
       email,
       password,
     }).then(res => {
+      console.log(res);
       toast.success('login successful!');
-      localStorage.removeItem('token');
+      const encrypt = encryptData(res?.data?.user)
       localStorage.setItem('token', JSON.stringify(res.data.token.accessToken));
+      localStorage.setItem('hms-user', JSON.stringify(encrypt));
       navigate('/dashboard');
+      window.location.reload();
     })
     .catch((err) => {
       toast.error(err.response.data.message);

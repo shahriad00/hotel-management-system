@@ -10,7 +10,7 @@ import ReactPaginate from "react-paginate";
 
 const TotalExpense = () => {
   const [toDate, setToDate] = useState(new Date());
-  const [fromDate, setFromDate] = useState(new Date());
+  const [fromDate, setFromDate] = useState(new Date);
   const [grandTotalIncome, setGrandTotalIncome] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(20);
@@ -20,12 +20,13 @@ const TotalExpense = () => {
   const fetchData = () => {
     axiosInstance
       .get(
-        `v1/all-income/search?page=${currentPage}&limit=${itemsPerPage}&from=${fromDate}&to=${toDate}`
+        `v1/all-income/search?page=${currentPage}&limit=${itemsPerPage}&from=${moment(fromDate).format('YYYY-MM-DD')}&to=${moment(toDate).format('YYYY-MM-DD')}`
       )
       .then((res) => {
         setAllIncome(res?.data?.allIncome);
         setTotalPages(res?.data?.totalPages);
         setGrandTotalIncome(res?.data?.grandTotal);
+        console.log(res?.data);
       })
       .catch((err) => {
         toast.error(err.message);

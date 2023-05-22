@@ -62,7 +62,8 @@ const RoomTypes = () => {
 
   return (
     <>
-      <h5 className="font-weight-bold bg-white rounded p-3 shadow-sm d-none">Room Type list</h5>
+      <h5 className="font-weight-bold">Room Type list</h5>
+      <hr />
       <div className="py-3 d-flex justify-content-between">
       <SearchBar placeHolder="Search Room-type title" handleSearch={handleSearch} setSearch={setSearch}/>
         <button
@@ -74,7 +75,7 @@ const RoomTypes = () => {
         </button>
       </div>
 
-      <table className="table-bordered table table-striped rounded-3 overflow-hidden bg-white shadow">
+      <table className="table-bordered table table-striped rounded-3 overflow-hidden bg-white shadow-sm">
         <thead>
           <tr className="">
             <th scope="col" className="w-5 text-center">S.No</th>

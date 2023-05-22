@@ -17,6 +17,8 @@ import Select from 'react-select';
 import axiosInstance from 'src/services/axiosInstance';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import CryptoJS from "crypto-js";
+import { SECRET } from 'src/assets/data/Secret';
 
 const RoleOptions = [
   { label: 'Admin', value: 'admin' },
@@ -34,6 +36,13 @@ const Register = () => {
 
   const navigate = useNavigate();
 
+  const encryptData = ( _data ) => {
+    const data = CryptoJS.AES.encrypt(
+      JSON.stringify(_data),SECRET
+    ).toString();
+    return data;
+  };
+
   const handleRegisterSubmit = (e) => {
     e.preventDefault();
     if(password === password2){
@@ -44,13 +53,13 @@ const Register = () => {
         role: role.value
       }).then(res => {
         toast.success('registration successful!');
+        const encrypt = encryptData(res?.data?.user)
         localStorage.setItem('token', JSON.stringify(res.data.token.accessToken));
-        navigate('/dashboard')
+        localStorage.setItem('hms-user', JSON.stringify(encrypt));
+        navigate('/dashboard');
       })
       .catch((err) => {
-        err?.response?.data?.errors.map((err) => {
-          return toast.error(err.messages[0]);
-        })
+          toast.error(err.message);
       });
     }else{
       toast.error('password and confirm password is not matching');

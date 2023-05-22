@@ -21,13 +21,12 @@ const AllExpense = () => {
   const [grandTotalExpense, setGrandTotalExpense] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(20);
-  const [allIncome, setAllIncome] = useState([]);
   const [totalPages, setTotalPages] = useState();
 
   const fetchData = () => {
     axiosInstance
       .get(
-        `v1/expense/search?page=${currentPage}&limit=${itemsPerPage}&from=${fromDate}&to=${toDate}`
+        `v1/expense/search?page=${currentPage}&limit=${itemsPerPage}&from=${moment(fromDate).format('YYYY-MM-DD')}&to=${moment(toDate).format('YYYY-MM-DD')}`
       )
       .then((res) => {
         setAllExpense(res?.data?.allExpense);

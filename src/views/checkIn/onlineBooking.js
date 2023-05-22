@@ -121,8 +121,8 @@ const OnlineBooking = () => {
   };
   const formData = new FormData();
   // date
-  formData.append("checkIn", checkInDate);
-  formData.append("checkOut", checkOutDate);
+  formData.append("checkIn", moment(checkInDate).format('YYYY-MM-DD'));
+  formData.append("checkOut", moment(checkOutDate).format('YYYY-MM-DD'));
   // selected all rooms
   formData.append("selectRooms", JSON.stringify(selectedRooms));
   // guest information
@@ -175,7 +175,7 @@ const OnlineBooking = () => {
 
   const checkAvailableRooms = () => {
     axiosInstance
-      .get(`v1/search?from=${moment(checkInDate).format('MM-DD-YYYY')}&to=${moment(checkOutDate).format('MM-DD-YYYY')}`)
+      .get(`v1/search?from=${moment(checkInDate).format('YYYY-MM-DD')}&to=${moment(checkOutDate).format('YYYY-MM-DD')}`)
       .then((res) => {
         filterRooms(res?.data?.allRooms, res?.data?.selectedRooms);
         console.log(res.data);

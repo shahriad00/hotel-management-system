@@ -22,7 +22,7 @@ import {
 } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 
-import avatar7 from './../../assets/images/avatars/2.jpg'
+import avatar7 from './../../assets/images/avatars/man.svg'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
 
@@ -32,6 +32,7 @@ const AppHeaderDropdown = () => {
 
   const handleLogOut = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('hms-user');
     navigate('/login');
     toast.success('Successfully Logged out!')
   }
@@ -39,7 +40,7 @@ const AppHeaderDropdown = () => {
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
-        <CAvatar src={avatar7} size="md" />
+        <CAvatar className='shadow-sm' src={avatar7} size="md" />
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
         {/* <CDropdownHeader className="bg-light fw-semibold py-2">Account</CDropdownHeader>

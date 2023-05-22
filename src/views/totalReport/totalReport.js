@@ -22,7 +22,7 @@ const TotalReport = () => {
   const fetchData = () => {
     axiosInstance
       .get(
-        `v1/all-report/search?page=${currentPage}&limit=${itemsPerPage}&from=${fromDate}&to=${toDate}`
+        `v1/all-report/search?page=${currentPage}&limit=${itemsPerPage}&from=${moment(fromDate).format('YYYY-MM-DD')}&to=${moment(toDate).format('YYYY-MM-DD')}`
       )
       .then((res) => {
         setAllIncome(res?.data?.allIncome);
@@ -137,16 +137,20 @@ const TotalReport = () => {
           <table className="table-bordered table rounded-3 overflow-hidden bg-white shadow-sm table-striped">
             <tbody>
               <tr>
+                <th className="w-100 text-start px-3">Report:</th>
+                <td></td>
+              </tr>
+              <tr>
                 <th className="w-100 text-end">Total Income:</th>
-                <td className="text-end w-10">{totalIncome}/- Tk</td>
+                <td className="text-end w-10 px-3">{totalIncome}/- Tk</td>
               </tr>
               <tr>
                 <th className="w-100 text-end">Total Expense:</th>
-                <td className="text-end w-10">{totalExpense}/- Tk</td>
+                <td className="text-end w-10 px-3">{totalExpense}/- Tk</td>
               </tr>
               <tr className="bg-success-light">
                 <th className="w-100 text-end">Net Profit:</th>
-                <td className="text-end w-10 fw-bold">
+                <td className="text-end w-10 fw-bold px-3">
                   {Number(totalIncome) - Number(totalExpense)}/- Tk
                 </td>
               </tr>
@@ -180,7 +184,7 @@ const TotalReport = () => {
             width={24}
             height={24}
           />
-          <div>Search by Date to get the Total Income</div>
+          <div>Search by Date to get the Total Report</div>
         </CAlert>
       )}
     </>

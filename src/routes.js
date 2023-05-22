@@ -1,5 +1,8 @@
 import React from 'react'
+import CryptoJS from "crypto-js";
+import { SECRET } from 'src/assets/data/Secret';
 
+// Dashboard
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 
 // Manage Rooms
@@ -37,6 +40,14 @@ const TotalExpense = React.lazy(() => import('./views/totalExpense/allExpense'))
 // Total Expense
 const TotalReport = React.lazy(() => import('./views/totalReport/totalReport'))
 
+// Settings
+const ChangePassword = React.lazy(() => import('./views/settings/changePassword'))
+
+const _data = JSON.parse(localStorage.getItem("hms-user"));
+
+const bytes = CryptoJS.AES.decrypt(_data ? _data : '', SECRET);
+const { role } = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
@@ -58,9 +69,10 @@ const routes = [
   { path: '/reference', name: 'Reference', element: Reference },
   { path: '/add-reference', name: 'Add Reference', element: AddReference },
   { path: '/edit-reference/:id', name: 'Edit Reference', element: UpdateReference },
-  { path: '/total-income', name: 'Total Income', element: TotalIncome },
-  { path: '/total-expense', name: 'Total Expense', element: TotalExpense },
-  { path: '/total-report', name: 'Total Report', element: TotalReport },
+  { path: '/settings/change-password', name: 'Change Password', element: ChangePassword },
+  { path: '/total-income', name: 'Total Income', element: (role === 'admin' || role === 'accountant') ? TotalIncome : null },
+  { path: '/total-expense', name: 'Total Expense', element: (role === 'admin' || role === 'accountant') ? TotalExpense : null },
+  { path: '/total-report', name: 'Total Report', element: (role === 'admin' || role === 'accountant') ? TotalReport : null},
 ]
 
 export default routes

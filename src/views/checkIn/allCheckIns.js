@@ -72,6 +72,8 @@ const AllCheckIn = () => {
         .then((res) => {
           setAdvanceHistory(res.data.totalAmount);
           setAdvanceAmount(0);
+          setPaymentType('');
+          setVisible(false);
           toast.success("Advance added successfully");
         })
         .catch((err) => {
@@ -243,7 +245,7 @@ const AllCheckIn = () => {
         previousLabel={"previous"}
         nextLabel={"next"}
         breakLabel={"..."}
-        pageCount={totalPages}
+        pageCount={Number(totalPages)}
         marginPagesDisplayed={2}
         pageRangeDisplayed={3}
         onPageChange={handlePageClick}

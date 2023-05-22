@@ -74,6 +74,7 @@ const AdvanceModal = ({
             color="secondary"
             onClick={() => {
               setAdvanceAmount(0);
+              setPaymentType('');
               setVisible(false);
             }}
           >
