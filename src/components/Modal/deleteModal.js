@@ -27,12 +27,12 @@ import {
           </CModalHeader>
           <CModalBody className="text-center py-4">Are you sure, You want to Delete?</CModalBody>
           <CModalFooter className="d-flex justify-content-center gap-3">
-            <CButton className="text-white" color="secondary" onClick={() => setVisible(false)}>
+            <button className="btn btn-danger text-white" onClick={() => setVisible(false)}>
               Close
-            </CButton>
-            <CButton className="text-white"  onClick={handleDelete} color="info">
+            </button>
+            <button className="btn btn-info text-white" onClick={handleDelete}>
               Confirm
-            </CButton>
+            </button>
           </CModalFooter>
         </CModal>
       </>

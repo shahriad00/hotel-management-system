@@ -79,9 +79,9 @@ const AdvanceModal = ({
           >
             Close
           </CButton>
-          <CButton onClick={() => addAdvanceAmount(checkInId)} color="primary">
+          <button onClick={() => addAdvanceAmount(checkInId)} className="btn btn-info text-white">
             Submit
-          </CButton>
+          </button>
         </CModalFooter>
       </CModal>
     </>

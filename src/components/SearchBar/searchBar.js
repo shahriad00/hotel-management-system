@@ -12,7 +12,7 @@ const SearchBar = ({
   return (
     <CInputGroup role='button' className="input-prepend w-25 shadow-sm">
         <CFormInput onChange={(e) => setSearch(e.target.value)} type="text" placeholder={placeHolder}/>
-        <CInputGroupText className='d-flex align-items-center gap-2' onClick={handleSearch}>
+        <CInputGroupText className='d-flex align-items-center gap-2 bg-info text-white' onClick={handleSearch}>
             Search
             <CIcon icon={cilMagnifyingGlass} />
         </CInputGroupText>

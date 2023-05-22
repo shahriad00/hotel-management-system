@@ -6,6 +6,7 @@ import {
   cilAddressBook,
   cilCash,
   cilShareBoxed,
+  cilDollar,
 } from "@coreui/icons";
 import React from "react";
 import CIcon from "@coreui/icons-react";
@@ -106,6 +107,12 @@ const _nav = [
     component: CNavItem,
     name: "Total Income",
     to: "/total-income",
+    icon: <CIcon icon={cilDollar} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: "Total Expense",
+    to: "/total-expense",
     icon: <CIcon icon={cilCash} customClassName="nav-icon" />,
   },
 ];

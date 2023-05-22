@@ -33,7 +33,7 @@ const AppSidebar = () => {
     >
       <CSidebarBrand className="d-none d-md-flex" to="/">
         <div className="fw-bold sidebar-brand-full">
-          <img src={logo} alt="logo" width={100}/>
+          <img src={logo} alt="logo" width={80}/>
         </div>
         <div className="sidebar-brand-narrow">
           <img src={logo} alt="logo" width={60} />

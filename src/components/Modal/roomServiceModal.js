@@ -87,9 +87,9 @@ import {
             >
               Close
             </CButton>
-            <CButton onClick={() => addRoomService(checkInId)} color="primary">
+            <button onClick={() => addRoomService(checkInId)} className="btn btn-info text-white">
               Submit
-            </CButton>
+            </button>
           </CModalFooter>
         </CModal>
       </>

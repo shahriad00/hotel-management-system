@@ -30,9 +30,9 @@ const CheckOutModal = ({
           <CButton className="text-white" color="danger" onClick={() => setVisibleCheckOut(false)}>
             Close
           </CButton>
-          <CButton className="text-white"  onClick={handleCheckOut} color="info">
+          <button className="btn btn-info text-white"  onClick={handleCheckOut}>
             Confirm
-          </CButton>
+          </button>
         </CModalFooter>
       </CModal>
     </>

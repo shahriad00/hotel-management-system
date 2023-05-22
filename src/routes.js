@@ -28,8 +28,11 @@ const Reference = React.lazy(() => import('./views/reference/reference'))
 const AddReference = React.lazy(() => import('./views/reference/addReference'))
 const UpdateReference = React.lazy(() => import('./views/reference/updateReference'))
 
-// Total Expense
+// Total Income
 const TotalIncome = React.lazy(() => import('./views/totalIncome/totalIncome'))
+
+// Total Expense
+const TotalExpense = React.lazy(() => import('./views/totalExpense/allExpense'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -53,6 +56,7 @@ const routes = [
   { path: '/add-reference', name: 'Add Reference', element: AddReference },
   { path: '/edit-reference/:id', name: 'Edit Reference', element: UpdateReference },
   { path: '/total-income', name: 'Total Income', element: TotalIncome },
+  { path: '/total-expense', name: 'Total Expense', element: TotalExpense },
 ]
 
 export default routes
