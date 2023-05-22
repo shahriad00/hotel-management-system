@@ -115,6 +115,12 @@ const _nav = [
     to: "/total-expense",
     icon: <CIcon icon={cilCash} customClassName="nav-icon" />,
   },
+  {
+    component: CNavItem,
+    name: "Total Report",
+    to: "/total-report",
+    icon: <CIcon icon={cilDollar} customClassName="nav-icon" />,
+  },
 ];
 
 export default _nav;

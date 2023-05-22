@@ -34,6 +34,9 @@ const TotalIncome = React.lazy(() => import('./views/totalIncome/totalIncome'))
 // Total Expense
 const TotalExpense = React.lazy(() => import('./views/totalExpense/allExpense'))
 
+// Total Expense
+const TotalReport = React.lazy(() => import('./views/totalReport/totalReport'))
+
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
@@ -57,6 +60,7 @@ const routes = [
   { path: '/edit-reference/:id', name: 'Edit Reference', element: UpdateReference },
   { path: '/total-income', name: 'Total Income', element: TotalIncome },
   { path: '/total-expense', name: 'Total Expense', element: TotalExpense },
+  { path: '/total-report', name: 'Total Report', element: TotalReport },
 ]
 
 export default routes
