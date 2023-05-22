@@ -3,6 +3,7 @@ import { toast } from "react-hot-toast";
 import { BiEdit } from "react-icons/bi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
+import EmptyList from "src/components/EmptyList/emptyList";
 import DeleteModal from "src/components/Modal/deleteModal";
 import SearchBar from "src/components/SearchBar/searchBar";
 import axiosInstance from "src/services/axiosInstance";
@@ -74,7 +75,8 @@ const Reference = () => {
           + Add Reference
         </button>
       </div>
-
+    {
+      reference.length > 0 ? 
       <table className="table rounded-3 overflow-hidden shadow-sm table-bordered bg-white table-striped">
         <thead>
           <tr className="">
@@ -115,7 +117,9 @@ const Reference = () => {
               </tr>
             ))}
         </tbody>
-      </table>
+      </table> : <EmptyList/>
+    }
+      
       <DeleteModal visible={visible} setVisible={setVisible} handleDelete={handleDelete} />
     </>
   );

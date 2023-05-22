@@ -6,7 +6,8 @@ import moment from "moment/moment";
 import AdvanceModal from "src/components/Modal/advanceModal";
 import RoomServiceModal from "src/components/Modal/roomServiceModal";
 import ReactPaginate from "react-paginate";
-import SearchBar from './../../components/SearchBar/searchBar';
+import SearchBar from "./../../components/SearchBar/searchBar";
+import EmptyList from "src/components/EmptyList/emptyList";
 
 const AllCheckIn = () => {
   const [checkIn, setCheckIn] = useState([]);
@@ -72,7 +73,7 @@ const AllCheckIn = () => {
         .then((res) => {
           setAdvanceHistory(res.data.totalAmount);
           setAdvanceAmount(0);
-          setPaymentType('');
+          setPaymentType("");
           setVisible(false);
           toast.success("Advance added successfully");
         })
@@ -132,23 +133,29 @@ const AllCheckIn = () => {
   //------- handle search ----------
   const handleSearch = () => {
     axiosInstance
-    .get(`v1/check-in?page=${currentPage}&limit=${itemsPerPage}&search=${search}`)
-    .then((res) => {
-      setCheckIn(res?.data?.allCheckIns);
-      setTotalPages(res?.data?.totalPages);
-      console.log(res?.data?.allCheckIns);
-    })
-    .catch((err) => {
-      toast.error(err.message);
-    });
-}
+      .get(
+        `v1/check-in?page=${currentPage}&limit=${itemsPerPage}&search=${search}`
+      )
+      .then((res) => {
+        setCheckIn(res?.data?.allCheckIns);
+        setTotalPages(res?.data?.totalPages);
+        console.log(res?.data?.allCheckIns);
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
+  };
 
   return (
     <>
       <h5 className="font-weight-bold">Check In list</h5>
       <hr />
       <div className="py-3 d-flex justify-content-between">
-      <SearchBar placeHolder="Search Check-in's" handleSearch={handleSearch} setSearch={setSearch}/>
+        <SearchBar
+          placeHolder="Search Check-in's"
+          handleSearch={handleSearch}
+          setSearch={setSearch}
+        />
         <button
           onClick={() => navigate("/check-in/add-check-in")}
           type="button"
@@ -157,109 +164,116 @@ const AllCheckIn = () => {
           + Add Check In
         </button>
       </div>
-
-      <table className="table-bordered table rounded-3 overflow-hidden bg-white shadow-sm table-striped">
-        <thead>
-          <tr className="">
-            <th scope="col" className="w-5 text-center">
-              S.No
-            </th>
-            <th scope="col" className="">
-              Guest Name
-            </th>
-            <th scope="col" className="">
-              Mobile
-            </th>
-            <th scope="col" className="text-center">
-              Room
-            </th>
-            <th scope="col" className="text-center">
-              Check In
-            </th>
-            <th scope="col" className="text-center">
-              Action
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {checkIn &&
-            checkIn.length > 0 &&
-            checkIn
-              .map(({ _id, name, mobile, checkIn, selectRooms }, i) => (
-                <tr key={_id}>
-                  <th scope="row" className="text-center">
-                    {i + 1}
-                  </th>
-                  <td className="">{name}</td>
-                  <td className="">{mobile}</td>
-                  <td className="text-center">
-                    {selectRooms.map((room, i) => (
-                      <span className="badge bg-dark gap-2 mx-1" key={room._id}>
-                      {room.roomName}
-                    </span>
-                    ))}
-                  </td>
-                  <td className="text-center">
-                    {moment(checkIn).format("DD-MM-YYYY")}
-                  </td>
-                  <td>
-                    <div className="d-flex align-items-center justify-content-center gap-3">
-                      <span
-                        onClick={() =>
-                          navigate(`/view-guest/${_id}`)
-                        }
-                        className="btn btn-info btn-sm text-white"
-                      >
-                        view
-                      </span>
-                      <span
-                        onClick={() => {
-                          getAdvanceAmount(_id);
-                        }}
-                        className="btn btn-warning btn-sm text-white"
-                      >
-                        advance pay
-                      </span>
-                      <span
-                        onClick={() => {
-                          setCheckInId(_id);
-                          setBlock(!block);
-                        }}
-                        className="btn bg-teal btn-sm text-white"
-                      >
-                        room service
-                      </span>
-                      <span
-                        onClick={() => navigate(`/check-out/${_id}`)}
-                        className="btn btn-danger btn-sm text-white"
-                      >
-                        check out
-                      </span>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-        </tbody>
-      </table>
-      <ReactPaginate
-        previousLabel={"previous"}
-        nextLabel={"next"}
-        breakLabel={"..."}
-        pageCount={Number(totalPages)}
-        marginPagesDisplayed={2}
-        pageRangeDisplayed={3}
-        onPageChange={handlePageClick}
-        containerClassName={"pagination justify-content-center"}
-        pageClassName={"page-item"}
-        pageLinkClassName={"page-link"}
-        previousClassName={"page-item"}
-        previousLinkClassName={"page-link"}
-        nextClassName={"page-item"}
-        nextLinkClassName={"page-link"}
-        breakClassName={"page-item"}
-        breakLinkClassName={"page-link"}
-        activeClassName={"active"}
-      />
+      {checkIn.length > 0 ? (
+        <>
+          <table className="table-bordered table rounded-3 overflow-hidden bg-white shadow-sm table-striped">
+            <thead>
+              <tr className="">
+                <th scope="col" className="w-5 text-center">
+                  S.No
+                </th>
+                <th scope="col" className="">
+                  Guest Name
+                </th>
+                <th scope="col" className="">
+                  Mobile
+                </th>
+                <th scope="col" className="text-center">
+                  Room
+                </th>
+                <th scope="col" className="text-center">
+                  Check In
+                </th>
+                <th scope="col" className="text-center">
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {checkIn &&
+                checkIn.length > 0 &&
+                checkIn.map(
+                  ({ _id, name, mobile, checkIn, selectRooms }, i) => (
+                    <tr key={_id}>
+                      <th scope="row" className="text-center">
+                        {i + 1}
+                      </th>
+                      <td className="">{name}</td>
+                      <td className="">{mobile}</td>
+                      <td className="text-center">
+                        {selectRooms.map((room, i) => (
+                          <span
+                            className="badge bg-dark gap-2 mx-1"
+                            key={room._id}
+                          >
+                            {room.roomName}
+                          </span>
+                        ))}
+                      </td>
+                      <td className="text-center">
+                        {moment(checkIn).format("DD-MM-YYYY")}
+                      </td>
+                      <td>
+                        <div className="d-flex align-items-center justify-content-center gap-3">
+                          <span
+                            onClick={() => navigate(`/view-guest/${_id}`)}
+                            className="btn btn-info btn-sm text-white"
+                          >
+                            view
+                          </span>
+                          <span
+                            onClick={() => {
+                              getAdvanceAmount(_id);
+                            }}
+                            className="btn btn-warning btn-sm text-white"
+                          >
+                            advance pay
+                          </span>
+                          <span
+                            onClick={() => {
+                              setCheckInId(_id);
+                              setBlock(!block);
+                            }}
+                            className="btn bg-teal btn-sm text-white"
+                          >
+                            room service
+                          </span>
+                          <span
+                            onClick={() => navigate(`/check-out/${_id}`)}
+                            className="btn btn-danger btn-sm text-white"
+                          >
+                            check out
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                )}
+            </tbody>
+          </table>
+          <ReactPaginate
+            previousLabel={"previous"}
+            nextLabel={"next"}
+            breakLabel={"..."}
+            pageCount={Number(totalPages)}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={3}
+            onPageChange={handlePageClick}
+            containerClassName={"pagination justify-content-center"}
+            pageClassName={"page-item"}
+            pageLinkClassName={"page-link"}
+            previousClassName={"page-item"}
+            previousLinkClassName={"page-link"}
+            nextClassName={"page-item"}
+            nextLinkClassName={"page-link"}
+            breakClassName={"page-item"}
+            breakLinkClassName={"page-link"}
+            activeClassName={"active"}
+          />
+        </>
+      ) : (
+        <EmptyList />
+      )}
 
       <AdvanceModal
         visible={visible}
