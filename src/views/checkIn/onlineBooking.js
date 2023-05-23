@@ -19,6 +19,7 @@ import COUNTRY from "src/assets/data/Country";
 import axiosInstance from "src/services/axiosInstance";
 import moment from "moment/moment";
 import SubmitButton from "src/components/Button/submitButton";
+import LoadingButton from "src/components/Button/loadingButton";
 
 const countryOptions = COUNTRY.map(({ name }) => {
   return { value: name, label: name };
@@ -62,6 +63,7 @@ const OnlineBooking = () => {
   const [instruction, setInstruction] = useState('');
   const [pickupCharge, setPickupCharge] = useState(0);
   const [pickup, setPickup] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -164,35 +166,39 @@ const OnlineBooking = () => {
       });
   };
 
+  //filtering available rooms from all selected rooms
   const filterRooms = (allRooms1, selectedRooms1) => {
-    console.log(allRooms1.length);
-    console.log(selectedRooms1.length);
     const availableRooms = allRooms1.filter(
       (obj1) => !selectedRooms1.some((obj2) => obj1._id === obj2.roomId)
     );
     setRoomsData(availableRooms);
   };
 
+  // checking available rooms in check-in check-out date range
   const checkAvailableRooms = () => {
+    setIsLoading(true);
     axiosInstance
       .get(`v1/search?from=${moment(checkInDate).format('YYYY-MM-DD')}&to=${moment(checkOutDate).format('YYYY-MM-DD')}`)
       .then((res) => {
         filterRooms(res?.data?.allRooms, res?.data?.selectedRooms);
-        console.log(res.data);
+        setIsLoading(false);
       })
       .catch((err) => {
-        toast.error(err.message);
+        toast.error(err?.response?.data?.message);
+        setIsLoading(false);
       });
   };
 
   const handleImageUpload = (e) => setImages([...e.target.files]);
 
+  // adding new field for other person
   const addField = () => {
     const values = [...fields];
     values.push({ name: "", idType: "", idNumber: "" });
     setFields(values);
   };
 
+  // removing new field for other person
   const removeField = (index) => {
     const values = [...fields];
     values.splice(index, 1);
@@ -298,14 +304,17 @@ const OnlineBooking = () => {
               />
             </div>
             <div className="w-50">
-              <button
-                type="button"
-                onClick={checkAvailableRooms}
-                className="btn btn-info text-white d-flex align-items-center gap-1"
-              >
-                <span>check room</span>
-                <BiSearch />
-              </button>
+              {
+                isLoading ? <LoadingButton /> :
+                <button
+                  type="button"
+                  onClick={checkAvailableRooms}
+                  className="btn btn-info text-white d-flex align-items-center justify-content-center gap-1 w-100"
+                >
+                  <span>check room</span>
+                  <BiSearch />
+                </button>
+              }
             </div>
             <div className="w-100">
               <CFormLabel className="semi-bold" htmlFor="rooms">

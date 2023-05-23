@@ -19,6 +19,7 @@ import COUNTRY from "src/assets/data/Country";
 import axiosInstance from "src/services/axiosInstance";
 import moment from "moment/moment";
 import SubmitButton from "src/components/Button/submitButton";
+import LoadingButton from "src/components/Button/loadingButton";
 
 const countryOptions = COUNTRY.map(({ name }) => {
   return { value: name, label: name };
@@ -59,6 +60,7 @@ const AddCheckIn = () => {
   const [images, setImages] = useState([]);
   const [roomsData, setRoomsData] = useState();
   const [referenceData, setReferencedData] = useState();
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -68,10 +70,10 @@ const AddCheckIn = () => {
       axiosInstance
         .get(`v1/reference`)
         .then((res) => {
-          setReferencedData(res.data);
+          setReferencedData(res?.data);
         })
         .catch((err) => {
-          toast.error(err.message);
+          toast.error(err?.message);
         });
     }
     return () => {
@@ -145,13 +147,10 @@ const AddCheckIn = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    for (const entry of formData) {
-      console.log(entry);
-    }
     axiosInstance
       .post(`v1/check-in`, formData)
       .then((res) => {
-        toast.success(res.data.message);
+        toast.success(res?.data?.message);
         navigate("/check-in/all-check-ins");
       })
       .catch((err) => {
@@ -159,6 +158,7 @@ const AddCheckIn = () => {
       });
   };
 
+  //filtering available rooms from all selected rooms
   const filterRooms = (allRooms1, selectedRooms1) => {
     const availableRooms = allRooms1.filter(
       (obj1) => !selectedRooms1.some((obj2) => obj1._id === obj2.roomId)
@@ -166,25 +166,31 @@ const AddCheckIn = () => {
     setRoomsData(availableRooms);
   };
 
+  // checking available rooms in check-in check-out date range
   const checkAvailableRooms = () => {
+    setIsLoading(true);
     axiosInstance
       .get(`v1/search?from=${moment(checkInDate).format('YYYY-MM-DD')}&to=${moment(checkOutDate).format('YYYY-MM-DD')}`)
       .then((res) => {
         filterRooms(res?.data?.allRooms, res?.data?.selectedRooms);
+        setIsLoading(false);
       })
       .catch((err) => {
-        toast.error(err.message);
+        toast.error(err?.response?.data?.message);
+        setIsLoading(false);
       });
   };
 
   const handleImageUpload = (e) => setImages([...e.target.files]);
 
+  // adding new field for other person
   const addField = () => {
     const values = [...fields];
     values.push({ name: "", idType: "", idNumber: "" });
     setFields(values);
   };
 
+  // removing new field for other person
   const removeField = (index) => {
     const values = [...fields];
     values.splice(index, 1);
@@ -290,14 +296,17 @@ const AddCheckIn = () => {
               />
             </div>
             <div className="w-50">
-              <button
-                type="button"
-                onClick={checkAvailableRooms}
-                className="btn btn-info text-white d-flex align-items-center gap-1"
-              >
-                <span>check room</span>
-                <BiSearch />
-              </button>
+              {
+                isLoading ? <LoadingButton /> :
+                <button
+                  type="button"
+                  onClick={checkAvailableRooms}
+                  className="btn btn-info text-white d-flex align-items-center justify-content-center gap-1 w-100"
+                >
+                  <span>check room</span>
+                  <BiSearch />
+                </button>
+              }
             </div>
             <div className="w-100">
               <CFormLabel className="semi-bold" htmlFor="rooms">

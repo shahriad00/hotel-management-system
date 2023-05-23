@@ -6,20 +6,27 @@ import axiosInstance from "src/services/axiosInstance";
 import { toast } from "react-hot-toast";
 import DeleteModal from "src/components/Modal/deleteModal";
 import SearchBar from "src/components/SearchBar/searchBar";
+import Skeleton from "react-loading-skeleton";
 
 const RoomTypes = () => {
   const [roomTypes, setRoomTypes] = useState();
   const [visible, setVisible] = useState(false);
   const [search, setSearch] = useState('');
   const [id, setId] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+
   const navigate = useNavigate();
 
   const fetchData = () => {
     axiosInstance
       .get(`v1/room-type`)
-      .then((res) => {setRoomTypes(res.data)})
+      .then((res) => {
+        setRoomTypes(res?.data);
+        setIsLoading(false)
+      })
       .catch((err) => {
           toast.error(err.message);
+          setIsLoading(false);
       });
   }
   useEffect(() => {
@@ -74,8 +81,9 @@ const RoomTypes = () => {
           + Add Room Type
         </button>
       </div>
-
-      <table className="table-bordered table table-striped rounded-3 overflow-hidden bg-white shadow-sm">
+      {
+        isLoading ? <Skeleton count={10} height={35} gap={5}/> :
+        <table className="table-bordered table table-striped rounded-3 overflow-hidden bg-white shadow-sm">
         <thead>
           <tr className="">
             <th scope="col" className="w-5 text-center">S.No</th>
@@ -118,6 +126,7 @@ const RoomTypes = () => {
             ))}
         </tbody>
       </table>
+      }
       <DeleteModal visible={visible} setVisible={setVisible} handleDelete={handleDelete} />
     </>
   );

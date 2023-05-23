@@ -1,6 +1,7 @@
 import 'react-app-polyfill/stable'
 import 'core-js'
 import "react-datepicker/dist/react-datepicker.css";
+import 'react-loading-skeleton/dist/skeleton.css';
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App'
@@ -8,11 +9,14 @@ import reportWebVitals from './reportWebVitals'
 import { Provider } from 'react-redux'
 import store from './store'
 import { Toaster } from 'react-hot-toast';
+import { SkeletonTheme } from 'react-loading-skeleton';
 
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>
-    <Toaster/>
-    <App />
+    <SkeletonTheme baseColor="#ddd" highlightColor="#ccc">
+      <Toaster/>
+      <App />
+    </SkeletonTheme>
   </Provider>,
 )
 

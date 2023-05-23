@@ -6,7 +6,7 @@ import moment from "moment/moment";
 import ReactPaginate from "react-paginate";
 import SearchBar from "src/components/SearchBar/searchBar";
 import DeleteModal from "src/components/Modal/deleteModal";
-import EmptyList from "src/components/EmptyList/emptyList";
+import Skeleton from "react-loading-skeleton";
 
 const AllBooking = () => {
   const [booking, setBooking] = useState([]);
@@ -16,6 +16,7 @@ const AllBooking = () => {
   const [totalPages, setTotalPages] = useState();
   const [search, setSearch] = useState("");
   const [id, setId] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -27,6 +28,7 @@ const AllBooking = () => {
       .then((res) => {
         setBooking(res.data?.allBookings);
         setTotalPages(res?.data?.totalPages);
+        setIsLoading(false);
       })
       .catch((err) => {
         toast.error(err.message);
@@ -105,7 +107,9 @@ const AllBooking = () => {
           + Add online booking
         </button>
       </div>
-      {booking.length > 0 ? (
+      {isLoading ? (
+        <Skeleton count={10} height={35} gap={5} />
+      ) : (
         <>
           <table className="table rounded-3 overflow-hidden shadow-sm table-bordered bg-white table-hover">
             <thead>
@@ -137,9 +141,7 @@ const AllBooking = () => {
                   .filter(({ type }) => type === "booking")
                   .map(({ _id, name, mobile, checkIn, selectRooms }, i) => (
                     <tr key={_id}>
-                      <th scope="row" className="text-center">
-                        {i + 1}
-                      </th>
+                      <td className="text-center">{i + 1}</td>
                       <td className="">{name}</td>
                       <td className="">{mobile}</td>
                       <td className="text-center">
@@ -184,6 +186,12 @@ const AllBooking = () => {
                       </td>
                     </tr>
                   ))}
+              {booking.length === 0 && (
+                <tr>
+                  <td></td>
+                  <th>booking List is Empty..</th>
+                </tr>
+              )}
             </tbody>
           </table>
           <ReactPaginate
@@ -206,8 +214,6 @@ const AllBooking = () => {
             activeClassName={"active"}
           />
         </>
-      ) : (
-        <EmptyList />
       )}
       <DeleteModal
         visible={visible}

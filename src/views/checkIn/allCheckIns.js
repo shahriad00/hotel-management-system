@@ -7,7 +7,7 @@ import AdvanceModal from "src/components/Modal/advanceModal";
 import RoomServiceModal from "src/components/Modal/roomServiceModal";
 import ReactPaginate from "react-paginate";
 import SearchBar from "./../../components/SearchBar/searchBar";
-import EmptyList from "src/components/EmptyList/emptyList";
+import Skeleton from "react-loading-skeleton";
 
 const AllCheckIn = () => {
   const [checkIn, setCheckIn] = useState([]);
@@ -24,21 +24,28 @@ const AllCheckIn = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [totalPages, setTotalPages] = useState("");
   const [search, setSearch] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+
   const navigate = useNavigate();
+
+  const fetchData = () => {
+    axiosInstance
+      .get(`v1/check-in?page=${currentPage}&limit=${itemsPerPage}`)
+      .then((res) => {
+        setCheckIn(res?.data?.allCheckIns);
+        setTotalPages(res?.data?.totalPages);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        toast.error(err?.response?.data?.message);
+        setIsLoading(false);
+      });
+  };
 
   useEffect(() => {
     let isMounted = true;
     if (isMounted) {
-      axiosInstance
-        .get(`v1/check-in?page=${currentPage}&limit=${itemsPerPage}`)
-        .then((res) => {
-          setCheckIn(res?.data?.allCheckIns);
-          setTotalPages(res?.data?.totalPages);
-          console.log(res?.data);
-        })
-        .catch((err) => {
-          toast.error(err.message);
-        });
+      fetchData();
     }
     return () => {
       isMounted = false;
@@ -51,10 +58,10 @@ const AllCheckIn = () => {
     axiosInstance
       .get(`v1/advance-payment/${id}`)
       .then((res) => {
-        setAdvanceHistory(res.data.totalAmount);
+        setAdvanceHistory(res?.data?.totalAmount);
       })
       .catch((err) => {
-        toast.error(err.message);
+        toast.error(err?.response?.data?.message);
       });
     setCheckInId(id);
     setVisible(!visible);
@@ -71,7 +78,7 @@ const AllCheckIn = () => {
           amount: advanceAmount,
         })
         .then((res) => {
-          setAdvanceHistory(res.data.totalAmount);
+          setAdvanceHistory(res?.data?.totalAmount);
           setAdvanceAmount(0);
           setPaymentType("");
           setVisible(false);
@@ -164,7 +171,9 @@ const AllCheckIn = () => {
           + Add Check In
         </button>
       </div>
-      {checkIn.length > 0 ? (
+      {isLoading ? (
+        <Skeleton count={10} height={35} gap={5} />
+      ) : (
         <>
           <table className="table-bordered table rounded-3 overflow-hidden bg-white shadow-sm table-striped">
             <thead>
@@ -217,7 +226,7 @@ const AllCheckIn = () => {
                         <div className="d-flex align-items-center justify-content-center gap-3">
                           <span
                             onClick={() => navigate(`/view-guest/${_id}`)}
-                            className="btn btn-info btn-sm text-white"
+                            className="btn bg-info-light btn-sm text-white"
                           >
                             view
                           </span>
@@ -271,8 +280,6 @@ const AllCheckIn = () => {
             activeClassName={"active"}
           />
         </>
-      ) : (
-        <EmptyList />
       )}
 
       <AdvanceModal

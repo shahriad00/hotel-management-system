@@ -50,7 +50,10 @@
 }
 
 .bg-info-light{
-  background-color: #0d6dfd70;
+  background-color: #39f;
+  &:hover{
+    background-color: #53a8fe;
+  }
 }
 
 input::-webkit-outer-spin-button,
