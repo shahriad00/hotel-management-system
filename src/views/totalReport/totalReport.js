@@ -7,17 +7,18 @@ import axiosInstance from "src/services/axiosInstance";
 import { toast } from "react-hot-toast";
 import moment from "moment/moment";
 import ReactPaginate from "react-paginate";
+import LoadingButton from "src/components/Button/loadingButton";
 
 const TotalReport = () => {
   const [toDate, setToDate] = useState(new Date());
   const [fromDate, setFromDate] = useState(new Date());
-  const [grandTotalIncome, setGrandTotalIncome] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(20);
   const [allIncome, setAllIncome] = useState([]);
   const [totalIncome, setTotalIncome] = useState(0);
   const [totalExpense, setTotalExpense] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchData = () => {
     axiosInstance
@@ -29,15 +30,21 @@ const TotalReport = () => {
         setTotalExpense(res?.data?.grandTotalExpense);
         setTotalIncome(res?.data?.grandTotalIncome);
         setTotalPages(res?.data?.totalPages);
-        setGrandTotalIncome(res?.data?.grandTotal);
+        console.log(res.data)
+        if (res?.data?.grandTotalExpense === 0 && res?.data?.grandTotalIncome === 0) {
+          toast.error("No data found in this date range");
+        }
+        setIsLoading(false);
       })
       .catch((err) => {
         toast.error(err.message);
+        setIsLoading(false);
         console.log(err);
       });
   };
 
   const handleSearch = () => {
+    setIsLoading(true);
     fetchData();
   };
 
@@ -72,16 +79,20 @@ const TotalReport = () => {
             className="form-control w-100"
           />
         </div>
-        <button
-          type="button"
-          className="btn btn-info text-white d-flex align-items-center gap-2 shadow"
-          onClick={handleSearch}
-        >
-          Search
-          <CIcon icon={cilMagnifyingGlass} />
-        </button>
+        {isLoading ? (
+          <LoadingButton className="px-4 text-white btn-width" />
+        ) : (
+          <button
+            type="button"
+            className="btn btn-info text-white d-flex align-items-center justify-content-center gap-2 shadow btn-width"
+            onClick={handleSearch}
+          >
+            Search
+            <CIcon icon={cilMagnifyingGlass} />
+          </button>
+        )}
       </div>
-      {allIncome?.length > 0 ? (
+      {(allIncome?.length > 0) ||  (totalExpense > 0) ? (
         <>
           <table className="table-bordered table rounded-3 overflow-hidden bg-white shadow-sm table-striped">
             <thead>

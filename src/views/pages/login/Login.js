@@ -95,12 +95,11 @@ const Login = () => {
                     <CRow>
                       <CCol xs={12}>
                         {
-                          isLoading ? <LoadingButton/> :  
-                          <CButton type='submit' color="info" className="px-4  w-100 text-white">
+                          isLoading ? <LoadingButton className="px-4 w-100 text-white"/> :  
+                          <CButton type='submit' color="info" className="px-4 w-100 text-white">
                             Login
                           </CButton>
                         }
-                       
                       </CCol>
                     </CRow>
                   </CForm>

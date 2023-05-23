@@ -7,6 +7,7 @@ import { useState } from "react";
 import DatePicker from "react-datepicker";
 import { toast } from "react-hot-toast";
 import ReactPaginate from "react-paginate";
+import LoadingButton from "src/components/Button/loadingButton";
 import AddExpenseModal from "src/components/Modal/addExpenseModal";
 import axiosInstance from "src/services/axiosInstance";
 
@@ -21,18 +22,24 @@ const AllExpense = () => {
   const [grandTotalExpense, setGrandTotalExpense] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(20);
-  const [totalPages, setTotalPages] = useState();
+  const [totalPages, setTotalPages] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchData = () => {
     axiosInstance
       .get(
-        `v1/expense/search?page=${currentPage}&limit=${itemsPerPage}&from=${moment(fromDate).format('YYYY-MM-DD')}&to=${moment(toDate).format('YYYY-MM-DD')}`
+        `v1/expense/search?page=${currentPage}&limit=${itemsPerPage}&from=${moment(
+          fromDate
+        ).format("YYYY-MM-DD")}&to=${moment(toDate).format("YYYY-MM-DD")}`
       )
       .then((res) => {
         setAllExpense(res?.data?.allExpense);
         setTotalPages(res?.data?.totalPages);
         setGrandTotalExpense(res?.data?.grandTotal);
-        console.log(res?.data);
+        if (res?.data?.allExpense.length === 0) {
+          toast.error("No data found in this date range");
+        }
+        setIsLoading(false);
       })
       .catch((err) => {
         toast.error(err.message);
@@ -65,6 +72,7 @@ const AllExpense = () => {
   };
 
   const handleSearch = () => {
+    setIsLoading(true);
     fetchData();
   };
 
@@ -100,14 +108,18 @@ const AllExpense = () => {
               className="form-control w-100"
             />
           </div>
-          <button
-            type="button"
-            className="btn btn-info text-white d-flex align-items-center gap-2 shadow"
-            onClick={handleSearch}
-          >
-            Search
-            <CIcon icon={cilMagnifyingGlass} />
-          </button>
+          {isLoading ? (
+            <LoadingButton className="btn px-3 text-white btn-width" />
+          ) : (
+            <button
+              type="button"
+              className="btn btn-info text-white d-flex align-items-center justify-content-center gap-2 shadow w-25"
+              onClick={handleSearch}
+            >
+              Search
+              <CIcon icon={cilMagnifyingGlass} />
+            </button>
+          )}
         </div>
         <button
           onClick={() => setVisible(true)}

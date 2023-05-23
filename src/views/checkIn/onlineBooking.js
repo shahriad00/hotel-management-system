@@ -305,11 +305,11 @@ const OnlineBooking = () => {
             </div>
             <div className="w-50">
               {
-                isLoading ? <LoadingButton /> :
+                isLoading ? <LoadingButton className="text-white btn-width"/> :
                 <button
                   type="button"
                   onClick={checkAvailableRooms}
-                  className="btn btn-info text-white d-flex align-items-center justify-content-center gap-1 w-100"
+                  className="btn btn-info text-white d-flex align-items-center justify-content-center gap-1 btn-width"
                 >
                   <span>check room</span>
                   <BiSearch />

@@ -111,7 +111,7 @@ const AllBooking = () => {
         <Skeleton count={10} height={35} gap={5} />
       ) : (
         <>
-          <table className="table rounded-3 overflow-hidden shadow-sm table-bordered bg-white table-hover">
+          <table className="table rounded-3 overflow-hidden shadow-sm table-bordered bg-white table-striped">
             <thead>
               <tr className="">
                 <th scope="col" className="w-5 text-center">
@@ -163,13 +163,13 @@ const AllBooking = () => {
                             onClick={() =>
                               navigate(`/check-in/view-online-booking/${_id}`)
                             }
-                            className="btn btn-info btn-sm text-white"
+                            className="btn bg-info-light btn-sm text-white"
                           >
                             view
                           </span>
                           <span
                             onClick={() => moveToCheckIn(_id)}
-                            className="btn btn-warning btn-sm text-white"
+                            className="btn bg-teal btn-sm text-white"
                           >
                             Move to check-in
                           </span>

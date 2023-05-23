@@ -7,26 +7,35 @@ import axiosInstance from "src/services/axiosInstance";
 import { toast } from "react-hot-toast";
 import moment from "moment/moment";
 import ReactPaginate from "react-paginate";
+import LoadingButton from "src/components/Button/loadingButton";
 
 const TotalExpense = () => {
   const [toDate, setToDate] = useState(new Date());
-  const [fromDate, setFromDate] = useState(new Date);
+  const [fromDate, setFromDate] = useState(new Date());
   const [grandTotalIncome, setGrandTotalIncome] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(20);
   const [allIncome, setAllIncome] = useState([]);
   const [totalPages, setTotalPages] = useState();
+  const [alertActive, setAlertActive] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchData = () => {
     axiosInstance
       .get(
-        `v1/all-income/search?page=${currentPage}&limit=${itemsPerPage}&from=${moment(fromDate).format('YYYY-MM-DD')}&to=${moment(toDate).format('YYYY-MM-DD')}`
+        `v1/all-income/search?page=${currentPage}&limit=${itemsPerPage}&from=${moment(
+          fromDate
+        ).format("YYYY-MM-DD")}&to=${moment(toDate).format("YYYY-MM-DD")}`
       )
       .then((res) => {
+        setAlertActive(false);
         setAllIncome(res?.data?.allIncome);
         setTotalPages(res?.data?.totalPages);
         setGrandTotalIncome(res?.data?.grandTotal);
-        console.log(res?.data);
+        if (res?.data?.allIncome.length === 0) {
+          toast.error("No data found in this date range");
+        }
+        setIsLoading(false);
       })
       .catch((err) => {
         toast.error(err.message);
@@ -35,6 +44,7 @@ const TotalExpense = () => {
   };
 
   const handleSearch = () => {
+    setIsLoading(true);
     fetchData();
   };
 
@@ -69,14 +79,18 @@ const TotalExpense = () => {
             className="form-control w-100"
           />
         </div>
-        <button
-          type="button"
-          className="btn btn-info text-white d-flex align-items-center gap-2 shadow"
-          onClick={handleSearch}
-        >
-          Search
-          <CIcon icon={cilMagnifyingGlass} />
-        </button>
+        {isLoading ? (
+          <LoadingButton className="px-4 text-white btn-width" />
+        ) : (
+          <button
+            type="button"
+            className="btn btn-info text-white d-flex align-items-center justify-content-center gap-2 shadow btn-width"
+            onClick={handleSearch}
+          >
+            Search
+            <CIcon icon={cilMagnifyingGlass} />
+          </button>
+        )}
       </div>
       {allIncome?.length > 0 ? (
         <>
@@ -135,7 +149,9 @@ const TotalExpense = () => {
                   <td></td>
                   <td></td>
                   <th className="text-end">Grand Total :</th>
-                  <td className="text-center fw-bold">{grandTotalIncome}/- Tk</td>
+                  <td className="text-center fw-bold">
+                    {grandTotalIncome}/- Tk
+                  </td>
                 </tr>
               )}
             </tbody>
@@ -162,7 +178,12 @@ const TotalExpense = () => {
         </>
       ) : (
         <CAlert color="info" className="d-flex align-items-center mt-3">
-          <CIcon icon={cilInfo} className="flex-shrink-0 me-2" width={24} height={24} />
+          <CIcon
+            icon={cilInfo}
+            className="flex-shrink-0 me-2"
+            width={24}
+            height={24}
+          />
           <div>Search by Date to get the Total Income</div>
         </CAlert>
       )}
