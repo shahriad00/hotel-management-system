@@ -79,10 +79,7 @@ const AllBooking = () => {
   // Handle changing the page
   const handlePageClick = (data) => {
     setCurrentPage(data.selected + 1);
-
-    setTimeout(() => {
-      fetchData();
-    }, 200);
+    fetchData();
   };
 
   //------- handle search ----------

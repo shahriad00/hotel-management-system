@@ -15,9 +15,10 @@ const Dashboard = () => {
       axiosInstance
         .get(`v1/all-room-status`)
         .then((res) => {
-          setAllRoomStatus(res.data);
+          setAllRoomStatus(res?.data);
         })
         .catch((err) => {
+          localStorage.removeItem('token');
           window.location.reload();
         });
     }
@@ -29,7 +30,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   const handleEventClick = (info) => {
-    navigate(`/view-guest/${info.event._def.extendedProps.checkInId}`);
+    navigate(`/view-guest/${info?.event?._def.extendedProps?.checkInId}`);
   };
 
   const events =
@@ -46,6 +47,8 @@ const Dashboard = () => {
     <>
       <CCard className="p-4">
         <CCardBody>
+          <h5 className="font-weight-bold fs-3">Check In / Booking Information</h5>
+          <hr />
           <>
             <FullCalendar
               plugins={[dayGridPlugin]}

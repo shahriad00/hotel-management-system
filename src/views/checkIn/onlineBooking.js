@@ -346,7 +346,7 @@ const OnlineBooking = () => {
                   rooms.map((room, i) => (
                     <div key={room.key} className="w-100">
                       <CFormLabel className="semi-bold" htmlFor={room.key}>
-                        Room name<span className="text-danger">*</span> : ({room.label})
+                        Room Price<span className="text-danger">*</span>: <span className="fs-7 text-secondary">[{room.label}]</span>
                       </CFormLabel>
                       <CInputGroup className="">
                         <CInputGroupText>৳</CInputGroupText>

@@ -297,11 +297,11 @@ const AddCheckIn = () => {
             </div>
             <div className="w-50">
               {
-                isLoading ? <LoadingButton /> :
+                isLoading ? <LoadingButton className="text-white btn-width"/> :
                 <button
                   type="button"
                   onClick={checkAvailableRooms}
-                  className="btn btn-info text-white d-flex align-items-center justify-content-center gap-1 w-100"
+                  className="btn btn-info text-white d-flex align-items-center justify-content-center gap-1 btn-width"
                 >
                   <span>check room</span>
                   <BiSearch />
@@ -338,7 +338,7 @@ const AddCheckIn = () => {
                   rooms.map((room, i) => (
                     <div key={room.key} className="w-100">
                       <CFormLabel className="semi-bold" htmlFor={room.key}>
-                        Room name<span className="text-danger">*</span>: ({room.label})
+                        Room Price<span className="text-danger">*</span>: <span className="fs-7 text-secondary">[{room.label}]</span>
                       </CFormLabel>
                       <CInputGroup className="">
                         <CInputGroupText>৳</CInputGroupText>

@@ -19,6 +19,7 @@ import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import CryptoJS from "crypto-js";
 import { SECRET } from 'src/assets/data/Secret';
+import LoadingButton from 'src/components/Button/loadingButton';
 
 const RoleOptions = [
   { label: 'Admin', value: 'admin' },
@@ -32,7 +33,8 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [password2, setPassword2] = useState('');
-  const [role, setRole] = useState();
+  const [role, setRole] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -44,6 +46,7 @@ const Register = () => {
   };
 
   const handleRegisterSubmit = (e) => {
+    setIsLoading(true);
     e.preventDefault();
     if(password === password2){
         axiosInstance.post('v1/auth/register', {
@@ -53,13 +56,16 @@ const Register = () => {
         role: role.value
       }).then(res => {
         toast.success('registration successful!');
-        const encrypt = encryptData(res?.data?.user)
+        // encrypted user
+        const encrypt = encryptData(res?.data?.user);
         localStorage.setItem('token', JSON.stringify(res.data.token.accessToken));
         localStorage.setItem('hms-user', JSON.stringify(encrypt));
+        setIsLoading(false);
         navigate('/dashboard');
       })
       .catch((err) => {
-          toast.error(err.message);
+          toast.error(err?.response?.data?.message);
+          setIsLoading(false);
       });
     }else{
       toast.error('password and confirm password is not matching');
@@ -134,7 +140,10 @@ const Register = () => {
                     />
                   </CInputGroup>
                   <div className="d-grid">
-                    <CButton type='submit' color="success">Create Account</CButton>
+                  {
+                    isLoading ? <LoadingButton className='w-100 text-white' /> : <CButton type='submit' color="info" className='text-white'>Create Account</CButton>
+                  }
+                    
                   </div>
                 </CForm>
               </CCardBody>

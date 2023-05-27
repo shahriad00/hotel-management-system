@@ -122,19 +122,7 @@ const AllCheckIn = () => {
   // Handle changing the page
   const handlePageClick = (data) => {
     setCurrentPage(data.selected + 1);
-
-    setTimeout(() => {
-      axiosInstance
-        .get(`v1/check-in?page=${currentPage}&limit=${itemsPerPage}`)
-        .then((res) => {
-          setCheckIn(res?.data?.allCheckIns);
-          setTotalPages(res?.data?.totalPages);
-          console.log(res?.data);
-        })
-        .catch((err) => {
-          toast.error(err.message);
-        });
-    }, 200);
+    fetchData();
   };
 
   //------- handle search ----------

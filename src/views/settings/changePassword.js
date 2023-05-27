@@ -39,11 +39,11 @@ const ChangePassword = () => {
   }
   return (
     <>
-      <div className="border-top border-end border-start rounded-top my-Header w-50">
+      <div className="border-top border-end border-start rounded-top my-Header">
         Change Password
       </div>
       <CForm onSubmit={handleSubmit}>
-          <div className="bg-white rounded-bottom p-4 border w-50">
+          <div className="bg-white rounded-bottom p-4 border">
           <div className="w-50 mb-4">
             <CFormLabel className="semi-bold" htmlFor="email">
               Email<span className="text-danger">*</span>:

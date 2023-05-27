@@ -65,8 +65,8 @@ const Login = () => {
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center bg-secondary">
       <CContainer>
         <CRow className="justify-content-center">
-          <CCol md={8}>
-            <CCardGroup className="w-50 mx-auto">
+          <CCol sm={12} md={6} lg={4}>
+            <CCardGroup className="mx-auto">
               <CCard className="p-3 py-4 w-100 shadow-lg">
                 <CCardBody>
                   <CForm onSubmit={handleLoginSubmit}>

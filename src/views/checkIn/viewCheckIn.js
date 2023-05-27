@@ -29,7 +29,6 @@ const ViewCheckIn = () => {
         .get(`v1/check-in/${id}`)
         .then((res) => {
           setCheckIn(res?.data);
-          console.log("data -> ", res?.data);
         })
         .catch((err) => {
           toast.error(err.message);
