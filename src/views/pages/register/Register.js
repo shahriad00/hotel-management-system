@@ -62,6 +62,7 @@ const Register = () => {
         localStorage.setItem('hms-user', JSON.stringify(encrypt));
         setIsLoading(false);
         navigate('/dashboard');
+        window.location.reload();
       })
       .catch((err) => {
           toast.error(err?.response?.data?.message);
