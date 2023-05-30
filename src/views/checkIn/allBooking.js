@@ -124,7 +124,7 @@ const AllBooking = () => {
                   Room
                 </th>
                 <th scope="col" className="text-center">
-                  Check In
+                  Booking Date
                 </th>
                 <th scope="col" className="text-center">
                   Action

@@ -7,7 +7,7 @@ import './dashboard.css';
 import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
-  const [allRoomStatus, setAllRoomStatus] = useState();
+  const [allRoomStatus, setAllRoomStatus] = useState([]);
 
   useEffect(() => {
     let isMounted = true;
@@ -19,6 +19,7 @@ const Dashboard = () => {
         })
         .catch((err) => {
           localStorage.removeItem('token');
+          localStorage.removeItem('hms-user');
           window.location.reload();
         });
     }

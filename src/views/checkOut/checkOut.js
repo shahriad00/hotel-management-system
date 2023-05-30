@@ -472,7 +472,7 @@ const CheckOut = () => {
               <th className="w-100 text-end">GST ({GST}%):</th>
               <td className="text-end w-10">{percentage(GST, total)}/- Tk</td>
             </tr>
-            {totalPayed && (
+            {(totalPayed > 0)&& (
               <tr>
                 <th className="w-100 text-end">Total Payed:</th>
                 <td className="text-end w-10">{totalPayed}/- Tk</td>

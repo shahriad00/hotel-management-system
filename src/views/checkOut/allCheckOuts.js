@@ -76,7 +76,7 @@ const AllCheckOuts = () => {
         />
       </div>
       {isLoading ? (
-        <Skeleton row={5} height={30} />
+        <Skeleton count={10} height={30} />
       ) : (
         <>
           <table className="table-bordered table rounded-3 overflow-hidden bg-white shadow-sm table-striped">
